@@ -1,0 +1,90 @@
+.layout-navigation{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: 90px;
+    height: 100vh;
+}
+.logo{
+    margin-top: 20px;
+    width: 50px;
+    height: 50px;
+    transition: transform 0.5s ease;
+}
+.logo:hover{
+    transform: scale(1.09);
+}
+
+
+.icon{
+    border-radius: 15px;
+    padding: 10px 20px;
+    width: 35px;
+    height: 35px;
+    transition: background-color 0.5s ease;
+}
+.icon:hover{
+    animation: Hover 0.5s ease 0s 1 normal forwards;
+    background-color: rgb(234, 232, 232);
+}
+.icon.active{
+    animation: Click 0.5s ease 0s 1 normal forwards;
+    background-color: rgba(235, 232, 232, 0.499);
+}
+.top-bar{
+    flex:1;
+}
+.center-bar{
+    flex:3;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+.bottom-bar{
+    flex:1;
+}
+.bar{
+    width: 35px;
+    height: 35px;
+    transition: animation 0.5s linear;
+}
+.bar.active{
+    animation: spin 1s ease infinite;
+}
+@keyframes spin{
+    from{
+        transform: rotate(0deg);
+    }
+    to{
+        transform: rotate(360deg);
+    }
+}
+@keyframes Hover {
+	0% {
+		transform: scale(1);
+	}
+
+	50% {
+		transform: scale(1.1);
+	}
+
+	100% {
+		transform: scale(1);
+	}
+}
+@keyframes Click {
+	0% {
+		transform: scale(1);
+	}
+
+	50% {
+		transform: scale(1.1);
+	}
+
+	100% {
+		transform: scale(1);
+	}
+}
