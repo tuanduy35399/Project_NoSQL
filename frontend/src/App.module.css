@@ -1,0 +1,21 @@
+#root{
+    margin: 0;
+    width: 1280px;
+    height: auto;
+    padding: 0;
+}
+.layout-web{
+    display: flex;
+    justify-content: space-around;
+    align-items: start;
+    gap: 2rem; 
+
+}
+.nav{
+    flex:1;
+}
+.page-render{
+    flex:6;
+    width: 1200px;
+    height: 100vh;
+}

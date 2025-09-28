@@ -3,7 +3,7 @@
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    width: 90px;
+    width: 70px;
     height: 100vh;
 }
 .logo{
@@ -15,18 +15,16 @@
 .logo:hover{
     transform: scale(1.09);
 }
-
-
 .icon{
     border-radius: 15px;
-    padding: 10px 20px;
-    width: 35px;
-    height: 35px;
+    padding: 7px 17px;
+    width: 30px;
+    height: 30px;
     transition: background-color 0.5s ease;
 }
 .icon:hover{
     animation: Hover 0.5s ease 0s 1 normal forwards;
-    background-color: rgb(234, 232, 232);
+    background-color: rgba(235, 232, 232, 0.499);
 }
 .icon.active{
     animation: Click 0.5s ease 0s 1 normal forwards;
@@ -45,6 +43,9 @@
 }
 .bottom-bar{
     flex:1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 .bar{
     width: 35px;

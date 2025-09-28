@@ -1,33 +1,46 @@
-import navcss from "./Navigation.module.css"
 import { useState } from "react"
+import { NavLink } from "react-router-dom"
+import navcss from "./Navigation.module.css"
+
 export default function Navigation(){
-    const [isActive, setActive] = useState("home")
-    const [cpActive, setCPActive] = useState(false)
+    const [compassActive, setCPActive]= useState(false)
     return(
         <>
-            <div className={`${navcss["layout-navigation"]} ${cpActive===true? navcss["active"]:undefined}`}>
+            <div className={navcss["layout-navigation"]}>
                 <div className={navcss["top-bar"]}>
                     <img className={`${navcss["logo"]}`} src="/logo.svg" alt="logo" />
                 </div>
                 <div className={navcss["center-bar"]}>
-                    <div className={`${navcss["icon"]} ${isActive==="home"? navcss["active"]:undefined}`}
-                    onClick={()=>setActive("home")}>
-                        <img src={isActive==="home"? "/homeIconActive.svg":"/homeIcon.svg"} alt="home" />
-                    </div>
+                    <NavLink 
+                        to="/" 
+                        className={({ isActive }) => `${navcss["icon"]} ${isActive ? navcss["active"] : ""}`}
+                        >
+                        {({ isActive }) => (
+                            <img src={isActive ? "/homeIconActive.svg" : "/homeIcon.svg"} alt="home" />
+                        )}
+                    </NavLink>
                     
-                    <div className={`${navcss["icon"]} ${isActive==="plus"? navcss["active"]:undefined}`}
-                        onClick={()=>setActive("plus")}>
-                        <img src={isActive==="plus"? "/plusIconActive.svg":"/plusIcon.svg"} alt="plus" />
-                    </div>
+                    <NavLink 
+                    to="/post" 
+                    className={({isActive})=> `${navcss["icon"]} ${isActive ? navcss["active"] : ""}`}
+                    >
+                       {({isActive})=>(
+                        <img src={isActive? "/plusIconActive.svg":"/plusIcon.svg"} alt="plus" />
+                       )}
+                    </NavLink>
 
-                    <div className={`${navcss["icon"]} ${isActive==="user"? navcss["active"]:undefined}`}
-                    onClick={()=>setActive("user")}>
-                        <img src={isActive==="user"? "/userIconActive.svg":"/userIcon.svg"} alt="user" />
-                    </div>
+                    <NavLink 
+                    to="/user" 
+                    className={({isActive})=>`${navcss["icon"]} ${isActive? navcss["active"]:undefined}`}
+                    >
+                        {({isActive})=>(
+                        <img src={isActive? "/userIconActive.svg":"/userIcon.svg"} alt="user" />
+                        )}
+                    </NavLink>
                 </div>
                 <div className={navcss["bottom-bar"]}>
-                    <div className={`${navcss["bar"]} ${cpActive===true? navcss["active"]:undefined}`}
-                        onClick={()=>setCPActive(!cpActive)}
+                    <div className={`${navcss["bar"]} ${compassActive===true? navcss["active"]:undefined}`}
+                        onClick={()=>setCPActive(!compassActive)}
                     >
                         <img src="/compass-regular-full.svg" alt="user" />
                     </div>

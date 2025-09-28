@@ -1,12 +1,16 @@
-import { useState } from 'react'
-import './App.css'
+import appCSS from './App.module.css'
 import Navigation from './Components/Navigation/Navigation'
+import Router from './routes/Routes'
 function App() {
-  // const [, ] = useState(0)
 
   return (
     <>
-      <Navigation/>
+      <div className={appCSS["layout-web"]}>
+        <div className={appCSS["nav"]}><Navigation/></div>
+        <div className={appCSS["page-render"]}>
+          <Router/>
+        </div>
+      </div>
     </>
   )
 }
