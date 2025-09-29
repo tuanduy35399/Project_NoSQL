@@ -3,7 +3,32 @@
     height: 100%;
     background-color: #FFFF;
     overflow-y: auto; 
-    overflow-x: hidden;
 }
+.layout::-webkit-scrollbar {
+    display: none;   /* Chrome, Safari */
+}
+.layout {
+    -ms-overflow-style: none;  /* IE, Edge */
+    scrollbar-width: none;     /* Firefox */
+}
+.box{
+    height: auto;
+    border-bottom: 1.5px solid rgb(193, 192, 192);
+    padding: 10px;
+}
+.box:last-child{
+    border: none;
+}
+.user-box{
+    font-weight: bold;
+}
+.desc-box{
 
+}
+.status-bar{
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 10px;
+}
 
