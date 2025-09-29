@@ -5,7 +5,7 @@ import Router from "./routes/Routes";
 import Login from "./Components/Login/Login";
 function App() {
   const [showSecond, setShowSecond] = useState(false);
-  const [isGuest, setGuest]= useState(false)
+  const [isGuest, setGuest]= useState(true)
   return (
     <>
       <div className={appCSS["layout-web"]}>

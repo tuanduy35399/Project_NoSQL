@@ -15,5 +15,7 @@ export default function ListPost(){
                 </div>
             ))}
         </div>
+
+        
     )
 }

@@ -13,7 +13,7 @@
     background: #e2e9e1;
     padding: 10px;
     text-align: center;
-    line-height: 1.5;
+    line-height: 1.0;
 }
 
 .btn{
@@ -34,11 +34,9 @@
 }
 
 .btn:hover {
-<<<<<<< HEAD
-=======
   background: #4A707A;
   color: #ffffff;
->>>>>>> 010cb4c365334dc605fcdfc436d2fbd64ddb720b
+
 }
 
 .link{
