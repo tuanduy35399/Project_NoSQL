@@ -8,12 +8,13 @@
 }
 .logo{
     margin-top: 20px;
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
     transition: transform 0.5s ease;
 }
 .logo:hover{
     transform: scale(1.09);
+    cursor:pointer;
 }
 .icon{
     border-radius: 15px;

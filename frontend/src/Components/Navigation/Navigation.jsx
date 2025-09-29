@@ -1,14 +1,14 @@
 import { useState } from "react"
-import { NavLink } from "react-router-dom"
+import { NavLink, Link } from "react-router-dom"
 import navcss from "./Navigation.module.css"
 
-export default function Navigation(){
+export default function Navigation({showPage}){
     const [compassActive, setCPActive]= useState(false)
     return(
-        <>
+        <nav>
             <div className={navcss["layout-navigation"]}>
                 <div className={navcss["top-bar"]}>
-                    <img className={`${navcss["logo"]}`} src="/logo.svg" alt="logo" />
+                    <Link to="/"><img className={`${navcss["logo"]}`} src="/logo_nobg.svg" alt="logo" /></Link>
                 </div>
                 <div className={navcss["center-bar"]}>
                     <NavLink 
@@ -40,12 +40,14 @@ export default function Navigation(){
                 </div>
                 <div className={navcss["bottom-bar"]}>
                     <div className={`${navcss["bar"]} ${compassActive===true? navcss["active"]:undefined}`}
-                        onClick={()=>setCPActive(!compassActive)}
-                    >
+                        onClick={()=>{
+                            setCPActive(!compassActive);
+                            showPage?.()
+                        }}>
                         <img src="/compass-regular-full.svg" alt="user" />
                     </div>
                 </div>
             </div>
-        </>
+        </nav>
     )
 }
