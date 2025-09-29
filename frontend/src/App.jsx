@@ -5,7 +5,7 @@ import Router from "./routes/Routes";
 import Login from "./Components/Login/Login";
 function App() {
   const [showSecond, setShowSecond] = useState(false);
-
+  const [isGuest, setGuest]= useState(false)
   return (
     <>
       <div className={appCSS["layout-web"]}>
@@ -34,7 +34,7 @@ function App() {
               <h1>Explore</h1>
             </div>
           )}
-          <Login/>
+          {isGuest && <Login/>}
         </div>
       </div>
     </>
