@@ -51,6 +51,7 @@
 .bar{
     width: 35px;
     height: 35px;
+    cursor: pointer;
     transition: animation 0.5s linear;
 }
 .bar.active{

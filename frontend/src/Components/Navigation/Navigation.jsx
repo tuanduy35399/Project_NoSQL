@@ -37,8 +37,8 @@ export default function Navigation({showPage}){
                         <img src={isActive? "/userIconActive.svg":"/userIcon.svg"} alt="user" />
                         )}
                     </NavLink>
-                </div>
-                <div className={navcss["bottom-bar"]}>
+                    </div>
+                    <div className={navcss["bottom-bar"]}>
                     <div className={`${navcss["bar"]} ${compassActive===true? navcss["active"]:undefined}`}
                         onClick={()=>{
                             setCPActive(!compassActive);
