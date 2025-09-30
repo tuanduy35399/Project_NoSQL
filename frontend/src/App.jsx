@@ -3,9 +3,10 @@ import appCSS from "./App.module.css";
 import Navigation from "./Components/Navigation/Navigation";
 import Router from "./routes/Routes";
 import Login from "./Components/Login/Login";
+import Explore from "./page/ExplorePage/Explore";
 function App() {
   const [showSecond, setShowSecond] = useState(false);
-  const [isGuest, setGuest]= useState(true)
+  const [isGuest, setGuest]= useState(false)
   return (
     <>
       <div className={appCSS["layout-web"]}>
@@ -31,10 +32,10 @@ function App() {
           {/* Explore */}
           {showSecond && (
             <div className={appCSS["box-explore"]}>
-              <h1>Explore</h1>
+              <Explore />
             </div>
           )}
-          {isGuest && <Login/>}
+          {!isGuest && <Login guest={setGuest}/>}
         </div>
       </div>
     </>

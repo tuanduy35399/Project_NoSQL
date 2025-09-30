@@ -1,5 +1,5 @@
 import './Login.css'
-function Login() {
+function Login({guest}) {
 
     return (
         <div className="container">
@@ -7,7 +7,7 @@ function Login() {
             <p>Express yourself, connect with others.</p>
             <button className="btn">Sign in</button>
             <button className="btn">Sign up</button><br/>
-            <a href='#' >Continue as guest</a>
+            <a onClick={()=>guest(true)} href='#' >Continue as guest</a>
         </div>
     );
 }
