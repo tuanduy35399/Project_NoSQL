@@ -3,7 +3,7 @@ export default function Explore(){
     return(
         <>
             <div className={style["box-explore"]}>
-                <input className={style["search-bar"]} type="text" placeholder="Tìm kiếm" />
+                <input className={style["search-bar"]} type="text" placeholder="      Tìm kiếm" />
             </div>
         </>
     )

@@ -20,16 +20,14 @@
 /* Khi chỉ có 1 page thì căn giữa */
 .pages-container.one {
   justify-content: center;
-  .page-render{
-    margin-left: -60px;
-  }
 }
-
+.pages-container.one .page-render {
+  margin: auto;
+}
 /* Khi có 2 page thì chia đều */
 .pages-container.two {
   justify-content: center;
   gap: 10px;
-
 }
 
 /* Page hiển thị */
