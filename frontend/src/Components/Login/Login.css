@@ -10,20 +10,23 @@
     width: 350px;
     height: 45vh;
     border-radius: 20px;
-    box-shadow: 0px 0px 6px 3px rgba(0, 0, 0, 0.06);
-    border: 1.5px solid rgb(193, 192, 192);
-    background-color: rgba(239, 237, 237, 0.393);
+    //box-shadow: 0px 0px 6px 3px rgba(0, 0, 0, 0.06);
+    border: 1.5px solid #e0e0e0;
+    background-color: rgba(194, 193, 193, 0.171);
     text-align: center;
     line-height: 1.0;
+}
+h2{
+    font-size: 25px;
+    font-family: 'Segoe UI';
 }
 
 p{
     font-size: 14px;
-    color: #000000;
+    color: #575757fd;
     opacity: 0.6;
-    font-family: Roboto;
-}
-p{
+    font-family: 'Segoe UI';
+    letter-spacing: 0.2px;
     margin-top:-3px;
     margin-bottom: 23px;
 }
@@ -33,17 +36,19 @@ a{
     margin-bottom: 10px;
 }
 a:link{
-    color: #3d899c;
+    color: #081249;
     text-decoration: none;
     transition: font-weight 0.1s ease;
-    font-size: 15px;
+    font-size: 14px;
+    font-family: 'Segoe UI';
+    letter-spacing: 0.3px;
 }
 a:hover{
     font-weight: bold;
 }
 a:visited{
-    color: #110a79;
-    text-decoration: none;
+    color: #081249;
+    //text-decoration: none;
     transition: font-weight 0.1s ease;
 
 }
@@ -52,10 +57,10 @@ a:visited{
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 50%;
-    padding: 15px;
+    width: 80%;
+    padding: 17px;
     border: 1px solid #ddd;
-    border-radius: 17px;
+    border-radius: 20px;
     background: #fff;
     cursor: pointer;
     transition: background 0.8s;
@@ -63,8 +68,9 @@ a:visited{
     font-family: Roboto;
     font-weight: 500;
     font-size: 16px;
+    color: #000000;
 }
 
 .btn:hover{
-    background: #888888
+    background: #888888ab
 }

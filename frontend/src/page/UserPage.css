@@ -1,8 +1,132 @@
-body{
-    margin: 0;
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+.user-page{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
 }
-h1{
-    text-align: center;
-    margin-top: 0;
-    margin-bottom: 20px;
+
+/*------------------------------------nav-bar------------------------------------*/
+.nav-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  border-bottom: 1px solid #ddd;
+  background: #fff;
+  position: fixed;  /* dính trên cùng */
+  top: 0;
+  box-sizing: border-box;
+  width: 100%;
+  line-height: 0.5;
+}
+
+.nav-bar .h1 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: bold;
+  font-family: 'Roboto';
+  
+  /* padding-bottom: 2px;
+  border-bottom: 1px solid #ddd; gạch chỉ dưới chữ */
+}
+
+.nav-bar .btn {
+
+  padding: 7px 14px;
+  background: #f7f6f6ff;
+  border: 1px solid #ccccccce;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.btn svg {
+  font-size: 18px;
+}
+
+/*----------------------------------profile-----------------------------------*/
+.profile {
+  display: flex;
+  align-items: center;          /* avatar và info cùng hàng, giữa theo chiều dọc */
+  justify-content: space-between; /* Đẩy avatar trái - username phải */
+  background-color: #fff;         /* Màu nền nếu cần */
+  border-bottom: 1px solid #ddd;  /* Tùy chọn: viền ngăn cách */
+  margin-top: -200px;              /* tạo khoảng cách nhỏ với tabs */
+  gap: 350px;
+}
+
+.profile-in4 {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;      /* chữ canh trái */
+  gap: 8px;
+}
+.profile-in4 h1{
+  margin-bottom: -5px; 
+}
+
+.profile-avt img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/*----------------------------------edit profile-----------------------------------*/
+.edit-btn{
+  margin: 10px 20px;            /* cách đều 2 bên */
+  text-align: center;           /* nút nằm giữa */
+  border: 1px solid #dddddd9a;
+  border-radius: 10px;          /*bo góc */
+  width: 100%;                   /*chiều dài nút */
+  padding: 5px;                 /*chiều rộng */
+  font-size: 15px;
+  font-family: 'Roboto';
+  font-weight: bold;
+  background: #fff;
+  
+}
+
+/*----------------------------------tab-----------------------------------*/
+.tab {
+  display: flex;
+  justify-content: center;
+  gap: 80px;
+  border-bottom: 1px solid #ddd;
+  padding-top: 5px;
+}
+
+.tab-btn {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 15px;
+  color: #6d6c6c;
+  position: relative; /* rất quan trọng để ::after hoạt động */
+  padding-bottom: 6px;
+  transition: color 0.2s ease;
+}
+
+/* tab đang active */
+.tab-btn.active {
+  color: #000;
+  font-weight: 600;
+}
+
+/* gạch dưới tab đang active */
+.tab-btn.active::after {
+  content: "";
+  position: absolute;
+  bottom: 0; /* nằm sát dưới chữ */
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #000;
+  border-radius: 2px;
 }
