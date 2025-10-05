@@ -1,4 +1,4 @@
-import './UserPage.css'
+import './Userpage.css'
 import { useState } from "react";
 import { BsThreeDots, BsThreeDotsVertical } from "react-icons/bs";
 export default function UserPage() {
@@ -13,7 +13,7 @@ export default function UserPage() {
         <div className="user-page">
             <nav className="nav-bar">
                 {/*Header gồm tiêu đề + nút menu*/}
-                <h1><span>Personal Page</span></h1>
+                <h1><span>Profile</span></h1>
                 <button className="btn">
                     ...{/*ba chấm ngang*/}
                 </button>
