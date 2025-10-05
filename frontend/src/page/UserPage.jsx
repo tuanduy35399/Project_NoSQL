@@ -1,4 +1,4 @@
-import './'
+import './UserPage.css'
 import { useState } from "react";
 import { BsThreeDots, BsThreeDotsVertical } from "react-icons/bs";
 export default function UserPage() {
