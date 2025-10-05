@@ -4,7 +4,7 @@ import { BsThreeDots, BsThreeDotsVertical } from "react-icons/bs";
 export default function UserPage() {
     const [activeTab, setActiveTab] = useState("thread");
     const user = {
-        avatar: "./avt.jpg",
+        avatar: "/avt.jpg",
         fullname: "Quynhhh",
         username: "thoconomcarot",
         followers: 0
