@@ -1,4 +1,4 @@
-import ListPost from "../Components/ListPost/ListPost"
+import ListPost from "../../Components/ListPost/ListPost"
 export default function HomePage(){
     return(
         <>
