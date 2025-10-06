@@ -1,4 +1,4 @@
-import './UserPage.css'
+import './test.css'
 import { useState } from "react";
 import { BsThreeDots, BsThreeDotsVertical } from "react-icons/bs";
 export default function UserPage() {
@@ -15,22 +15,21 @@ export default function UserPage() {
                 {/*Header gồm tiêu đề + nút menu*/}
                 <h1><span>Profile</span></h1>
                 <button className="btn">
-                   <BsThreeDots />{/*ba chấm ngang*/}
+                    ...{/*ba chấm ngang*/}
                 </button>
             </nav>
-            <nav className="profile">
-                <div className="profile-in4">
-                    <h1>{user.fullname}</h1>
-                    <p className="name">@{user.username}</p>
-                    <p>{user.followers} followers</p>
-                </div>
-                <div className="profile-avt">
-                    <img src={user.avatar} alt="avt" className="avt" />
-                    <button className="edit-btn">Edit profile</button>
-                </div>
-            </nav>
-            <nav>
-                <div className="tab">
+            <div className="profile-in4">
+                <h1>{user.fullname}</h1>
+                <p>@{user.username}</p>
+                <p>{user.followers} người theo dõi</p>
+            </div>
+            <div className="profile-avt">
+                <img src={user.avatar} alt="avt" className="avt" />
+            </div>
+
+            <button className="edit-btn">Edit profile</button>
+
+            <div className="tab">
                 <button className={`tab-btn ${activeTab === "thread" ? "active" : ""}`}
                     onClick={() => setActiveTab("thread")}>
                     Thread
@@ -49,11 +48,10 @@ export default function UserPage() {
                     Reposts
                 </button>
             </div>
-            </nav>
-            
             <div className='hh'>
+
             </div>
-            
+
         </div>
     )
 }
