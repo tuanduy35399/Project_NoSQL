@@ -29,6 +29,50 @@
     display: flex;
     justify-content: start;
     align-items: center;
-    gap: 10px;
+    gap: 25px;
+    margin: 10px 0;
+}
+[class*="btn"]{
+    width: 40px;
+    height: 30px;
+    border: none;
+    background-color: #ffffff00;
+    cursor: pointer;
+    border-radius: 5px;
+}
+[class*="btn"]:hover{
+    animation: Hover 0.5s ease 0s 1 normal forwards;
+    background-color: rgba(235, 232, 232, 0.499);
+}
+.btn-like{
+    background-repeat: no-repeat;
+    background-position: center;
+    background-image: url("/like.svg");
+}
+.btn-like-active{
+    background-image: url("/likeActive.svg");
+}
+.btn-share{
+    background-repeat: no-repeat;
+    background-position: center;
+    background-image: url("/share.svg");
+}
+.btn-comment{
+    background-repeat: no-repeat;   
+    background-position: center;
+    background-image: url("/comment.svg");
 }
 
+@keyframes Hover {
+	0% {
+		transform: scale(1);
+	}
+
+	50% {
+		transform: scale(1.1);
+	}
+
+	100% {
+		transform: scale(1);
+	}
+}

@@ -1,7 +1,7 @@
 import {Routes, Route} from "react-router-dom"
-import HomePage from "../page/HomePage.jsx"
-import PostPage from "../page/PostPage.jsx"
-import UserPage from "../page/UserPage.jsx"
+import HomePage from "../page/HomePage/HomePage.jsx"
+import PostPage from "../page/PostPage/PostPage.jsx"
+import UserPage from "../page/UserPage/UserPage.jsx"
 export default function Router(){
     return(
         <Routes>
