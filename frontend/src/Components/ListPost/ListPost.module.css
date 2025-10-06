@@ -1,78 +1,79 @@
 .layout{
-    width: 100%;
-    height: 100%;
-    background-color: #FFFF;
-    overflow-y: auto; 
+  width: 100%;
+  height: 100%;
+  background-color: #FFFF;
+  overflow-y: auto;
 }
-.layout::-webkit-scrollbar {
-    display: none;   /* Chrome, Safari */
-}
-.layout {
-    -ms-overflow-style: none;  /* IE, Edge */
-    scrollbar-width: none;     /* Firefox */
-}
+.layout::-webkit-scrollbar { display: none; }
+.layout { -ms-overflow-style: none; scrollbar-width: none; }
+
 .box{
-    height: auto;
-    border-bottom: 1.5px solid rgb(193, 192, 192);
-    padding: 10px;
+  height: auto;
+  border-bottom: 1.5px solid rgb(193, 192, 192);
+  padding: 10px;
 }
-.box:last-child{
-    border: none;
-}
-.user-box{
-    font-weight: bold;
-}
-.desc-box{
+.box:last-child{ border: none; }
 
-}
+.user-box{ font-weight: bold; }
+.desc-box{ }
+
 .status-bar{
-    display: flex;
-    justify-content: start;
-    align-items: center;
-    gap: 25px;
-    margin: 10px 0;
-}
-[class*="btn"]{
-    width: 40px;
-    height: 30px;
-    border: none;
-    background-color: #ffffff00;
-    cursor: pointer;
-    border-radius: 5px;
-}
-[class*="btn"]:hover{
-    animation: Hover 0.5s ease 0s 1 normal forwards;
-    background-color: rgba(235, 232, 232, 0.499);
-}
-.btn-like{
-    background-repeat: no-repeat;
-    background-position: center;
-    background-image: url("/like.svg");
-}
-.btn-like-active{
-    background-image: url("/likeActive.svg");
-}
-.btn-share{
-    background-repeat: no-repeat;
-    background-position: center;
-    background-image: url("/share.svg");
-}
-.btn-comment{
-    background-repeat: no-repeat;   
-    background-position: center;
-    background-image: url("/comment.svg");
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 25px;
+  margin: 10px 0;
 }
 
-@keyframes Hover {
-	0% {
-		transform: scale(1);
-	}
+/* ---- BUTTON CORE ---- */
+.btn{
+  width: 40px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 5px;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.btn:hover{
+  background-color: rgba(235, 232, 232, 0.499);
+}
 
-	50% {
-		transform: scale(1.1);
-	}
+/* Chỉ animate icon bên trong để vùng click không đổi */
+.icon{
+  width: 20px;
+  height: 20px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  transition: transform 120ms ease;
+  will-change: transform;
+  pointer-events: none; /* không chặn click vào button */
+}
+.btn:hover .icon{
+  transform: scale(1.06);
+}
+.btn:active .icon{
+  transform: scale(0.95);
+}
 
-	100% {
-		transform: scale(1);
-	}
+/* ---- ICONS ---- */
+/* Like mặc định & khi đã like */
+.btn-like .icon{
+  background-image: url("/like.svg");
+}
+.btn-like-active .icon{
+  background-image: url("/likeActive.svg");
+}
+
+/* Comment & Share */
+.btn-comment .icon{
+  background-image: url("/comment.svg");
+}
+.btn-share .icon{
+  background-image: url("/share.svg");
 }
