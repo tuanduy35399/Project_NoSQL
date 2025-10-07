@@ -29,26 +29,24 @@ export default function UserPage() {
                     <button className="edit-btn">Edit profile</button>
                 </div>
             </nav>
-            <nav>
-                <div className="tab">
+            <nav className="tab">
                 <button className={`tab-btn ${activeTab === "thread" ? "active" : ""}`}
-                    onClick={() => setActiveTab("thread")}>
+                    onMouseDown={() => setActiveTab("thread")}>
                     Thread
                 </button>
                 <button className={`tab-btn ${activeTab === "reply" ? "active" : ""}`}
-                    onClick={() => setActiveTab("reply")}>
+                    onMouseDown={() => setActiveTab("reply")}>
                     Replies
                 </button>
                 <button className={`tab-btn ${activeTab === "media" ? "active" : ""}`}
-                    onClick={() => setActiveTab("media")}>
+                    onMouseDown={() => setActiveTab("media")}>
                     Media
                 </button>
                 <button
                     className={`tab-btn ${activeTab === "repost" ? "active" : ""}`}
-                    onClick={() => setActiveTab("repost")}>
+                    onMouseDown={() => setActiveTab("repost")}>
                     Reposts
                 </button>
-            </div>
             </nav>
             
             <div className='hh'>

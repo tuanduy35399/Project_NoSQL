@@ -119,7 +119,13 @@
   justify-content: space-around; /* chia đều các tab */
   align-items: center;
   border-bottom: 1px solid #ddd;
-  background-color: #fff;
+  background-color: #ffffff;
+  width: 90%;
+ 
+  position: fixed;      /* giúp tab dính theo khi cuộn */
+  top: 230px;            /* 👈 chỉnh cho nó nằm ngay dưới nút Edit Profile */
+  z-index: 10;
+  margin-top: 50px;     /* 👈 giảm khoảng cách giữa tab và Edit Profile */
 }
 
 .tab-btn {
@@ -147,8 +153,7 @@
   border-bottom: 2px solid #000; /* gạch chân tab đang chọn */
 }
 
-
-/*.hh{
+.hh{
   width: 200px;
   height: 500px;
-}*/
+}
