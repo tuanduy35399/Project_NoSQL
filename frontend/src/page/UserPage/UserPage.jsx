@@ -32,7 +32,7 @@ export default function UserPage() {
             <nav className="tab">
                 <button className={`tab-btn ${activeTab === "thread" ? "active" : ""}`}
                     onMouseDown={() => setActiveTab("thread")}>
-                    Thread
+                    Post
                 </button>
                 <button className={`tab-btn ${activeTab === "reply" ? "active" : ""}`}
                     onMouseDown={() => setActiveTab("reply")}>
