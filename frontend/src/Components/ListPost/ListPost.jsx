@@ -1,13 +1,9 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import style from "./ListPost.module.css";
 import { API } from "../../data.js";
 
 export default function ListPost() {
   const [data, setData] = useState(API);
-
-//   useEffect(() => {
-//     API.then((result) => setData(result));
-//   }, []);
 
   const handleAction = (postId, type) => {
     setData((prevData) =>
@@ -16,7 +12,7 @@ export default function ListPost() {
           if (type === "LIKE") {
             return {
               ...post,
-              liked: !post.liked, // toggle like
+              liked: !post.liked,
               like: post.like + (post.liked ? -1 : 1),
             };
           }
@@ -32,32 +28,62 @@ export default function ListPost() {
     );
   };
 
+  // (Optional) Hỗ trợ bàn phím cho accessibility
+  const handleKey = (e, fn) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      fn();
+    }
+  };
+
   return (
-    <div className={style["layout"]}>
+    <div className={style.layout}>
       {data.map((value) => (
-        <div key={value.id} className={style["box"]}>
+        <div key={value.id} className={style.box}>
           <div className={style["user-box"]}>User: {value.email}</div>
           <div className={style["desc-box"]}>Cảm nghĩ: {value.body}</div>
 
           <div className={style["status-bar"]}>
+            {/* LIKE */}
             <button
-              className={`${style["btn"]} ${style["btn-like"]} ${
+              type="button"
+              className={`${style.btn} ${style["btn-like"]} ${
                 value.liked ? style["btn-like-active"] : ""
               }`}
-              onClick={() => handleAction(value.id, "LIKE")}
-            />
+              aria-label="Like"
+              onMouseDown={() => handleAction(value.id, "LIKE")}
+              onKeyDown={(e) => handleKey(e, () => handleAction(value.id, "LIKE"))}
+            >
+              <span className={style.icon} />
+            </button>
             <span>{value.like}</span>
 
+            {/* COMMENT */}
             <button
-              className={`${style["btn"]} ${style["btn-comment"]}`}
-              onClick={() => handleAction(value.id, "COMMENT")}
-            />
+              type="button"
+              className={`${style.btn} ${style["btn-comment"]}`}
+              aria-label="Comment"
+              onMouseDown={() => handleAction(value.id, "COMMENT")}
+              onKeyDown={(e) =>
+                handleKey(e, () => handleAction(value.id, "COMMENT"))
+              }
+            >
+              <span className={style.icon} />
+            </button>
             <span>{value.comment}</span>
 
+            {/* SHARE */}
             <button
-              className={`${style["btn"]} ${style["btn-share"]}`}
-              onClick={() => handleAction(value.id, "SHARE")}
-            />
+              type="button"
+              className={`${style.btn} ${style["btn-share"]}`}
+              aria-label="Share"
+              onMouseDown={() => handleAction(value.id, "SHARE")}
+              onKeyDown={(e) =>
+                handleKey(e, () => handleAction(value.id, "SHARE"))
+              }
+            >
+              <span className={style.icon} />
+            </button>
             <span>{value.share}</span>
           </div>
         </div>
