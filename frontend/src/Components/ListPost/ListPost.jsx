@@ -44,19 +44,19 @@ export default function ListPost() {
               className={`${style["btn"]} ${style["btn-like"]} ${
                 value.liked ? style["btn-like-active"] : ""
               }`}
-              onClick={() => handleAction(value.id, "LIKE")}
+              onMouseDown={() => handleAction(value.id, "LIKE")}
             />
             <span>{value.like}</span>
 
             <button
               className={`${style["btn"]} ${style["btn-comment"]}`}
-              onClick={() => handleAction(value.id, "COMMENT")}
+              onMouseDown={() => handleAction(value.id, "COMMENT")}
             />
             <span>{value.comment}</span>
 
             <button
               className={`${style["btn"]} ${style["btn-share"]}`}
-              onClick={() => handleAction(value.id, "SHARE")}
+              onMouseDown={() => handleAction(value.id, "SHARE")}
             />
             <span>{value.share}</span>
           </div>
