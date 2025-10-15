@@ -45,10 +45,19 @@ function App() {
     });
   };
 
-  // 👇 Nếu đang ở /signin thì chỉ render SignIn
+  // Nếu đang ở /signin thì chỉ render SignIn
   if (location.pathname === "/signin") {
     return (
       <div className={appCSS["signin-page"]}>
+        <Router />
+      </div>
+    );
+  }
+
+  //Nếu đang ở /signup thì chỉ render Signup
+  if (location.pathname === "/signup") {
+    return (
+      <div className={appCSS["signup-page"]}>
         <Router />
       </div>
     );

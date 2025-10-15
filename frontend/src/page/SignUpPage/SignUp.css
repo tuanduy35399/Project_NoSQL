@@ -1,0 +1,87 @@
+.signup-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  background-color: #fff;
+
+  background-image: url("/SOUL-SPACE.svg"); /* đường dẫn tới ảnh */
+  background-size: cover; /* ảnh phủ kín */
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.signup-form {
+  background: #fff;
+  padding: 40px 45px;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  max-width: 380px;
+  text-align: left;
+}
+
+.signup-form h2 {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 25px;
+  color: #111;
+}
+
+.signup-form label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+
+.signup-form input {
+  width: 100%;
+  padding: 10px 12px;
+  margin-bottom: 16px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  outline: none;
+  font-size: 15px;
+  transition: border 0.2s;
+  box-sizing: border-box;
+}
+
+.signup-form input:focus {
+  border-color: #000;
+}
+
+.signup-btn {
+  width: 100%;
+  padding: 10px;
+  background: #000;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.signup-btn:hover {
+  background: #333;
+}
+
+.signin-link {
+  text-align: center;
+  margin-top: 16px;
+  font-size: 14px;
+  color: #555;
+}
+
+.signin-link a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.signin-link a:hover {
+  text-decoration: underline;
+}
