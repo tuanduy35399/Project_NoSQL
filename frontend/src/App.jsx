@@ -1,74 +1,5 @@
-// import { useState } from "react";
-// import {
-//   DndContext, 
-//   closestCenter,
-//   KeyboardSensor,
-//   PointerSensor,
-//   useSensor,
-//   useSensors,
-// } from '@dnd-kit/core';
-// import {
-//   arrayMove,
-//   SortableContext,
-//   sortableKeyboardCoordinates,
-//   verticalListSortingStrategy,
-// } from '@dnd-kit/sortable';
-
-// import {SortableItem} from './SortableItem';
-// import appCSS from "./App.module.css";
-// import Navigation from "./Components/Navigation/Navigation";
-// import Router from "./routes/Routes";
-// import Login from "./Components/Login/Login";
-// import Explore from "./page/ExplorePage/Explore";
-
-// function App() {
-//   const [showSecond, setShowSecond] = useState(false);
-//   const [isGuest, setGuest]= useState(false);
-//   const [items, setItems] = useState([1, 2, 3]);
-//   const sensors = useSensors(
-//     useSensor(PointerSensor),
-//     useSensor(KeyboardSensor, {
-//       coordinateGetter: sortableKeyboardCoordinates,
-//     })
-//   );
-//   return (
-//     <>
-//       <div className={appCSS["layout-web"]}>
-//         {/* Cột điều hướng */}
-//         <div className={appCSS["nav"]}>
-//           <Navigation showPage={()=>setShowSecond(!showSecond)}/>
-            
-//         </div>
-
-//         {/* Container các page */}
-        
-//         <div
-//           className={`${appCSS["pages-container"]} ${
-//             showSecond ? appCSS["two"] : appCSS["one"]
-//           }`}
-//         >
-          
-//           {/* Page Render 1 */}
-//           <div className={appCSS["page-render"]}>
-//               <Router />
-//           </div>
-          
-//           {/* Explore */}
-//           {showSecond && (
-//             <div className={appCSS["box-explore"]}>
-//               <Explore />
-//             </div>
-//           )}
-//           {!isGuest && <Login guest={setGuest}/>}
-//         </div>
-//       </div>
-//     </>
-//   );
-// }
-
-// export default App;
-
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 import {
   DndContext,
   closestCenter,
@@ -92,17 +23,15 @@ import Login from "./Components/Login/Login";
 import Explore from "./page/ExplorePage/Explore";
 
 function App() {
-  const [showSecond, setShowSecond] = useState(false); 
+  const [showSecond, setShowSecond] = useState(false);
   const [isGuest, setGuest] = useState(false);
+  const location = useLocation(); // 👈 lấy đường dẫn hiện tại
 
-  // items: danh sách ID của các box
   const [items, setItems] = useState(["page", "explore"]);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
 
   const handleDragEnd = (event) => {
@@ -116,14 +45,21 @@ function App() {
     });
   };
 
+  // 👇 Nếu đang ở /signin thì chỉ render SignIn
+  if (location.pathname === "/signin") {
+    return (
+      <div className={appCSS["signin-page"]}>
+        <Router />
+      </div>
+    );
+  }
+
   return (
     <div className={appCSS["layout-web"]}>
-      {/* Cột điều hướng */}
       <div className={appCSS["nav"]}>
         <Navigation showPage={() => setShowSecond(!showSecond)} />
       </div>
 
-      {/* Container các page */}
       <DndContext
         sensors={sensors}
         collisionDetection={closestCenter}
