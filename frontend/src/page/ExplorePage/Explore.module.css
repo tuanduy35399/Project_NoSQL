@@ -20,6 +20,7 @@
   border: 1.5px solid rgb(193, 192, 192);
   background-color: rgba(239, 237, 237, 0.393);
   box-sizing: border-box;
+  outline: none;
 }
 .box-explore{
   flex: 1;

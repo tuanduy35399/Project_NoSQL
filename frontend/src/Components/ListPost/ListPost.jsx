@@ -4,7 +4,7 @@ import { API } from "../../data.js";
 
 export default function ListPost() {
   const [data, setData] = useState(API);
-
+  
   const handleAction = (postId, type) => {
     setData((prevData) =>
       prevData.map((post) => {
@@ -51,8 +51,7 @@ export default function ListPost() {
                 value.liked ? style["btn-like-active"] : ""
               }`}
               aria-label="Like"
-              onMouseDown={() => handleAction(value.id, "LIKE")}
-              onKeyDown={(e) => handleKey(e, () => handleAction(value.id, "LIKE"))}
+              onClick={() => handleAction(value.id, "LIKE")}
             >
               <span className={style.icon} />
             </button>
@@ -63,10 +62,7 @@ export default function ListPost() {
               type="button"
               className={`${style.btn} ${style["btn-comment"]}`}
               aria-label="Comment"
-              onMouseDown={() => handleAction(value.id, "COMMENT")}
-              onKeyDown={(e) =>
-                handleKey(e, () => handleAction(value.id, "COMMENT"))
-              }
+              onClick={() => handleAction(value.id, "COMMENT")}
             >
               <span className={style.icon} />
             </button>
@@ -77,10 +73,7 @@ export default function ListPost() {
               type="button"
               className={`${style.btn} ${style["btn-share"]}`}
               aria-label="Share"
-              onMouseDown={() => handleAction(value.id, "SHARE")}
-              onKeyDown={(e) =>
-                handleKey(e, () => handleAction(value.id, "SHARE"))
-              }
+              onClick={() => handleAction(value.id, "SHARE")}
             >
               <span className={style.icon} />
             </button>

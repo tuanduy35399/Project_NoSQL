@@ -1,0 +1,33 @@
+.infor{
+    
+}
+.input{
+    border-radius: 10px;
+    width: 550px;
+    height: 400px;
+    padding-left: 20px;
+    padding-top: 20px;
+    font-size: 20px;
+}
+.post-content{
+
+}
+
+textarea{
+    resize: none;
+    border: none;
+    background-color: rgba(193, 192, 192, 0.281);
+    outline: none;
+}
+
+.buttonPost{
+    width: 100px;
+    height: 50px;
+    border-radius: 10px;
+    border: none;
+    background-color: rgba(193, 192, 192, 0.281);
+    margin-right: 10px;
+}
+.buttonPost:hover{
+    background-color: rgb(193, 192, 192);
+}
