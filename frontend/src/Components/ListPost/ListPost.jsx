@@ -1,10 +1,25 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import style from "./ListPost.module.css";
-import { API } from "../../data.js";
+import axios from "axios";
+// import { API } from "../../data.js";
 
 export default function ListPost() {
-  const [data, setData] = useState(API);
+  const [data, setData] = useState([]);
+  const API =  async ()=>{
+    try{
+      const rs = await axios.get('http://localhost:8080/api/v1/blogs/68f3ee73899d3611c9cfc4ef');
+      setData([rs.data])
+    }catch(error){
+      alert('Loi data');
+      console.log('loi data');
+    }
+    }
+    
+  useEffect(()=>{
+    API();
+  }, []);
   
+  // console.log(data);
   const handleAction = (postId, type) => {
     setData((prevData) =>
       prevData.map((post) => {
@@ -40,8 +55,8 @@ export default function ListPost() {
     <div className={style.layout}>
       {data.map((value) => (
         <div key={value.id} className={style.box}>
-          <div className={style["user-box"]}>User: {value.email}</div>
-          <div className={style["desc-box"]}>Cảm nghĩ: {value.body}</div>
+          <div className={style["user-box"]}>User: {value.userName}</div>
+          <div className={style["desc-box"]}>Cảm nghĩ: {value.content}</div>
 
           <div className={style["status-bar"]}>
             {/* LIKE */}
@@ -55,7 +70,7 @@ export default function ListPost() {
             >
               <span className={style.icon} />
             </button>
-            <span>{value.like}</span>
+            <span>{value.likeCount}</span>
 
             {/* COMMENT */}
             <button
@@ -66,7 +81,7 @@ export default function ListPost() {
             >
               <span className={style.icon} />
             </button>
-            <span>{value.comment}</span>
+            <span>{value.commentCount}</span>
 
             {/* SHARE */}
             <button
@@ -77,7 +92,7 @@ export default function ListPost() {
             >
               <span className={style.icon} />
             </button>
-            <span>{value.share}</span>
+            <span>{value.shareCount}</span>
           </div>
         </div>
       ))}

@@ -1,33 +1,107 @@
-.infor{
-    
-}
-.input{
-    border-radius: 10px;
-    width: 550px;
-    height: 400px;
-    padding-left: 20px;
-    padding-top: 20px;
-    font-size: 20px;
-}
-.post-content{
-
+textarea {
+  width: 30vw;
+  padding-left: 20px;
+  font-size: 20px;
+  min-height: 300px;
+  resize:none;
+  border-left: 2px solid rgba(0, 0, 0, 0.281);
+  border-top: none;
+  border-right: none;
+  border-bottom: none;
+  outline: none;
 }
 
-textarea{
-    resize: none;
-    border: none;
-    background-color: rgba(193, 192, 192, 0.281);
-    outline: none;
+/* Nút đăng bài */
+.buttonPost-1 {
+  width: 30px;
+  height: 30px;
+  border-radius: 10px;
+  border: none;
+  background-color: rgba(193, 192, 192, 0);
+  margin-right: 10px;
+  background-image: url("./write.svg");
+  background-repeat: no-repeat;
+  background-size: contain;
+  cursor: pointer;
 }
 
-.buttonPost{
-    width: 100px;
-    height: 50px;
-    border-radius: 10px;
-    border: none;
-    background-color: rgba(193, 192, 192, 0.281);
-    margin-right: 10px;
+.buttonPost-1:hover {
+  background-color: rgb(193, 192, 192);
 }
-.buttonPost:hover{
-    background-color: rgb(193, 192, 192);
+
+/* Nút chọn file bằng hình post.png */
+.fileInput {
+  display: none;
+}
+
+.buttonPost-2 {
+  width: 30px;
+  height: 30px;
+  border-radius: 10px;
+  border: none;
+  background-color: rgba(193, 192, 192, 0);
+  margin-right: 10px;
+  background-image: url("./image.svg");
+  background-repeat: no-repeat;
+  background-size: contain;
+  cursor: pointer;
+}
+
+.buttonPost-2:hover {
+  background-color: rgb(193, 192, 192);
+}
+
+.option1 {
+  display: flex;
+  gap: 20px;
+  justify-content: flex-start;
+  margin-top: 10px;
+}
+
+
+/* Hiển thị ảnh preview */
+.previewContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.previewWrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.previewImage {
+  max-width: 500px;
+  max-height: 500px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+  padding: 3px;
+}
+
+/* Nút xóa ảnh */
+.removeButton {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: center;
+  transition: 0.2s;
+}
+
+.removeButton:hover {
+  background-color: red;
 }
