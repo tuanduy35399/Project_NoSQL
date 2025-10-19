@@ -42,9 +42,11 @@
   background: #fff;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   animation: pop 0.2s ease 0s normal forwards;
   padding: 20px;
+  overflow-y: auto;
+  scrollbar-width: none;
 }
 
 @keyframes pop {

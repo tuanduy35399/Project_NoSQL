@@ -1,10 +1,25 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import style from "./ListPost.module.css";
-import { API } from "../../data.js";
+import axios from "axios";
+// import { API } from "../../data.js";
 
 export default function ListPost() {
-  const [data, setData] = useState(API);
-
+  const [data, setData] = useState([]);
+  const API =  async ()=>{
+    try{
+      const rs = await axios.get('http://localhost:8080/api/v1/blogs/68f3ee73899d3611c9cfc4ef');
+      setData([rs.data])
+    }catch(error){
+      alert('Loi data');
+      console.log('loi data');
+    }
+    }
+    
+  useEffect(()=>{
+    API();
+  }, []);
+  
+  // console.log(data);
   const handleAction = (postId, type) => {
     setData((prevData) =>
       prevData.map((post) => {
@@ -40,8 +55,8 @@ export default function ListPost() {
     <div className={style.layout}>
       {data.map((value) => (
         <div key={value.id} className={style.box}>
-          <div className={style["user-box"]}>User: {value.email}</div>
-          <div className={style["desc-box"]}>Cảm nghĩ: {value.body}</div>
+          <div className={style["user-box"]}>User: {value.userName}</div>
+          <div className={style["desc-box"]}>Cảm nghĩ: {value.content}</div>
 
           <div className={style["status-bar"]}>
             {/* LIKE */}
@@ -51,40 +66,33 @@ export default function ListPost() {
                 value.liked ? style["btn-like-active"] : ""
               }`}
               aria-label="Like"
-              onMouseDown={() => handleAction(value.id, "LIKE")}
-              onKeyDown={(e) => handleKey(e, () => handleAction(value.id, "LIKE"))}
+              onClick={() => handleAction(value.id, "LIKE")}
             >
               <span className={style.icon} />
             </button>
-            <span>{value.like}</span>
+            <span>{value.likeCount}</span>
 
             {/* COMMENT */}
             <button
               type="button"
               className={`${style.btn} ${style["btn-comment"]}`}
               aria-label="Comment"
-              onMouseDown={() => handleAction(value.id, "COMMENT")}
-              onKeyDown={(e) =>
-                handleKey(e, () => handleAction(value.id, "COMMENT"))
-              }
+              onClick={() => handleAction(value.id, "COMMENT")}
             >
               <span className={style.icon} />
             </button>
-            <span>{value.comment}</span>
+            <span>{value.commentCount}</span>
 
             {/* SHARE */}
             <button
               type="button"
               className={`${style.btn} ${style["btn-share"]}`}
               aria-label="Share"
-              onMouseDown={() => handleAction(value.id, "SHARE")}
-              onKeyDown={(e) =>
-                handleKey(e, () => handleAction(value.id, "SHARE"))
-              }
+              onClick={() => handleAction(value.id, "SHARE")}
             >
               <span className={style.icon} />
             </button>
-            <span>{value.share}</span>
+            <span>{value.shareCount}</span>
           </div>
         </div>
       ))}
