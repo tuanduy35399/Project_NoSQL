@@ -1,15 +1,42 @@
 import React, { useState } from 'react';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import './SignIn.css';
 
 const SignIn = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate(); // dùng để chuyển trang sau khi login
 
-  const handleSignIn = (e) => {
+  const handleSignIn = async (e) => {
     e.preventDefault();
-    console.log('Đang đăng nhập với:', { username, password });
-    // TODO: Thêm logic xử lý đăng nhập tại đây
+
+    try {
+      const response = await fetch("http://localhost:8080/auth/log-in", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.result.authentication) {
+        alert("Đăng nhập thất bại");
+        return;
+      }
+
+      // Lưu thông tin đăng nhập (chỉ username ở đây)
+      localStorage.setItem("user", JSON.stringify({ username }));
+
+      alert("Đăng nhập thành công!");
+      console.log("User đã đăng nhập:", username);
+
+      // Chuyển sang trang dashboard/home
+      navigate("/home");
+
+    } catch (error) {
+      console.error("Lỗi kết nối:", error);
+      alert("Không thể kết nối đến server");
+    }
   };
 
   return (

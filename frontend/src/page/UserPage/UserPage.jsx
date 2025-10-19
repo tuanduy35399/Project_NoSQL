@@ -1,13 +1,22 @@
 import './UserPage.css'
 import { useState } from "react";
 import { BsThreeDots, BsThreeDotsVertical } from "react-icons/bs";
+import Edit from "../../Components/EditProfile/Edit"; 
 export default function UserPage() {
     const [activeTab, setActiveTab] = useState("thread");
+    const [showEdit, setShowEdit] = useState(false);
     const user = {
         avatar: "/avt.jpg",
         fullname: "Quynhhh",
         username: "thoconomcarot",
         followers: 0
+    };
+    const handleEditClick = () => {
+        setShowEdit(true);
+    };
+
+    const handleClose = () => {
+        setShowEdit(false);
     };
     return (
         <div className="user-page">
@@ -15,7 +24,7 @@ export default function UserPage() {
                 {/*Header gồm tiêu đề + nút menu*/}
                 <h1><span>Profile</span></h1>
                 <button className="btn">
-                   <BsThreeDots />{/*ba chấm ngang*/}
+                    <BsThreeDots />{/*ba chấm ngang*/}
                 </button>
             </nav>
             <nav className="profile">
@@ -26,7 +35,9 @@ export default function UserPage() {
                 </div>
                 <div className="profile-avt">
                     <img src={user.avatar} alt="avt" className="avt" />
-                    <button className="edit-btn">Edit profile</button>
+                    <button className="edit-btn" onMouseDown={handleEditClick}>
+                        Edit profile
+                    </button>
                 </div>
             </nav>
             <nav className="tab">
@@ -48,10 +59,17 @@ export default function UserPage() {
                     Reposts
                 </button>
             </nav>
-            
-            <div className='hh'>
-            </div>
-            
+
+            {showEdit && (
+                <div className="overlay">
+                    <div className="modal">
+                        <Edit />
+                        <button className="close-btn" onClick={handleClose}>
+                            Đóng
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }
