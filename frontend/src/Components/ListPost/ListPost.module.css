@@ -4,6 +4,19 @@
   background-color: #FFFF;
   overflow-y: auto;
 }
+.header_post {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  margin-bottom: 5px;
+  gap: 10px;
+}
+.avatar_user {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: aqua;
+}
 .layout::-webkit-scrollbar { display: none; }
 .layout { -ms-overflow-style: none; scrollbar-width: none; }
 
@@ -76,4 +89,16 @@
 }
 .btn-share .icon{
   background-image: url("/share.svg");
+}
+
+.picture {
+  max-width: 500px;
+  max-height: 500px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+  padding: 3px;
 }

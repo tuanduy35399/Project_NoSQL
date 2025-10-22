@@ -5,7 +5,7 @@ import style from "./PostPage.module.css";
 
 export default function PostPage() {
   const [body, setBody] = useState("");
-  const [published, setPublished] = useState(false);
+  const [option, setOption] = useState("publish");
   const [files, setFiles] = useState([]);
   const [previewUrls, setPreviewUrls] = useState([]);
   const navigate = useNavigate();
@@ -39,7 +39,7 @@ export default function PostPage() {
       const formData = new FormData();
       formData.append("userId", "1"); //fake user id
       formData.append("content", body);
-      formData.append("published", published);
+      formData.append("published", option);
       files.forEach((file) => formData.append("files", file));
 
       await axios.post("http://localhost:8080/api/v1/upload", formData, {
@@ -50,7 +50,6 @@ export default function PostPage() {
       setFiles([]);
       setPreviewUrls([]);
       if (fileInputRef.current) fileInputRef.current.value = "";
-
       alert("Post successful!");
       navigate("/home");
     } catch (error) {
@@ -71,10 +70,15 @@ export default function PostPage() {
   return (
     <div>
       <div className={style.infor}>
-        <center><h2>Make your new post</h2></center>
+        <h2>Make your new post</h2>
       </div>
-
       <div className={style["post-content"]}>
+        <div className={style.header_post}>
+          <div className={style.avatar_user}>{/* <img src={url}></img> */}</div>
+          <strong>
+            <span>Username</span>
+          </strong>
+        </div>
         <textarea
           placeholder="Start a new post..."
           className={style.input}
@@ -87,7 +91,11 @@ export default function PostPage() {
       <div className={style.previewContainer}>
         {previewUrls.map((url, index) => (
           <div key={index} className={style.previewWrapper}>
-            <img src={url} alt={`preview-${index}`} className={style.previewImage} />
+            <img
+              src={url}
+              alt={`preview-${index}`}
+              className={style.previewImage}
+            />
             <button
               type="button"
               className={style.removeButton}
@@ -99,28 +107,28 @@ export default function PostPage() {
         ))}
       </div>
 
-      <div className={style.option1}>
-          <label>
-            <input
-              type="checkbox"
-              checked={published}
-              onChange={(e) => setPublished(e.target.checked)}
-            /> Publish
-          </label>
+      <div className={style.option}>
+        <select className={style.selectForm} value={option} onChange={(e)=>setOption(e.target.value)}>
+          <option value="publish">Publish</option>
+          <option value="private">Private</option>
+        </select>
 
-          {/* Nút chọn file bằng hình post.png */}
-          <label htmlFor="fileInput" className={style["buttonPost-2"]}></label>
-          <input
-            id="fileInput"
-            type="file"
-            multiple
-            ref={fileInputRef}
-            onChange={handleFileChange}
-            className={style.fileInput}
-          />
+        {/* Nút chọn file bằng hình post.png */}
+        <label htmlFor="fileInput" className={style["buttonPost-2"]}></label>
+        <input
+          id="fileInput"
+          type="file"
+          multiple
+          ref={fileInputRef}
+          onChange={handleFileChange}
+          className={style.fileInput}
+        />
 
         {/* Nút đăng bài */}
-        <button className={style["buttonPost-1"]} onClick={handleSubmit}></button>
+        <button
+          className={style["buttonPost-1"]}
+          onClick={handleSubmit}
+        ></button>
       </div>
     </div>
   );

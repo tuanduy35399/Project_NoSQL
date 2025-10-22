@@ -7,11 +7,11 @@ export default function ListPost() {
   const [data, setData] = useState([]);
   const API =  async ()=>{
     try{
-      const rs = await axios.get('http://localhost:8080/api/v1/blogs/68f3ee73899d3611c9cfc4ef');
+      const rs = await axios.get('http://localhost:8080/api/v1/blogs/68f3e9ace3b2d8fdce241a4c');
       setData([rs.data])
     }catch(error){
-      alert('Loi data');
-      console.log('loi data');
+      alert("Error to connect database");
+      console.log("Error to connect database", error);
     }
     }
     
@@ -28,14 +28,14 @@ export default function ListPost() {
             return {
               ...post,
               liked: !post.liked,
-              like: post.like + (post.liked ? -1 : 1),
+              like: post.likeCount + (post.likeCount ? -1 : 1),
             };
           }
           if (type === "COMMENT") {
-            return { ...post, comment: post.comment + 1 };
+            return { ...post, comment: post.commentCount + 1 };
           }
           if (type === "SHARE") {
-            return { ...post, share: post.share + 1 };
+            return { ...post, share: post.shareCount+ 1 };
           }
         }
         return post;
@@ -43,23 +43,25 @@ export default function ListPost() {
     );
   };
 
-  // (Optional) Hỗ trợ bàn phím cho accessibility
-  const handleKey = (e, fn) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      fn();
-    }
-  };
-
   return (
     <div className={style.layout}>
       {data.map((value) => (
-        <div key={value.id} className={style.box}>
-          <div className={style["user-box"]}>User: {value.userName}</div>
-          <div className={style["desc-box"]}>Cảm nghĩ: {value.content}</div>
-
+        <div key={value.userId} className={style.box}>
+          <div className={style["post-content"]}>
+                  <div className={style.header_post}>
+                    <div className={style.avatar_user}>
+                      {/* <img src={url}></img> */}
+                    </div>
+                    <div className={style["user-box"]}>{value.userId}</div>
+                  </div>
+          </div>
+          <div className={style["desc-box"]}>{value.content}</div>
+          {
+              value.imageUrls.map((value)=>(
+                  <img src={value} className={style["picture"]}></img>
+              ))  
+          }
           <div className={style["status-bar"]}>
-            {/* LIKE */}
             <button
               type="button"
               className={`${style.btn} ${style["btn-like"]} ${

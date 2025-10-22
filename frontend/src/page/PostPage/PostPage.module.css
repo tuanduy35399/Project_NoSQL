@@ -1,5 +1,5 @@
 textarea {
-  width: 30vw;
+  width: 35vw;
   padding-left: 20px;
   font-size: 20px;
   min-height: 300px;
@@ -10,23 +10,44 @@ textarea {
   border-bottom: none;
   outline: none;
 }
-
+.avatar_user{
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: aqua;
+}
+.selectForm{
+  border-radius: 5px;
+  background-color: white;
+  border: 2px solid black;
+  cursor: pointer;
+}
+.selectForm:hover{
+  background-color: rgba(193, 192, 192, 0.295);
+}
+.header_post{
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  margin-left: -25px;
+  margin-bottom: 5px;
+  gap: 10px;
+}
 /* Nút đăng bài */
 .buttonPost-1 {
-  width: 30px;
-  height: 30px;
+  width: 35px;
+  height: 35px;
   border-radius: 10px;
   border: none;
   background-color: rgba(193, 192, 192, 0);
-  margin-right: 10px;
-  background-image: url("./write.svg");
+  background-image: url("./3512833.png");
   background-repeat: no-repeat;
   background-size: contain;
   cursor: pointer;
 }
 
 .buttonPost-1:hover {
-  background-color: rgb(193, 192, 192);
+  background-color: rgba(193, 192, 192, 0.295);
 }
 
 /* Nút chọn file bằng hình post.png */
@@ -35,25 +56,26 @@ textarea {
 }
 
 .buttonPost-2 {
-  width: 30px;
-  height: 30px;
+  width: 35px;
+  height: 35px;
   border-radius: 10px;
   border: none;
   background-color: rgba(193, 192, 192, 0);
-  margin-right: 10px;
-  background-image: url("./image.svg");
+  background-image: url("./3554808.png");
   background-repeat: no-repeat;
   background-size: contain;
   cursor: pointer;
 }
 
 .buttonPost-2:hover {
-  background-color: rgb(193, 192, 192);
+  background-color: rgba(193, 192, 192, 0.295);
 }
 
-.option1 {
+.option {
+  width: 400px;
+  height: 33px;
   display: flex;
-  gap: 20px;
+  gap: 15px;
   justify-content: flex-start;
   margin-top: 10px;
 }
@@ -104,4 +126,11 @@ textarea {
 
 .removeButton:hover {
   background-color: red;
+}
+.infor{
+  width: auto;
+  height: 47px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
