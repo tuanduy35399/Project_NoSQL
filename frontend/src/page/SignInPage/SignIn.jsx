@@ -11,31 +11,31 @@ const SignIn = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:8080/auth/log-in", {
+      const res = await fetch("http://localhost:8080/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({ username, password }),
       });
 
-      const data = await response.json();
-
-      if (!response.ok || !data.result.authentication) {
-        alert("Đăng nhập thất bại");
+      if (!res.ok) {
+        // nếu BE trả lỗi (404, 500, ...)
+        alert("Incorrect username or password!");
         return;
       }
 
-      // Lưu thông tin đăng nhập (chỉ username ở đây)
-      localStorage.setItem("user", JSON.stringify({ username }));
+      const data = await res.json();
 
-      alert("Đăng nhập thành công!");
-      console.log("User đã đăng nhập:", username);
-
-      // Chuyển sang trang dashboard/home
-      navigate("/home");
+      if (data.result === true) {
+        alert("Signed in successfully!");
+        navigate("/home");
+      } else {
+        alert("Incorrect username or password!");
+      }
 
     } catch (error) {
-      console.error("Lỗi kết nối:", error);
-      alert("Không thể kết nối đến server");
+      console.error("Lỗi:", error);
+      alert("Cannot connect to server!");
     }
   };
 

@@ -1,41 +1,53 @@
 import { useState } from "react";
-import "./Edit.css"; // import CSS riêng
+import "./Edit.css";
 
-export default function Edit() {
-  const [formData, setFormData] = useState({
-    name: "Hiếu Nhân (@hn6_4)",
-    bio: "",
-    interest: "",
-    link: ""
-  });
+export default function Edit({ user, onClose, onSave }) {
+  const [formData, setFormData] = useState(user); // ✅ lấy dữ liệu từ props
 
   const handleChange = (field, value) => {
     setFormData({ ...formData, [field]: value });
   };
 
   const handleSubmit = () => {
-    console.log("Submitted:", formData, { showInstagram, isPrivate });
+    if (onSave) onSave(formData); // ✅ gửi dữ liệu mới về UserPage
   };
 
   return (
-    <div className="profile-container">
-      <div className="profile-card">
-        {/* Name */}
+    <div className="overlay">
+      <div className="edit-modal">
+        {/* Header */}
+        <div className="edit-header">
+          <h2>Edit Profile</h2>
+          <button className="close-icon" onClick={onClose}>×</button>
+        </div>
+
+        {/* Full Name */}
         <div className="profile-field">
-          <label className="profile-label">Tên</label>
+          <label className="profile-label">Full Name</label>
           <input
             type="text"
-            value={formData.name}
-            onChange={(e) => handleChange("name", e.target.value)}
+            value={formData.fullname}
+            onChange={(e) => handleChange("fullname", e.target.value)}
+            className="profile-input"
+          />
+        </div>
+
+        {/* Username */}
+        <div className="profile-field">
+          <label className="profile-label">Username</label>
+          <input
+            type="text"
+            value={formData.username}
+            onChange={(e) => handleChange("username", e.target.value)}
             className="profile-input"
           />
         </div>
 
         {/* Bio */}
         <div className="profile-field">
-          <label className="profile-label">Tiểu sử</label>
+          <label className="profile-label">Bio</label>
           <textarea
-            placeholder="+ Viết tiểu sử"
+            placeholder="Write biography"
             value={formData.bio}
             onChange={(e) => handleChange("bio", e.target.value)}
             className="profile-textarea"
@@ -44,9 +56,9 @@ export default function Edit() {
 
         {/* Link */}
         <div className="profile-field">
-          <label className="profile-label">Liên kết</label>
+          <label className="profile-label">Link</label>
           <input
-            placeholder="+ Thêm liên kết"
+            placeholder="Add link"
             value={formData.link}
             onChange={(e) => handleChange("link", e.target.value)}
             className="profile-input"
@@ -55,7 +67,7 @@ export default function Edit() {
 
         {/* Button */}
         <button className="profile-button" onClick={handleSubmit}>
-          Xong
+          Done
         </button>
       </div>
     </div>

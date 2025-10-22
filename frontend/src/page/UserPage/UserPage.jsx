@@ -1,16 +1,22 @@
 import './UserPage.css'
 import { useState } from "react";
-import { BsThreeDots, BsThreeDotsVertical } from "react-icons/bs";
-import Edit from "../../Components/EditProfile/Edit"; 
+import { BsThreeDots } from "react-icons/bs";
+import Edit from "../../Components/EditProfile/Edit";
+
 export default function UserPage() {
     const [activeTab, setActiveTab] = useState("thread");
     const [showEdit, setShowEdit] = useState(false);
-    const user = {
+
+    // Dữ liệu user có thể thay đổi
+    const [user, setUser] = useState({
         avatar: "/avt.jpg",
         fullname: "Quynhhh",
         username: "thoconomcarot",
-        followers: 0
-    };
+        bio: "Write biography",
+        link: "",
+        followers: 0,
+    });
+
     const handleEditClick = () => {
         setShowEdit(true);
     };
@@ -18,20 +24,31 @@ export default function UserPage() {
     const handleClose = () => {
         setShowEdit(false);
     };
+
+    // Khi nhấn Done trong Edit
+    const handleSave = (updatedUser) => {
+        setUser(updatedUser);
+        setShowEdit(false);
+    };
+
     return (
         <div className="user-page">
+            {/* Header */}
             <nav className="nav-bar">
-                {/*Header gồm tiêu đề + nút menu*/}
                 <h1><span>Profile</span></h1>
                 <button className="btn">
-                    <BsThreeDots />{/*ba chấm ngang*/}
+                    <BsThreeDots />
                 </button>
             </nav>
+
+            {/* Profile info */}
             <nav className="profile">
                 <div className="profile-in4">
                     <h1>{user.fullname}</h1>
                     <p className="name">@{user.username}</p>
                     <p>{user.followers} followers</p>
+                    {user.bio && <p className='bio'>{user.bio}</p>}
+                    {user.link && <a href={user.link}>{user.link}</a>}
                 </div>
                 <div className="profile-avt">
                     <img src={user.avatar} alt="avt" className="avt" />
@@ -40,36 +57,28 @@ export default function UserPage() {
                     </button>
                 </div>
             </nav>
+
+            {/* Tabs */}
             <nav className="tab">
-                <button className={`tab-btn ${activeTab === "thread" ? "active" : ""}`}
-                    onMouseDown={() => setActiveTab("thread")}>
-                    Post
-                </button>
-                <button className={`tab-btn ${activeTab === "reply" ? "active" : ""}`}
-                    onMouseDown={() => setActiveTab("reply")}>
-                    Replies
-                </button>
-                <button className={`tab-btn ${activeTab === "media" ? "active" : ""}`}
-                    onMouseDown={() => setActiveTab("media")}>
-                    Media
-                </button>
-                <button
-                    className={`tab-btn ${activeTab === "repost" ? "active" : ""}`}
-                    onMouseDown={() => setActiveTab("repost")}>
-                    Reposts
-                </button>
+                {["thread", "reply", "media", "repost"].map((tab) => (
+                    <button
+                        key={tab}
+                        className={`tab-btn ${activeTab === tab ? "active" : ""}`}
+                        onMouseDown={() => setActiveTab(tab)}
+                    >
+                        {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                    </button>
+                ))}
             </nav>
 
+            {/* Hiển thị Edit modal */}
             {showEdit && (
-                <div className="overlay">
-                    <div className="modal">
-                        <Edit />
-                        <button className="close-btn" onClick={handleClose}>
-                            Đóng
-                        </button>
-                    </div>
-                </div>
+                <Edit
+                    user={user}
+                    onClose={handleClose}
+                    onSave={handleSave}
+                />
             )}
         </div>
-    )
+    );
 }
