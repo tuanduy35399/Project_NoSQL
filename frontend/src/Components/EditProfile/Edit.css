@@ -1,0 +1,113 @@
+/* Nền mờ phủ toàn màn hình */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.55);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+/* Khung modal chính */
+.edit-modal {
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  width: 420px;
+  max-width: 90%;
+  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.25);
+  animation: fadeIn 0.25s ease;
+}
+
+/* Hiệu ứng xuất hiện */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Header có tiêu đề và nút đóng */
+.edit-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 8px;
+}
+
+.edit-header h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #222;
+  margin: 0;
+}
+
+/* Nút đóng (dấu ×) */
+.close-icon {
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #555;
+  transition: color 0.2s;
+}
+
+.close-icon:hover {
+  color: #000;
+}
+
+/* Các trường nhập liệu */
+.profile-field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+}
+
+.profile-label {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.profile-input,
+.profile-textarea {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  font-family: Roboto;
+}
+
+.profile-input:focus,
+.profile-textarea:focus {
+  border-color: #000;
+  box-shadow: 0 0 0 2px rgba(0,0,0,0.1);
+}
+
+/* Ô bio */
+.profile-textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+/* Nút Done */
+.profile-button {
+  width: 100%;
+  background-color: #000;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 0;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.25s;
+}
+
+.profile-button:hover {
+  background-color: #222;
+}

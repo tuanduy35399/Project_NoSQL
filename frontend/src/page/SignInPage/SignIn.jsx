@@ -1,15 +1,42 @@
 import React, { useState } from 'react';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import './SignIn.css';
 
 const SignIn = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate(); // dùng để chuyển trang sau khi login
 
-  const handleSignIn = (e) => {
+  const handleSignIn = async (e) => {
     e.preventDefault();
-    console.log('Đang đăng nhập với:', { username, password });
-    // TODO: Thêm logic xử lý đăng nhập tại đây
+
+    try {
+      const res = await fetch("http://localhost:8080/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ username, password }),
+      });
+
+      if (!res.ok) {
+        // nếu BE trả lỗi (404, 500, ...)
+        alert("Incorrect username or password!");
+        return;
+      }
+
+      const data = await res.json();
+
+      if (data.result === true) {
+        alert("Signed in successfully!");
+        navigate("/home");
+      } else {
+        alert("Incorrect username or password!");
+      }
+
+    } catch (error) {
+      console.error("Lỗi:", error);
+      alert("Cannot connect to server!");
+    }
   };
 
   return (
