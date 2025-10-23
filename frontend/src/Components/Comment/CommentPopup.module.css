@@ -1,0 +1,104 @@
+/* CommentPopup.module.css */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.popup {
+    background: white;
+    width: 90%;
+    max-width: 500px;
+    max-height: 80vh;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.closeButton {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    color: #aaa;
+}
+
+.closeButton:hover {
+    color: #333;
+}
+
+.popup h3 {
+    margin-top: 0;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.commentList {
+    flex-grow: 1;
+    /* Làm cho danh sách comment co dãn */
+    overflow-y: auto;
+    /* Thêm thanh cuộn nếu comment quá dài */
+    padding-right: 10px;
+}
+
+.comment {
+    margin-bottom: 15px;
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 10px;
+}
+
+.comment:last-child {
+    border-bottom: none;
+}
+
+.comment strong {
+    font-size: 0.9rem;
+}
+
+.comment p {
+    font-size: 1rem;
+    margin: 5px 0 0;
+}
+
+.commentInputBox {
+    display: flex;
+    margin-top: 20px;
+    border-top: 1px solid #eee;
+    padding-top: 15px;
+}
+
+.commentInputBox input {
+    flex-grow: 1;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    padding: 10px 15px;
+    outline: none;
+}
+
+.commentInputBox button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 15px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.commentInputBox button:hover {
+    background-color: #0056b3;
+}

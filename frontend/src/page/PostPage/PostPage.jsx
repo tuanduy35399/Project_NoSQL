@@ -2,10 +2,18 @@ import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import style from "./PostPage.module.css";
+import { toast} from "sonner";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/Components/ui/select";
 
 export default function PostPage() {
   const [body, setBody] = useState("");
-  const [option, setOption] = useState("publish");
+  const [option, setOption] = useState("private");
   const [files, setFiles] = useState([]);
   const [previewUrls, setPreviewUrls] = useState([]);
   const navigate = useNavigate();
@@ -50,18 +58,18 @@ export default function PostPage() {
       setFiles([]);
       setPreviewUrls([]);
       if (fileInputRef.current) fileInputRef.current.value = "";
-      alert("Post successful!");
+      toast.success("Post successful!");
       navigate("/home");
     } catch (error) {
       console.error("Fail to post:", error);
-      alert("Post failure!");
+      toast.error("Post failure!");
     }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (body.trim() === "") {
-      alert("Content cannot be blank!");
+      toast.warning("Content cannot be blank!");
       return;
     }
     postNews();
@@ -108,10 +116,33 @@ export default function PostPage() {
       </div>
 
       <div className={style.option}>
-        <select className={style.selectForm} value={option} onChange={(e)=>setOption(e.target.value)}>
+        {/* <select
+          className={style.selectForm}
+          value={option}
+          onChange={(e) => setOption(e.target.value)}
+        >
           <option value="publish">Publish</option>
           <option value="private">Private</option>
-        </select>
+        </select> */}
+        <Select>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Option" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem
+              value="publish"
+              onChange={(e) => setOption(e.target.value)}
+            >
+              Publish
+            </SelectItem>
+            <SelectItem
+              value="private"
+              onChange={(e) => setOption(e.target.value)}
+            >
+              Private
+            </SelectItem>
+          </SelectContent>
+        </Select>
 
         {/* Nút chọn file bằng hình post.png */}
         <label htmlFor="fileInput" className={style["buttonPost-2"]}></label>

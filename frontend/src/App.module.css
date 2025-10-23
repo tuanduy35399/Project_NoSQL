@@ -15,6 +15,7 @@
   gap: 1rem;
   padding: 1rem;
   box-sizing: border-box;
+  /* flex-wrap: wrap; */
 }
 
 /* Khi chỉ có 1 page thì căn giữa */
@@ -33,11 +34,13 @@
 /* Page hiển thị */
 .page-render {
   flex: 1;
-  max-width: 600px;
+  max-width: 700px;
   height: 93vh;
-  box-shadow: 0px 0px 6px 3px rgba(0, 0, 0, 0.06);
+box-shadow: 10px 10px 46px -21px rgba(0, 0, 0, 0.75);
+  -webkit-box-shadow: 10px 10px 46px -21px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 10px 10px 46px -21px rgba(0, 0, 0, 0.75);
   border: 1.5px solid rgb(193, 192, 192);
-  border-radius: 30px 30px 0 0;
+  border-radius: 30px;
   overflow: hidden;
   background: #fff;
   display: flex;

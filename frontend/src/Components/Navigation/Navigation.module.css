@@ -1,93 +1,109 @@
-.layout-navigation{
+.layout-navigation {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
     width: 70px;
     height: 100vh;
+    box-sizing: border-box;
 }
-.logo{
+
+.logo {
     margin-top: 20px;
     width: 60px;
     height: 60px;
     transition: transform 0.5s ease;
 }
-.logo:hover{
+
+.logo:hover {
     transform: scale(1.09);
-    cursor:pointer;
+    cursor: pointer;
 }
-.icon{
+
+.iconprivate {
     border-radius: 15px;
     padding: 7px 17px;
-    width: 30px;
-    height: 30px;
+    width: 60px;
+    height: 40px;
     transition: background-color 0.5s ease;
 }
-.icon:hover{
+
+.iconprivate:hover {
     animation: Hover 0.5s ease 0s 1 normal forwards;
-    background-color: rgba(235, 232, 232, 0.499);
+    background-color: rgba(250, 249, 249, 0.733);
 }
-.icon.active{
+
+.iconprivate.active {
     animation: Click 0.5s ease 0s 1 normal forwards;
-    background-color: rgba(235, 232, 232, 0.499);
+    background-color: rgba(250, 249, 249, 0.733);
 }
-.top-bar{
-    flex:1;
+
+.top-bar {
+    flex: 1;
 }
-.center-bar{
-    flex:3;
+
+.center-bar {
+    flex: 3;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 10px;
 }
-.bottom-bar{
-    flex:1;
+
+.bottom-bar {
+    flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
-.bar{
+
+.bar {
     width: 35px;
     height: 35px;
     cursor: pointer;
     transition: animation 0.5s linear;
 }
-.bar.active{
+
+.bar.active {
     animation: spin 1s ease infinite;
 }
-@keyframes spin{
-    from{
+
+@keyframes spin {
+    from {
         transform: rotate(0deg);
     }
-    to{
+
+    to {
         transform: rotate(360deg);
     }
 }
+
 @keyframes Hover {
-	0% {
-		transform: scale(1);
-	}
+    0% {
+        transform: scale(1);
+    }
 
-	50% {
-		transform: scale(1.1);
-	}
+    50% {
+        transform: scale(1.1);
+    }
 
-	100% {
-		transform: scale(1);
-	}
+    100% {
+        transform: scale(1);
+    }
 }
+
 @keyframes Click {
-	0% {
-		transform: scale(1);
-	}
+    0% {
+        transform: scale(1);
+    }
 
-	50% {
-		transform: scale(1.1);
-	}
+    50% {
+        transform: scale(1.1);
+    }
 
-	100% {
-		transform: scale(1);
-	}
+    100% {
+        transform: scale(1);
+    }
 }
+
