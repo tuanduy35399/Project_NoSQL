@@ -14,7 +14,7 @@ import {
   sortableKeyboardCoordinates,
   horizontalListSortingStrategy,
 } from "@dnd-kit/sortable";
-
+import { Toaster } from "sonner";
 import { SortableItem } from "./Components/SortableItem";
 import appCSS from "./App.module.css";
 import Navigation from "./Components/Navigation/Navigation";
@@ -52,7 +52,7 @@ function App() {
       <div className={appCSS["signin-page"]}>
         <Router />
       </div>
-    );
+    ); 
   }
 
   //Nếu đang ở /signup thì chỉ render Signup
@@ -66,6 +66,16 @@ function App() {
 
   return (
     <div className={appCSS["layout-web"]}>
+      <Toaster
+              position="bottom-right"
+              toastOptions={{
+                classNames: {
+                  success: "toast-success",
+                  error: "toast-error",
+                  warning: "toast-warning",
+                },
+              }}
+            />
       <div className={appCSS["nav"]}>
         <Navigation showPage={() => setShowSecond(!showSecond)} />
       </div>

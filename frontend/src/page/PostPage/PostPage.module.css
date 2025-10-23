@@ -134,3 +134,28 @@ textarea {
   justify-content: center;
   align-items: center;
 }
+
+.toastSuccess {
+  background-color: #d1fae5;
+  /* Màu nền xanh lá nhạt */
+  color: #065f46;
+  /* Màu chữ xanh lá đậm */
+  border: 1px solid #065f46;
+  /* Viền */
+}
+
+.toastError {
+  background-color: #fee2e2;
+  /* Màu nền đỏ nhạt */
+  color: #991b1b;
+  /* Màu chữ đỏ đậm */
+  border: 1px solid #991b1b;
+}
+
+.toastWarning {
+  background-color: #fef3c7;
+  /* Màu nền vàng nhạt */
+  color: #92400e;
+  /* Màu chữ vàng đậm */
+  border: 1px solid #92400e;
+}
