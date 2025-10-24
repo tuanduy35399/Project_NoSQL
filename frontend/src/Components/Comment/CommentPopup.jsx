@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import style from "./CommentPopup.module.css";
 import axios from "axios";
-
+import { toast } from "sonner";
 // Component này nhận 2 props:
 // - postId: ID của bài post để fetch comment
 // - onClose: Một hàm để đóng popup (do component cha truyền vào)
@@ -10,8 +10,6 @@ export default function CommentPopup({ postId, onClose }) {
   const [newComment, setNewComment] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
-  // Giả định API để fetch comment là: http://localhost:8080/api/v1/posts/{postId}/comments
-  // BẠN CẦN THAY THẾ BẰNG API THỰC TẾ CỦA MÌNH
   useEffect(() => {
     const fetchComments = async () => {
       setIsLoading(true);
@@ -23,18 +21,13 @@ export default function CommentPopup({ postId, onClose }) {
         setComments(rs.data);
       } catch (error) {
         console.error("Không thể tải bình luận:", error);
-        // Có thể set data mẫu ở đây để test
-        // setComments([
-        //   { id: 1, author: "User 1", text: "Comment đầu tiên!" },
-        //   { id: 2, author: "User 2", text: "Bài viết hay quá." },
-        // ]);
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchComments();
-  }, [postId]); // Fetch lại khi postId thay đổi
+  }, [postId]);
 
   // Xử lý khi gửi comment mới
   const handleCommentSubmit = async (e) => {
@@ -58,7 +51,7 @@ export default function CommentPopup({ postId, onClose }) {
       setNewComment(""); // Xóa nội dung trong ô input
     } catch (error) {
       console.error("Không thể gửi bình luận:", error);
-      alert("Gửi bình luận thất bại!");
+      toast.error("Gửi bình luận thất bại!");
     }
   };
 

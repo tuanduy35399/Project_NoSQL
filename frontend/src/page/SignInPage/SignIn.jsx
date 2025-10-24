@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import './SignIn.css';
+import axios from 'axios';
 
 const SignIn = () => {
   const [username, setUsername] = useState('');
@@ -10,32 +11,19 @@ const SignIn = () => {
   const handleSignIn = async (e) => {
     e.preventDefault();
 
+    const formData = { username, password };
     try {
-      const res = await fetch("http://localhost:8080/auth/log-in", {
-        method: "POST",
+      const response = await axios.post("http://localhost:8080/api/users/sign-in", formData, {
         headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ username, password }),
       });
 
-      if (!res.ok) {
-        // nếu BE trả lỗi (404, 500, ...)
-        alert("Incorrect username or password!");
-        return;
-      }
-
-      const data = await res.json();
-
-      if (data.result === true) {
-        alert("Signed in successfully!");
-        navigate("/home");
-      } else {
-        alert("Incorrect username or password!");
-      }
-
+      console.log("Signin success:", response.data); // log phản hồi từ server để kiểm tra
+      alert("Signin successfully!");
+      navigate("/home"); // chuyển đến trang home sau khi đăng nhập thành công
     } catch (error) {
-      console.error("Lỗi:", error);
-      alert("Cannot connect to server!");
+      console.error("Signin failed:", error);
+      console.log("Error response data:", error.response?.data); // log chi tiết lỗi từ server nếu có
+      alert("Signin failed! Please try again.");
     }
   };
 

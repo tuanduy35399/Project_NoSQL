@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
+//import { Toaster } from "sonner"; 
 import {
   DndContext,
   closestCenter,
@@ -26,7 +27,7 @@ import Explore from "./page/ExplorePage/Explore";
 function App() {
   const [showSecond, setShowSecond] = useState(false);
   const [isGuest, setGuest] = useState(false);
-  const location = useLocation(); // 👈 lấy đường dẫn hiện tại
+  const location = useLocation(); 
 
   const [items, setItems] = useState(["page", "explore"]);
 
