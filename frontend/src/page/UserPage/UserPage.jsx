@@ -1,12 +1,29 @@
 import './UserPage.css'
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BsThreeDots } from "react-icons/bs";
 import Edit from "../../Components/EditProfile/Edit";
+import axios from 'axios';
+import { toast } from 'sonner';
 
 export default function UserPage() {
     const [activeTab, setActiveTab] = useState("thread");
     const [showEdit, setShowEdit] = useState(false);
+    const [dataUser, setDataUser] = useState([]);
 
+    const fetchDataUser = async () => {
+        try {
+            const tempData = await axios.get("/api/users/6719c9c5e4b0a12a8b1f56b3"); 
+            console.log("Lay du lieu user thanh cong");
+        } catch (error) {
+            console.log("Loi khi lay du lieu user", error);
+            toast.error("Cannot get data user");
+        }
+        
+
+    }  
+    useEffect(() => {
+        fetchDataUser();
+    }, []);
     // Dữ liệu user có thể thay đổi
     const [user, setUser] = useState({
         avatar: "/avt.jpg",
@@ -30,7 +47,6 @@ export default function UserPage() {
         setUser(updatedUser);
         setShowEdit(false);
     };
-
     return (
         <div className="user-page">
             {/* Header */}

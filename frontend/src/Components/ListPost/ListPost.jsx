@@ -111,7 +111,11 @@ export default function ListPost() {
                 alt="Post content"
               ></img>
             ))}
-
+            <span style={{ color: "grey"}}>
+              {new Date(post.createdAt).toLocaleString("vi-VN", {
+                hour12: false, // dùng định dạng 24h
+              })}
+            </span>
             <div className={style["status-bar"]}>
               <button
                 type="button"
