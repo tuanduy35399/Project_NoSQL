@@ -2,28 +2,52 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import './SignIn.css';
 import axios from 'axios';
+import { toast } from "sonner";
 
 const SignIn = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate(); // dùng để chuyển trang sau khi login
+  const navigate = useNavigate();
 
   const handleSignIn = async (e) => {
-    e.preventDefault();
+    e.preventDefault();  //ngăn form reload page khi submit
 
     const formData = { username, password };
+
     try {
-      const response = await axios.post("http://localhost:8080/api/users/sign-in", formData, {
+      const response = await axios.post("http://localhost:8080/auth/login", formData, {
         headers: { "Content-Type": "application/json" },
       });
 
-      console.log("Signin success:", response.data); // log phản hồi từ server để kiểm tra
-      alert("Signin successfully!");
-      navigate("/home"); // chuyển đến trang home sau khi đăng nhập thành công
+      console.log("Signin success:", response.data);
+
+      if (response.data === true) {
+        toast.success("Signin successfully!");
+
+        // Lưu trạng thái đăng nhập
+        localStorage.setItem("isLoggedIn", "true"); // Lưu trạng thái đăng nhập
+        localStorage.setItem("username", username); // Lưu username
+        navigate("/home");
+
+      } else {
+        toast.error("Incorrect username or password!");
+      }
+
     } catch (error) {
       console.error("Signin failed:", error);
-      console.log("Error response data:", error.response?.data); // log chi tiết lỗi từ server nếu có
-      alert("Signin failed! Please try again.");
+
+      if (error.response) {
+        const { status, data } = error.response;
+        if (status === 400) {
+          toast.error(data.message || "Invalid input! Please check your username and password.");
+        } else if (status === 401) {
+          toast.error("Unauthorized! Incorrect username or password.");
+        } else if (status === 500) {
+          toast.error("Server error! Please try again later.");
+        }
+      } else {
+        toast.error("Cannot connect to server!");
+      }
     }
   };
 

@@ -23,6 +23,8 @@ import Router from "./routes/Routes";
 import Login from "./Components/Login/Login";
 import Explore from "./page/ExplorePage/Explore";
 
+localStorage.removeItem("isLoggedIn"); //thêm tạm thời để test giao diện khi chưa đăng nhập
+//mỗi lần reload trang sẽ bị đăng xuất
 
 function App() {
   const [showSecond, setShowSecond] = useState(false);
@@ -53,7 +55,7 @@ function App() {
       <div className={appCSS["signin-page"]}>
         <Router />
       </div>
-    ); 
+    );
   }
 
   //Nếu đang ở /signup thì chỉ render Signup
@@ -65,18 +67,21 @@ function App() {
     );
   }
 
+  // Kiểm tra đăng nhập từ localStorage
+  const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+
   return (
     <div className={appCSS["layout-web"]}>
       <Toaster
-              position="bottom-right"
-              toastOptions={{
-                classNames: {
-                  success: "toast-success",
-                  error: "toast-error",
-                  warning: "toast-warning",
-                },
-              }}
-            />
+        position="bottom-right"
+        toastOptions={{
+          classNames: {
+            success: "toast-success",
+            error: "toast-error",
+            warning: "toast-warning",
+          },
+        }}
+      />
       <div className={appCSS["nav"]}>
         <Navigation showPage={() => setShowSecond(!showSecond)} />
       </div>
@@ -88,9 +93,8 @@ function App() {
       >
         <SortableContext items={items} strategy={horizontalListSortingStrategy}>
           <div
-            className={`${appCSS["pages-container"]} ${
-              showSecond ? appCSS["two"] : appCSS["one"]
-            }`}
+            className={`${appCSS["pages-container"]} ${showSecond ? appCSS["two"] : appCSS["one"]
+              }`}
           >
             {items.map((id) =>
               id === "page" ? (
@@ -109,7 +113,9 @@ function App() {
                 )
               )
             )}
-            {!isGuest && <Login guest={setGuest} />}
+
+            {/* Chỉ hiện khung login khi chưa đăng nhập và chưa là guest */}
+            {!isGuest && !isLoggedIn && <Login guest={setGuest} />}
           </div>
         </SortableContext>
       </DndContext>

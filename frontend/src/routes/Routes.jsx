@@ -13,6 +13,7 @@ export default function Router() {
       <Route path="/user" element={<UserPage />} />
       <Route path="/signin" element={<SignIn />} />
       <Route path="/signup" element={<SignUp />} />
+      <Route path="/home" element={<HomePage />} />
     </Routes>
   );
 }
