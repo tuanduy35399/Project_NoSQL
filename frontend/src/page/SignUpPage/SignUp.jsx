@@ -13,8 +13,7 @@ export default function SignUp() {
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // tránh reload page khi submit form
-
-    const formData = {fullName, userName, birthday, password}; //tạo object chứa data form
+    const formData = {fullname, username, birthday, password}; //tạo object chứa data form
 
     try {
       const response = await axios.post(
@@ -30,7 +29,7 @@ export default function SignUp() {
       console.error("Signup failed:", error);
 
       if (error.response) {
-        // ✅ Có phản hồi từ server (status khác 2xx)
+        // Có phản hồi từ server (status khác 2xx)
         const { status, data } = error.response;
         console.log("Error status:", status);
         console.log("Error data:", data);
@@ -46,11 +45,11 @@ export default function SignUp() {
         }
 
       } else if (error.request) {
-        // 🚫 Request được gửi đi nhưng không nhận được phản hồi
+        // Request được gửi đi nhưng không nhận được phản hồi
         console.error("No response from server:", error.request);
         toast.error("Cannot connect to the server. Please check your backend.");
       } else {
-        // 💥 Lỗi khác (vd: bug trong code React)
+        // Lỗi khác (vd: bug trong code React)
         console.error("Error setting up the request:", error.message);
         toast.error("Something went wrong in the app. Check the console for details.");
       }

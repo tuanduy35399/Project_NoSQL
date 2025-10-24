@@ -1,21 +1,19 @@
 import ListPost from "../../Components/ListPost/ListPost"
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-
 
 export default function HomePage() {
-    const navigate = useNavigate(); //cho phép chuyển page thay vì link
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-    useEffect(() => {  //chạy code sau khi component render
-        const isLoggedIn = localStorage.getItem("isLoggedIn");  //ktra user có đang đăng nhập?
-        if (!isLoggedIn || isLoggedIn !== "true") {  //chưa đăng nhập
-            navigate("/signin", { replace: true });  //chuyển về trang signin
-        } 
-    }, [navigate]);
+  useEffect(() => {
+    const loginStatus = localStorage.getItem("isLoggedIn");
+    if (loginStatus === "true") {
+      setIsLoggedIn(true);
+    }
+  }, []);
 
-    return (
-        <>
-            <ListPost />
-        </>
-    );
+  return (
+    <>
+      <ListPost />
+    </>
+  );
 }
