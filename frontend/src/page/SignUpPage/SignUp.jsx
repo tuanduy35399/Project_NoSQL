@@ -4,8 +4,8 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function SignUp() {
-  const [fullName, setFullName] = useState("");
-  const [userName, setUserName] = useState("");
+  const [fullname, setFullname] = useState("");
+  const [username, setUsername] = useState("");
   const [birthday, setBirthday] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate(); //dùng để chuyển page sau khi đky thành công
@@ -14,10 +14,10 @@ export default function SignUp() {
     // vì dùng axios nên cần async await
     e.preventDefault();  // tránh reload page khi submit form
 
-    const formData = {fullName, userName, birthday, password}; //tạo object chứa data form
+    const formData = {fullname, username, birthday, password}; //tạo object chứa data form
 
     try {
-      const response = await axios.post("http://localhost:8080/api/users", formData, {  // gửi dữ liệu lên server
+      const response = await axios.post("http://localhost:8080/api/users/sign-up", formData, {  // gửi dữ liệu lên server
         //headers: { "Content-Type": "multipart/form-data" },  //Khai báo kdl gửi đi
         //do SignUp không cần upload file nên không cần khai báo kdl formdata này vì chỉ cần file json là được 
         //axios sẽ tự động thêm header phù hợp
@@ -34,8 +34,8 @@ export default function SignUp() {
 
   //chỉ để kiểm tra form trước khi gửi (debug)
   console.log({
-    fullName,
-    userName,
+    fullname,
+    username,
     birthday,
     password,
   });
@@ -49,8 +49,8 @@ export default function SignUp() {
         <input
           type="text"
           placeholder="Enter full name"
-          value={fullName}
-          onChange={(e) => setFullName(e.target.value)}
+          value={fullname}
+          onChange={(e) => setFullname(e.target.value)}
           required
         />
 
@@ -58,8 +58,8 @@ export default function SignUp() {
         <input
           type="text"
           placeholder="Enter username"
-          value={userName}
-          onChange={(e) => setUserName(e.target.value)}
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
           required
         />
 
