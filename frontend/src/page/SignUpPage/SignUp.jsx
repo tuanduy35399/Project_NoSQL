@@ -14,7 +14,7 @@ export default function SignUp() {
   const handleSubmit = async (e) => {
     e.preventDefault(); // tránh reload page khi submit form
 
-    const formData = { fullname, username, password, birthday };
+    const formData = {fullName, userName, birthday, password}; //tạo object chứa data form
 
     try {
       const response = await axios.post(

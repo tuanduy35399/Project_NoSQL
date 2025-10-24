@@ -13,9 +13,10 @@ import {
 
 export default function PostPage() {
   const [body, setBody] = useState("");
-  const [option, setOption] = useState("private");
+  const [publish, setPublish] = useState(true);
   const [files, setFiles] = useState([]);
   const [previewUrls, setPreviewUrls] = useState([]);
+  const [progress, setProgress] = useState(0);
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
 
@@ -42,29 +43,34 @@ export default function PostPage() {
     }
   };
 
-  const postNews = async () => {
-    try {
-      const formData = new FormData();
-      formData.append("userId", "1"); //fake user id
-      formData.append("content", body);
-      formData.append("published", option);
-      files.forEach((file) => formData.append("files", file));
+ const postNews = async () => {
+   const loadingToast = toast.loading(`Uploading ${progress}%`);
+   try {
+     const formData = new FormData();
+     formData.append("userId", "6719c9c5e4b0a12a8b1f56b3");
+     formData.append("content", body);
+     formData.append("published", publish ? "true" : "false");
+     files.forEach((file) => formData.append("files", file));
 
-      await axios.post("http://localhost:8080/api/v1/upload", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+     await axios.post("http://localhost:8080/api/v1/blogs", formData, {
+       headers: { "Content-Type": "multipart/form-data" },
+       onUploadProgress: (e) => {
+         const percent = Math.round((e.loaded * 100) / e.total);
+         setProgress(percent);
+         toast.loading(`Uploading ${percent}%`, { id: loadingToast });
+       },
+     });
 
-      setBody("");
-      setFiles([]);
-      setPreviewUrls([]);
-      if (fileInputRef.current) fileInputRef.current.value = "";
-      toast.success("Post successful!");
-      navigate("/home");
-    } catch (error) {
-      console.error("Fail to post:", error);
-      toast.error("Post failure!");
-    }
-  };
+     toast.success("Post successful!", { id: loadingToast });
+     setProgress(0);
+     navigate("/");
+   } catch (error) {
+     toast.error("Post failure!", { id: loadingToast });
+     console.log("Xay ra loi khi post bai viet ", error);
+     setProgress(0);
+   }
+ };
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -77,6 +83,8 @@ export default function PostPage() {
 
   return (
     <div>
+      
+
       <div className={style.infor}>
         <h2>Make your new post</h2>
       </div>
@@ -116,31 +124,18 @@ export default function PostPage() {
       </div>
 
       <div className={style.option}>
-        {/* <select
-          className={style.selectForm}
-          value={option}
-          onChange={(e) => setOption(e.target.value)}
+        <Select
+          onValueChange={(value) => {
+            setPublish(value === "true");
+          }}
+          defaultValue={String(publish)}
         >
-          <option value="publish">Publish</option>
-          <option value="private">Private</option>
-        </select> */}
-        <Select>
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Option" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem
-              value="publish"
-              onChange={(e) => setOption(e.target.value)}
-            >
-              Publish
-            </SelectItem>
-            <SelectItem
-              value="private"
-              onChange={(e) => setOption(e.target.value)}
-            >
-              Private
-            </SelectItem>
+            <SelectItem value="true">Publish</SelectItem>
+            <SelectItem value="false">Private</SelectItem>
           </SelectContent>
         </Select>
 
@@ -160,6 +155,7 @@ export default function PostPage() {
           className={style["buttonPost-1"]}
           onClick={handleSubmit}
         ></button>
+        
       </div>
     </div>
   );

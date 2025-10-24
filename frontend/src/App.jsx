@@ -29,7 +29,7 @@ localStorage.removeItem("isLoggedIn"); //thêm tạm thời để test giao di�
 function App() {
   const [showSecond, setShowSecond] = useState(false);
   const [isGuest, setGuest] = useState(false);
-  const location = useLocation(); // 👈 lấy đường dẫn hiện tại
+  const location = useLocation(); 
 
   const [items, setItems] = useState(["page", "explore"]);
 
