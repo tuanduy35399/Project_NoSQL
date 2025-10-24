@@ -2,42 +2,67 @@ import React, { useState } from "react";
 import "./SignUp.css";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 export default function SignUp() {
-  const [fullName, setFullName] = useState("");
-  const [userName, setUserName] = useState("");
-  const [birthday, setBirthday] = useState("");
+  const [fullname, setFullName] = useState("");
+  const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate(); //dùng để chuyển page sau khi đky thành công
+  const [birthday, setBirthday] = useState("");
+  const navigate = useNavigate(); // dùng để chuyển page sau khi đky thành công
 
-  const handleSubmit = async (e) => {  //gọi hàm xử lý khi nhấn đăng ký
-    // vì dùng axios nên cần async await
-    e.preventDefault();  // tránh reload page khi submit form
+  const handleSubmit = async (e) => {
+    e.preventDefault(); // tránh reload page khi submit form
 
-    const formData = {fullName, userName, birthday, password}; //tạo object chứa data form
+    const formData = { fullname, username, password, birthday };
 
     try {
-      const response = await axios.post("http://localhost:8080/api/users", formData, {  // gửi dữ liệu lên server
-        //headers: { "Content-Type": "multipart/form-data" },  //Khai báo kdl gửi đi
-        //do SignUp không cần upload file nên không cần khai báo kdl formdata này vì chỉ cần file json là được 
-        //axios sẽ tự động thêm header phù hợp
-      });
+      const response = await axios.post(
+        "http://localhost:8080/api/users/sign-up",
+        formData
+      );
 
-      console.log("Signup success:", response.data);  // xử lý phản hồi khi thành công
-      alert("Signup successfully! Please sign in.");
-      navigate("/signin");  //chuyển đến trang đăng nhập sau khi đky thành công
+      console.log("Signup success:", response.data);
+      toast.success("Signup successfully! Please sign in.");
+      navigate("/signin");
+
     } catch (error) {
       console.error("Signup failed:", error);
-      alert("Signup failed! Please try again.");
+
+      if (error.response) {
+        // ✅ Có phản hồi từ server (status khác 2xx)
+        const { status, data } = error.response;
+        console.log("Error status:", status);
+        console.log("Error data:", data);
+
+        if (status === 400) {
+          toast.error(data.message || "Invalid input or username already exists!");
+        } else if (status === 409) {
+          toast.error("Username already exists! Please choose another username.");
+        } else if (status === 500) {
+          toast.error("Server error! Please try again later.");
+        } else {
+          toast.error(data.message || "Unexpected error occurred!");
+        }
+
+      } else if (error.request) {
+        // 🚫 Request được gửi đi nhưng không nhận được phản hồi
+        console.error("No response from server:", error.request);
+        toast.error("Cannot connect to the server. Please check your backend.");
+      } else {
+        // 💥 Lỗi khác (vd: bug trong code React)
+        console.error("Error setting up the request:", error.message);
+        toast.error("Something went wrong in the app. Check the console for details.");
+      }
     }
   };
 
   //chỉ để kiểm tra form trước khi gửi (debug)
   console.log({
-    fullName,
-    userName,
-    birthday,
+    fullname,
+    username,
     password,
+    birthday,
   });
 
   return (
@@ -49,7 +74,7 @@ export default function SignUp() {
         <input
           type="text"
           placeholder="Enter full name"
-          value={fullName}
+          value={fullname}
           onChange={(e) => setFullName(e.target.value)}
           required
         />
@@ -58,7 +83,7 @@ export default function SignUp() {
         <input
           type="text"
           placeholder="Enter username"
-          value={userName}
+          value={username}
           onChange={(e) => setUserName(e.target.value)}
           required
         />
@@ -80,7 +105,9 @@ export default function SignUp() {
           required
         />
 
-        <button type="submit" className="signup-btn">Sign Up</button>
+        <button type="submit" className="signup-btn">
+          Sign Up
+        </button>
 
         <p className="signin-link">
           Already have an account? <Link to="/signin">Sign In</Link>
