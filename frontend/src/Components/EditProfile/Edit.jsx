@@ -2,14 +2,14 @@ import { useState } from "react";
 import "./Edit.css";
 
 export default function Edit({ user, onClose, onSave }) {
-  const [formData, setFormData] = useState(user); // ✅ lấy dữ liệu từ props
+  const [formData, setFormData] = useState(user);
 
   const handleChange = (field, value) => {
     setFormData({ ...formData, [field]: value });
   };
 
   const handleSubmit = () => {
-    if (onSave) onSave(formData); // ✅ gửi dữ liệu mới về UserPage
+    if (onSave) onSave(formData); 
   };
 
   return (

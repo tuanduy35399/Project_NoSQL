@@ -21,15 +21,14 @@ export default function SignUp() {
         formData
       );
 
-      console.log("Signup success:", response.data);
-      toast.success("Signup successfully! Please sign in.");
+      console.log("Sign up success:", response.data);
+      toast.success("Sign up successfully! Please sign in.");
       navigate("/signin");
 
     } catch (error) {
-      console.error("Signup failed:", error);
+      console.error("Sign up failed:", error);
 
       if (error.response) {
-        // Có phản hồi từ server (status khác 2xx)
         const { status, data } = error.response;
         console.log("Error status:", status);
         console.log("Error data:", data);

@@ -66,18 +66,8 @@ export default function ListPost() {
       // (Hoặc bạn có thể truyền 1 hàm vào popup để nó gọi ngược lại)
     }
 
-    if (type === "SHARE") {
-      setData((prevData) =>
-        prevData.map((post) => {
-          if (post.id === postId) {
-            return { ...post, shareCount: post.shareCount + 1 };
-          }
-          return post;
-        })
-      );
       // Lời khuyên: Bạn nên gọi API để "share" ở đây
       // axios.post(`http://localhost:8080/api/v1/posts/${postId}/share`);
-    }
   };
 
   // Hàm để đóng popup
@@ -139,20 +129,9 @@ export default function ListPost() {
                 <span className={style.icon} />
               </button>
               <span>{post.commentCount}</span>
-
-              {/* SHARE */}
-              <button
-                type="button"
-                className={`${style.btn} ${style["btn-share"]}`}
-                aria-label="Share"
-                onClick={() => handleAction(post.id, "SHARE")}
-              >
-                <span className={style.icon} />
-              </button>
-              <span>{post.shareCount}</span>
             </div>
           </div>
-        ))}
+        )).reverse()}
       </div>
       {/* Render Popup một cách có điều kiện */}
       {isCommentPopupOpen && (

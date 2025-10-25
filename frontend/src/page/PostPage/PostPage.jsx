@@ -12,6 +12,7 @@ import {
 } from "@/Components/ui/select";
 
 export default function PostPage() {
+  const [userData, setUserData] = useState("");
   const [body, setBody] = useState("");
   const [publish, setPublish] = useState(true);
   const [files, setFiles] = useState([]);
@@ -46,8 +47,11 @@ export default function PostPage() {
  const postNews = async () => {
    const loadingToast = toast.loading(`Uploading ${progress}%`);
    try {
+     const response = await axios.get("http://localhost:8080/api/users/68f5a47e35e628702759a434");
+     setUserData(response.data);
      const formData = new FormData();
      formData.append("userId", "6719c9c5e4b0a12a8b1f56b3");
+     formData.append("userName", response.data.username)
      formData.append("content", body);
      formData.append("published", publish ? "true" : "false");
      files.forEach((file) => formData.append("files", file));
@@ -83,16 +87,18 @@ export default function PostPage() {
 
   return (
     <div>
-      
-
       <div className={style.infor}>
-        <h2>Make your new post</h2>
+        <span style={{ fontSize: 20, fontWeight: "bold" }}>
+          Make your new post
+        </span>
       </div>
       <div className={style["post-content"]}>
         <div className={style.header_post}>
-          <div className={style.avatar_user}>{/* <img src={url}></img> */}</div>
+          <div className={style.avatar_user}>
+            <img src={userData.userAvatarUrl} alt="AvatarUser"></img>
+          </div>
           <strong>
-            <span>Username</span>
+            <span>{userData.username || "unknown"}</span>
           </strong>
         </div>
         <textarea
@@ -130,12 +136,16 @@ export default function PostPage() {
           }}
           defaultValue={String(publish)}
         >
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-[180px] border-accent-foreground">
             <SelectValue placeholder="Option" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="true">Publish</SelectItem>
-            <SelectItem value="false">Private</SelectItem>
+            <SelectItem value="true">
+              <span style={{fontWeight:"bold"}}>Publish</span>
+            </SelectItem>
+            <SelectItem value="false">
+              <span style={{ fontWeight: "bold" }}>Private</span>
+            </SelectItem>
           </SelectContent>
         </Select>
 
@@ -149,13 +159,10 @@ export default function PostPage() {
           onChange={handleFileChange}
           className={style.fileInput}
         />
-
-        {/* Nút đăng bài */}
         <button
           className={style["buttonPost-1"]}
           onClick={handleSubmit}
         ></button>
-        
       </div>
     </div>
   );

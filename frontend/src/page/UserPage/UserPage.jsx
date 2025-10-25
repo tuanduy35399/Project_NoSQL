@@ -12,27 +12,20 @@ export default function UserPage() {
 
     const fetchDataUser = async () => {
         try {
-            const tempData = await axios.get("/api/users/6719c9c5e4b0a12a8b1f56b3"); 
+            const tempData = await axios.get(
+              "http://localhost:8080/api/users/68f5a47e35e628702759a434" //lay 1 id cu the
+            ); 
+            setDataUser(tempData.data);
             console.log("Lay du lieu user thanh cong");
         } catch (error) {
             console.log("Loi khi lay du lieu user", error);
             toast.error("Cannot get data user");
         }
-        
 
     }  
     useEffect(() => {
         fetchDataUser();
     }, []);
-    // Dữ liệu user có thể thay đổi
-    const [user, setUser] = useState({
-        avatar: "/avt.jpg",
-        fullname: "Quynhhh",
-        username: "thoconomcarot",
-        bio: "Write biography",
-        link: "",
-        followers: 0,
-    });
 
     const handleEditClick = () => {
         setShowEdit(true);
@@ -44,57 +37,50 @@ export default function UserPage() {
 
     // Khi nhấn Done trong Edit
     const handleSave = (updatedUser) => {
-        setUser(updatedUser);
+        setDataUser(updatedUser);
         setShowEdit(false);
     };
     return (
-        <div className="user-page">
-            {/* Header */}
-            <nav className="nav-bar">
-                <h1><span>Profile</span></h1>
-                <button className="btn">
-                    <BsThreeDots />
-                </button>
-            </nav>
+      <div className="user-page">
+        <nav className="nav-bar">
+          <h1>
+            <span>Profile</span>
+          </h1>
+          <button className="btn">
+            <BsThreeDots />
+          </button>
+        </nav>
+        <nav className="profile">
+          <div className="profile-in4">
+            <h1>{dataUser.fullname}</h1>
+            <p className="name">@{dataUser.username}</p>
+            <p>{dataUser.followers} followers</p>
+          </div>
+          <div className="profile-avt">
+            <img src={dataUser.userAvatarUrl} alt="avt" className="avt" />
+            <button className="edit-btn" onMouseDown={handleEditClick}>
+              Edit profile
+            </button>
+          </div>
+        </nav>
 
-            {/* Profile info */}
-            <nav className="profile">
-                <div className="profile-in4">
-                    <h1>{user.fullname}</h1>
-                    <p className="name">@{user.username}</p>
-                    <p>{user.followers} followers</p>
-                    {user.bio && <p className='bio'>{user.bio}</p>}
-                    {user.link && <a href={user.link}>{user.link}</a>}
-                </div>
-                <div className="profile-avt">
-                    <img src={user.avatar} alt="avt" className="avt" />
-                    <button className="edit-btn" onMouseDown={handleEditClick}>
-                        Edit profile
-                    </button>
-                </div>
-            </nav>
+        {/* Tabs */}
+        <nav className="tab">
+          {["thread", "reply", "media", "repost"].map((tab) => (
+            <button
+              key={tab}
+              className={`tab-btn ${activeTab === tab ? "active" : ""}`}
+              onMouseDown={() => setActiveTab(tab)}
+            >
+              {tab.charAt(0).toUpperCase() + tab.slice(1)}
+            </button>
+          ))}
+        </nav>
 
-            {/* Tabs */}
-            <nav className="tab">
-                {["thread", "reply", "media", "repost"].map((tab) => (
-                    <button
-                        key={tab}
-                        className={`tab-btn ${activeTab === tab ? "active" : ""}`}
-                        onMouseDown={() => setActiveTab(tab)}
-                    >
-                        {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                    </button>
-                ))}
-            </nav>
-
-            {/* Hiển thị Edit modal */}
-            {showEdit && (
-                <Edit
-                    user={user}
-                    onClose={handleClose}
-                    onSave={handleSave}
-                />
-            )}
-        </div>
+        {/* Hiển thị Edit modal */}
+        {showEdit && (
+          <Edit user={user} onClose={handleClose} onSave={handleSave} />
+        )}
+      </div>
     );
 }
