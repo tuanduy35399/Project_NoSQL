@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 export default function UserPage() {
     const [activeTab, setActiveTab] = useState("thread");
     const [showEdit, setShowEdit] = useState(false);
-    const [dataUser, setDataUser] = useState([]);
+    const [dataUser, setDataUser] = useState(null);
     const [menuOpen, setMenuOpen] = useState(false);
     const menuRef = useRef(null);
     const navigate = useNavigate();
@@ -17,18 +17,17 @@ export default function UserPage() {
     const fetchDataUser = async () => {
         try {
             const tempData = await axios.get(
-                "http://localhost:8080/api/users/68f54ae35e628702759a434" // lấy 1 id cũ thể
+                "http://localhost:8080/api/users/68f5a47e35e628702759a434"
             );
-            setDatAuser(tempData.data);
+            setDataUser(tempData.data);
 
-            console.log("lay du lieu user thanh cong");
+            console.log("Lấy dữ liệu user thành công");
         } catch (error) {
-            console.log("Loi khi lay du lieu user", error);
+            console.log("Lỗi khi lấy dữ liệu user", error);
             toast.error("Cannot get data user");
         }
-    }
+    };
 
-    // Đóng menu khi click ra ngoài
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -42,7 +41,6 @@ export default function UserPage() {
         };
     }, []);
 
-
     useEffect(() => {
         fetchDataUser();
     }, []);
@@ -55,23 +53,21 @@ export default function UserPage() {
         setShowEdit(false);
     };
 
-    // Khi nhấn Done trong Edit
     const handleSave = (updatedUser) => {
         setDataUser(updatedUser);
         setShowEdit(false);
     };
 
-    //Hàm logout
     const handleLogout = () => {
-        localStorage.removeItem("isLoggedIn");  // Xóa trạng thái signin
-        toast.success("Logged out successfully!");  //thông báo đăng xuất thành công
+        localStorage.removeItem("isLoggedIn");
+        toast.success("Logged out successfully!");
         navigate("/home");
     };
+
+    if (!dataUser) return <p>Loading...</p>;
+
     return (
         <div className="user-page">
-
-
-            {/* Header */}
             <nav className="nav-bar">
                 <h1><span>Profile</span></h1>
                 <div className="menu-wrapper" ref={menuRef}>
@@ -86,27 +82,22 @@ export default function UserPage() {
                 </div>
             </nav>
 
-
-            {/* Profile info */}
             <nav className="profile">
                 <div className="profile-in4">
-                    <h1>{user.fullname}</h1>
-                    <p className="name">@{user.username}</p>
-                    {/* <p>{user.followers} followers</p> */}
-                    {user.bio && <p className='bio'>{user.bio}</p>}
-                    {user.link && <a href={user.link}>{user.link}</a>}
+                    <h1>{dataUser.fullname}</h1>
+                    <p className="name">@{dataUser.username}</p>
+                    {dataUser.bio && <p className='bio'>{dataUser.bio}</p>}
+                    {dataUser.link && <a href={dataUser.link}>{dataUser.link}</a>}
                 </div>
+
                 <div className="profile-avt">
-                    <img src={user.avatar} alt="avt" className="avt" />
+                    <img src={dataUser.avatar} alt="avt" className="avt" />
                     <button className="edit-btn" onMouseDown={handleEditClick}>
                         Edit profile
                     </button>
                 </div>
             </nav>
 
-
-
-            {/* Tabs */}
             <nav className="tab">
                 {["thread", "reply", "media", "repost"].map((tab) => (
                     <button
@@ -119,11 +110,9 @@ export default function UserPage() {
                 ))}
             </nav>
 
-
-            {/* Hiển thị Edit modal */}
             {showEdit && (
                 <Edit
-                    user={user}
+                    user={dataUser}
                     onClose={handleClose}
                     onSave={handleSave}
                 />
