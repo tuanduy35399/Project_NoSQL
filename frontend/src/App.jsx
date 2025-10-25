@@ -23,8 +23,8 @@ import Router from "./routes/Routes";
 import Login from "./Components/Login/Login";
 import Explore from "./page/ExplorePage/Explore";
 
-localStorage.removeItem("isLoggedIn"); //thêm tạm thời để test giao diện khi chưa đăng nhập
-//mỗi lần reload trang sẽ bị đăng xuất
+// localStorage.removeItem("isLoggedIn"); //thêm tạm thời để test giao diện khi chưa đăng nhập
+// //mỗi lần reload trang sẽ bị đăng xuất
 
 function App() {
   const [showSecond, setShowSecond] = useState(false);

@@ -92,6 +92,7 @@
 .profile-textarea {
   min-height: 80px;
   resize: vertical;
+  width: 100%;
 }
 
 /* Nút Done */

@@ -1,26 +1,44 @@
 import './UserPage.css'
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { BsThreeDots } from "react-icons/bs";
 import Edit from "../../Components/EditProfile/Edit";
 import axios from 'axios';
 import { toast } from 'sonner';
+import { useNavigate } from 'react-router-dom';
 
 export default function UserPage() {
     const [activeTab, setActiveTab] = useState("thread");
     const [showEdit, setShowEdit] = useState(false);
     const [dataUser, setDataUser] = useState([]);
+    const [menuOpen, setMenuOpen] = useState(false);
+    const menuRef = useRef(null);
+    const navigate = useNavigate();
 
     const fetchDataUser = async () => {
         try {
-            const tempData = await axios.get("/api/users/6719c9c5e4b0a12a8b1f56b3"); 
+            const tempData = await axios.get("/api/users/6719c9c5e4b0a12a8b1f56b3");
             console.log("Lay du lieu user thanh cong");
         } catch (error) {
             console.log("Loi khi lay du lieu user", error);
             toast.error("Cannot get data user");
         }
-        
+    }
 
-    }  
+    // Đóng menu khi click ra ngoài
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (menuRef.current && !menuRef.current.contains(event.target)) {
+                setMenuOpen(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
+
     useEffect(() => {
         fetchDataUser();
     }, []);
@@ -47,22 +65,39 @@ export default function UserPage() {
         setUser(updatedUser);
         setShowEdit(false);
     };
+
+    //Hàm logout
+    const handleLogout = () => {
+        localStorage.removeItem("isLoggedIn");  // Xóa trạng thái signin
+        toast.success("Logged out successfully!");  //thông báo đăng xuất thành công
+        navigate("/home");
+    };
     return (
         <div className="user-page">
+
+
             {/* Header */}
             <nav className="nav-bar">
                 <h1><span>Profile</span></h1>
-                <button className="btn">
-                    <BsThreeDots />
-                </button>
+                <div className="menu-wrapper" ref={menuRef}>
+                    <button className="btn" onClick={() => setMenuOpen(!menuOpen)}>
+                        <BsThreeDots />
+                    </button>
+                    {menuOpen && (
+                        <div className="dropdown-menu">
+                            <button onClick={handleLogout}>Log out</button>
+                        </div>
+                    )}
+                </div>
             </nav>
+            
 
             {/* Profile info */}
             <nav className="profile">
                 <div className="profile-in4">
                     <h1>{user.fullname}</h1>
                     <p className="name">@{user.username}</p>
-                    <p>{user.followers} followers</p>
+                    {/* <p>{user.followers} followers</p> */}
                     {user.bio && <p className='bio'>{user.bio}</p>}
                     {user.link && <a href={user.link}>{user.link}</a>}
                 </div>
@@ -73,6 +108,8 @@ export default function UserPage() {
                     </button>
                 </div>
             </nav>
+
+
 
             {/* Tabs */}
             <nav className="tab">
@@ -86,6 +123,7 @@ export default function UserPage() {
                     </button>
                 ))}
             </nav>
+
 
             {/* Hiển thị Edit modal */}
             {showEdit && (

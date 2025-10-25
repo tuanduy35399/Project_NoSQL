@@ -16,10 +16,7 @@ export default function SignUp() {
     const formData = {fullname, username, birthday, password}; //tạo object chứa data form
 
     try {
-      const response = await axios.post(
-        "http://localhost:8080/api/users/sign-up",
-        formData
-      );
+      const response = await axios.post("http://localhost:8080/api/users/sign-up",formData);
 
       console.log("Signup success:", response.data);
       toast.success("Signup successfully! Please sign in.");
