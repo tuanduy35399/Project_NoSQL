@@ -114,7 +114,6 @@ function App() {
               )
             )}
 
-            {/* Chỉ hiện khung login khi chưa đăng nhập và chưa là guest */}
             {!isGuest && !isLoggedIn && <Login guest={setGuest} />}
           </div>
         </SortableContext>

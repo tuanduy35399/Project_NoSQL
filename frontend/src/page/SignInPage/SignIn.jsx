@@ -20,10 +20,10 @@ const SignIn = () => {
         headers: { "Content-Type": "application/json" },
       });
 
-      console.log("Signin success:", response.data);
+      console.log("Sign in success:", response.data);
 
       if (response.data === true) {
-        toast.success("Signin successfully!");
+        toast.success("Sign in successfully!");
 
         localStorage.setItem("isLoggedIn", "true"); // Lưu trạng thái đăng nhập thành công
         localStorage.setItem("user", JSON.stringify(response.data)); // Lưu thông tin user nếu cần
@@ -34,7 +34,7 @@ const SignIn = () => {
       }
 
     } catch (error) {
-      console.error("Signin failed:", error);
+      console.error("Sign in failed:", error);
 
       if (error.response) {
         const { status, data } = error.response;

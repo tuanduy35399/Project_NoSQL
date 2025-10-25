@@ -30,12 +30,12 @@
 
 .iconprivate:hover {
     animation: Hover 0.5s ease 0s 1 normal forwards;
-    background-color: rgba(250, 249, 249, 0.733);
+    background-color: rgba(219, 217, 217, 0.733);
 }
 
 .iconprivate.active {
     animation: Click 0.5s ease 0s 1 normal forwards;
-    background-color: rgba(250, 249, 249, 0.733);
+    background-color: rgba(219, 217, 217, 0.733);
 }
 
 .top-bar {

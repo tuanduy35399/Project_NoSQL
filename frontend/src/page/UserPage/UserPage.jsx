@@ -42,15 +42,6 @@ export default function UserPage() {
     useEffect(() => {
         fetchDataUser();
     }, []);
-    // Dữ liệu user có thể thay đổi
-    const [user, setUser] = useState({
-        avatar: "/avt.jpg",
-        fullname: "Quynhhh",
-        username: "thoconomcarot",
-        bio: "Write biography",
-        link: "",
-        followers: 0,
-    });
 
     const handleEditClick = () => {
         setShowEdit(true);
@@ -62,7 +53,7 @@ export default function UserPage() {
 
     // Khi nhấn Done trong Edit
     const handleSave = (updatedUser) => {
-        setUser(updatedUser);
+        setDataUser(updatedUser);
         setShowEdit(false);
     };
 
