@@ -16,8 +16,12 @@ export default function UserPage() {
 
     const fetchDataUser = async () => {
         try {
-            const tempData = await axios.get("/api/users/6719c9c5e4b0a12a8b1f56b3");
-            console.log("Lay du lieu user thanh cong");
+            const tempData = await axios.get(
+                "http://localhost:8080/api/users/68f54ae35e628702759a434" // lấy 1 id cũ thể
+            );
+            setDatAuser(tempData.data);
+
+            console.log("lay du lieu user thanh cong");
         } catch (error) {
             console.log("Loi khi lay du lieu user", error);
             toast.error("Cannot get data user");
@@ -81,7 +85,7 @@ export default function UserPage() {
                     )}
                 </div>
             </nav>
-            
+
 
             {/* Profile info */}
             <nav className="profile">
