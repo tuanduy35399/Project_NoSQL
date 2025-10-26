@@ -1,76 +1,71 @@
-// ListPost.js (Đã cập nhật)
 import { useState, useEffect } from "react";
 import style from "./ListPost.module.css";
 import axios from "axios";
-import { toast} from 'sonner';
+import { toast } from "sonner";
 import CommentPopup from "../Comment/CommentPopup.jsx";
 
 export default function ListPost() {
   const [data, setData] = useState([]);
-
-  // Thêm 2 state mới để quản lý popup
-  // 1. popup có mở không?
   const [isCommentPopupOpen, setIsCommentPopupOpen] = useState(false);
-  // 2. popup đang mở cho post nào?
   const [selectedPostId, setSelectedPostId] = useState(null);
 
-  const API = async () => {
+  // ✅ Lấy dữ liệu từ backend
+  const fetchPosts = async () => {
     try {
       const rs = await axios.get("http://localhost:8080/api/v1/soulspaces");
-      // Thêm các trường dữ liệu "ảo" để xử lý state local
+      if (!Array.isArray(rs.data)) {
+        console.error("API không trả về mảng hợp lệ:", rs.data);
+        toast.error("Invalid API response format");
+        return;
+      }
+
+      // ✅ Thêm field local (liked, count fallback)
       const processedData = rs.data.map((post) => ({
         ...post,
-        liked: false, // Thêm trường "liked"
-        // Đảm bảo các trường count tồn tại
+        liked: false,
         likeCount: post.likeCount || 0,
         commentCount: post.commentCount || 0,
         shareCount: post.shareCount || 0,
       }));
+
       setData(processedData);
     } catch (error) {
-      toast.error("Error to connect database");
-      console.log("Error to connect database", error);
+      toast.error("Error connecting to database");
+      console.error("Error fetching posts:", error);
     }
   };
 
+  // ✅ Chạy khi component mount
   useEffect(() => {
-    API();
+    fetchPosts();
   }, []);
 
-  // console.log(data);
+  // ✅ Xử lý like/comment
   const handleAction = (postId, type) => {
     if (type === "LIKE") {
       setData((prevData) =>
-        prevData.map((post) => {
-          if (post.id === postId) {
-            // Sửa lại logic: Tăng/giảm dựa trên trạng thái "liked"
-            return {
-              ...post,
-              liked: !post.liked,
-              likeCount: post.likeCount + (post.liked ? -1 : 1),
-            };
-          }
-          return post;
-        })
+        prevData.map((post) =>
+          post.id === postId
+            ? {
+                ...post,
+                liked: !post.liked,
+                likeCount: post.likeCount + (post.liked ? -1 : 1),
+              }
+            : post
+        )
       );
-      // Lời khuyên: Bạn nên gọi API để "like" ở đây
+
+      // Gợi ý: Gọi API like ở đây nếu backend có hỗ trợ
       // axios.post(`http://localhost:8080/api/v1/posts/${postId}/like`);
     }
 
     if (type === "COMMENT") {
-      // Khi click comment, hãy mở popup
       setSelectedPostId(postId);
       setIsCommentPopupOpen(true);
-
-      // Không cần tăng số đếm ở đây nữa, vì nó sẽ tự tăng khi user submit
-      // (Hoặc bạn có thể truyền 1 hàm vào popup để nó gọi ngược lại)
     }
-
-      // Lời khuyên: Bạn nên gọi API để "share" ở đây
-      // axios.post(`http://localhost:8080/api/v1/posts/${postId}/share`);
   };
 
-  // Hàm để đóng popup
+  // ✅ Đóng popup
   const handleClosePopup = () => {
     setIsCommentPopupOpen(false);
     setSelectedPostId(null);
@@ -79,61 +74,77 @@ export default function ListPost() {
   return (
     <>
       <div className={style.layout}>
-        {data.map((post) => (
-          // Sửa lại key: Dùng post.id thay vì post.userId
-          <div key={post.id} className={style.box}>
-            <div className={style["post-content"]}>
-              <div className={style.header_post}>
-                <div className={style.avatar_user}>
-                  <img src={post.userAvatarUrl} alt="User Avatar"></img>
+        {[...data] // tránh mutate data khi reverse
+          .reverse()
+          .map((post) => (
+            <div key={post.id} className={style.box}>
+              {/* --- Header post --- */}
+              <div className={style["post-content"]}>
+                <div className={style.header_post}>
+                  <div className={style.avatar_user}>
+                    <img
+                      src={post.userAvatarUrl || "/default-avatar.png"}
+                      alt="User Avatar"
+                    />
+                  </div>
+                  <div className={style["user-box"]}>
+                    {post.userName ?? "Unknown user"}
+                  </div>
                 </div>
-                <div className={style["user-box"]}>{String(post.userName)}</div>
+              </div>
+
+              {/* --- Nội dung bài viết --- */}
+              <div className={style["desc-box"]}>{post.content}</div>
+
+              {/* --- Hình ảnh bài viết --- */}
+              {Array.isArray(post.imageContentUrls) &&
+                post.imageContentUrls.map((url, index) => (
+                  <img
+                    key={index}
+                    src={url}
+                    className={style["picture"]}
+                    alt={`Post image ${index}`}
+                  />
+                ))}
+
+              {/* --- Thời gian đăng --- */}
+              <span style={{ color: "grey" }}>
+                {new Date(post.createdAt).toLocaleString("vi-VN", {
+                  hour12: false,
+                })}
+              </span>
+
+              {/* --- Thanh trạng thái (like / comment) --- */}
+              <div className={style["status-bar"]}>
+                {/* LIKE */}
+                <button
+                  type="button"
+                  className={`${style.btn} ${style["btn-like"]} ${
+                    post.liked ? style["btn-like-active"] : ""
+                  }`}
+                  aria-label="Like"
+                  onClick={() => handleAction(post.id, "LIKE")}
+                >
+                  <span className={style.icon} />
+                </button>
+                <span>{post.likeCount}</span>
+
+                {/* COMMENT */}
+                <button
+                  type="button"
+                  className={`${style.btn} ${style["btn-comment"]}`}
+                  aria-label="Comment"
+                  onClick={() => handleAction(post.id, "COMMENT")}
+                >
+                  <span className={style.icon} />
+                </button>
+                <span>{post.commentCount}</span>
               </div>
             </div>
-            <div className={style["desc-box"]}>{post.content}</div>
-
-            {/* Sửa lại key và biến map */}
-            {post.imageContentUrls.map((url, index) => (
-              <img
-                key={index}
-                src={url}
-                className={style["picture"]}
-                alt="Post content"
-              ></img>
-            ))}
-            <span style={{ color: "grey"}}>
-              {new Date(post.createdAt).toLocaleString("vi-VN", {
-                hour12: false, // dùng định dạng 24h
-              })}
-            </span>
-            <div className={style["status-bar"]}>
-              <button
-                type="button"
-                className={`${style.btn} ${style["btn-like"]} ${
-                  post.liked ? style["btn-like-active"] : ""
-                }`}
-                aria-label="Like"
-                onClick={() => handleAction(post.id, "LIKE")}
-              >
-                <span className={style.icon} />
-              </button>
-              <span>{post.likeCount}</span>
-
-              {/* COMMENT */}
-              <button
-                type="button"
-                className={`${style.btn} ${style["btn-comment"]}`}
-                aria-label="Comment"
-                onClick={() => handleAction(post.id, "COMMENT")}
-              >
-                <span className={style.icon} />
-              </button>
-              <span>{post.commentCount}</span>
-            </div>
-          </div>
-        )).reverse()}
+          ))}
       </div>
-      {/* Render Popup một cách có điều kiện */}
+
+      {/* --- Comment Popup --- */}
       {isCommentPopupOpen && (
         <CommentPopup postId={selectedPostId} onClose={handleClosePopup} />
       )}
