@@ -47,11 +47,11 @@ export default function PostPage() {
  const postNews = async () => {
    const loadingToast = toast.loading(`Uploading ${progress}%`);
    try {
-     const response = await axios.get("http://localhost:8080/api/users/68f5a47e35e628702759a434");
-     setUserData(response.data);
+     const localStore= localStorage.getItem("user")
+     setUserData(localStore.data);
      const formData = new FormData();
      formData.append("userId", "6719c9c5e4b0a12a8b1f56b3");
-     formData.append("userName", response.data.username)
+     formData.append("userName", localStore.username);
      formData.append("content", body);
      formData.append("published", publish ? "true" : "false");
      files.forEach((file) => formData.append("files", file));

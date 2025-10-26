@@ -16,19 +16,20 @@ const SignIn = () => {
 
     //----------------------------------------connect to backend------------------------------------------------------
     try {
-      const response = await axios.post("http://localhost:8080/auth/login", formData, {
+      const response = await axios.post("http://localhost:8080/auth/log-in", formData, {
         headers: { "Content-Type": "application/json" },
       });
 
       console.log("Sign in success:", response.data);
 
-      if (response.data === true) {
+      if (response.data.authentication === true) {
         toast.success("Sign in successfully!");
 
         localStorage.setItem("isLoggedIn", "true"); // Lưu trạng thái đăng nhập thành công
-        localStorage.setItem("user", JSON.stringify(response.data)); // Lưu thông tin user nếu cần
+        localStorage.setItem("userId", JSON.stringify(response.data.user.id));
+        localStorage.setItem("username", JSON.stringify(response.data.user.username)); // Lưu thông tin user nếu cần
 
-        navigate("/home");
+        navigate("/");
       } else {
         toast.error("Incorrect username or password!");
       }

@@ -1,24 +1,30 @@
-import './UserPage.css'
-import { useEffect, useState, useRef } from "react";
-import { BsThreeDots } from "react-icons/bs";
-import Edit from "../../Components/EditProfile/Edit";
+import { useEffect, useState } from "react";
 import axios from 'axios';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
-
+import "./UserPage.css";
+import Edit from "../../Components/EditProfile/Edit";
 export default function UserPage() {
     const [activeTab, setActiveTab] = useState("thread");
     const [showEdit, setShowEdit] = useState(false);
     const [dataUser, setDataUser] = useState(null);
-    const [menuOpen, setMenuOpen] = useState(false);
-    const menuRef = useRef(null);
+    const [isLogin, setIsLogin] = useState(false);
     const navigate = useNavigate();
-
+    
     const fetchDataUser = async () => {
         try {
+            const userId = String(localStorage.getItem("userId")).replaceAll('"', ''); 
+            // console.log(userId);
+            if (!userId) {
+              console.error("Logged in but userId not found in LocalStorage.");
+              toast.error("User session error. Please log in again.");
+              return; // Dừng thực thi
+            }
             const tempData = await axios.get(
-                "http://localhost:8080/api/users/68f5a47e35e628702759a434"
+              `http://localhost:8080/api/users/${userId}`
             );
+            const islogined = Boolean(localStorage.getItem("isLoggedIn"));
+            setIsLogin(islogined);
             setDataUser(tempData.data);
 
             console.log("Lấy dữ liệu user thành công");
@@ -29,29 +35,9 @@ export default function UserPage() {
     };
 
     useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (menuRef.current && !menuRef.current.contains(event.target)) {
-                setMenuOpen(false);
-            }
-        };
-
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, []);
-
-    useEffect(() => {
         fetchDataUser();
     }, []);
 
-    const handleEditClick = () => {
-        setShowEdit(true);
-    };
-
-    const handleClose = () => {
-        setShowEdit(false);
-    };
 
     const handleSave = (updatedUser) => {
         setDataUser(updatedUser);
@@ -61,62 +47,73 @@ export default function UserPage() {
     const handleLogout = () => {
         localStorage.removeItem("isLoggedIn");
         toast.success("Logged out successfully!");
-        navigate("/home");
+        navigate("/");
     };
-
-    if (!dataUser) return <p>Loading...</p>;
-
     return (
-        <div className="user-page">
-            <nav className="nav-bar">
-                <h1><span>Profile</span></h1>
-                <div className="menu-wrapper" ref={menuRef}>
-                    <button className="btn" onClick={() => setMenuOpen(!menuOpen)}>
-                        <BsThreeDots />
-                    </button>
-                    {menuOpen && (
-                        <div className="dropdown-menu">
-                            <button onClick={handleLogout}>Log out</button>
-                        </div>
-                    )}
-                </div>
-            </nav>
-
+      <div className="user-page">
+        <nav className="nav-bar">
+          <h1>
+            <span>Profile</span>
+          </h1>
+          {isLogin && (
+            <div className="menu-wrapper">
+              <div className="dropdown-menu">
+                <button onClick={handleLogout}>Log out</button>
+              </div>
+            </div>
+          )}
+        </nav>
+            {isLogin ? //TH1: Ng dung da dang nhap va da load du lieu thanh cong 
+                (
+          <>
             <nav className="profile">
-                <div className="profile-in4">
-                    <h1>{dataUser.fullname}</h1>
-                    <p className="name">@{dataUser.username}</p>
-                    {dataUser.bio && <p className='bio'>{dataUser.bio}</p>}
-                    {dataUser.link && <a href={dataUser.link}>{dataUser.link}</a>}
-                </div>
+              <div className="profile-in4">
+                <h1>{dataUser.fullname}</h1>
+                <p className="name">@{dataUser.username}</p>
+              </div>
 
-                <div className="profile-avt">
-                    <img src={dataUser.avatar} alt="avt" className="avt" />
-                    <button className="edit-btn" onMouseDown={handleEditClick}>
-                        Edit profile
-                    </button>
-                </div>
-            </nav>
-
-            <nav className="tab">
-                {["thread", "reply", "media", "repost"].map((tab) => (
-                    <button
-                        key={tab}
-                        className={`tab-btn ${activeTab === tab ? "active" : ""}`}
-                        onMouseDown={() => setActiveTab(tab)}
-                    >
-                        {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                    </button>
-                ))}
-            </nav>
-
-            {showEdit && (
-                <Edit
-                    user={dataUser}
-                    onClose={handleClose}
-                    onSave={handleSave}
+              <div className="profile-avt">
+                <img
+                  src={dataUser.userAvatarUrl}
+                  alt="avatar"
+                  className="avt"
                 />
+                <button
+                  className="edit-btn"
+                  onMouseDown={() => setShowEdit(true)}
+                >
+                  Edit profile
+                </button>
+              </div>
+            </nav>
+            <nav className="tab">
+              {["thread", "reply", "media", "repost"].map((tab) => (
+                <button
+                  key={tab}
+                  className={`tab-btn ${activeTab === tab ? "active" : ""}`}
+                  onMouseDown={() => setActiveTab(tab)}
+                >
+                  {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                </button>
+              ))}
+            </nav>
+            {showEdit && (
+              <Edit
+                user={dataUser}
+                onClose={() => setShowEdit(false)}
+                onSave={handleSave}
+              />
             )}
-        </div>
+          </>
+        ) : // Trường hợp 2: Ng dung da dang nhap nhung dang load du lieu 
+        !dataUser ? (
+          <p>Loading profile...</p>
+        ) : (
+          // Trường hợp 3: Người dùng CHƯA đăng nhập
+          <>
+            <h2>You need to Login</h2>
+          </>
+        )}
+      </div>
     );
 }
