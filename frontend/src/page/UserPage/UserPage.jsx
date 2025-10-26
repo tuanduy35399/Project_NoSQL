@@ -1,82 +1,128 @@
-import { useEffect, useState, useRef } from "react"; // Thêm useRef
+import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import "./UserPage.css";
 import Edit from "../../Components/EditProfile/Edit";
-import { BsThreeDots } from "react-icons/bs"; // Thêm icon cho menu 3 chấm
+import { BsThreeDots } from "react-icons/bs";
 
 export default function UserPage() {
-  const [activeTab, setActiveTab] = useState("thread");
   const [showEdit, setShowEdit] = useState(false);
-  const [dataUser, setDataUser] = useState(null);
+  const [dataUser, setDataUser] = useState(null); // Bắt đầu là null
   const [isLogin, setIsLogin] = useState(false);
   const navigate = useNavigate();
   const [isDelete, setIsDelete] = useState(false);
-
-  // Thêm state và ref cho dropdown menu 3 chấm (từ HEAD)
+  const [userBlog, setUserBlogs] = useState([]); // Bắt đầu là mảng rỗng
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
+
   const fetchDataUser = async () => {
     try {
       const userId = String(localStorage.getItem("userId")).replaceAll('"', "");
-      // console.log(userId);
       if (!userId) {
-        console.error("Logged in but userId not found in LocalStorage.");
-        toast.error("User session error. Please log in again.");
-        return; // Dừng thực thi
+        // Nếu không có userId (dù trước đó check login),
+        // ta nên coi như chưa login và dừng lại
+        setIsLogin(false);
+        localStorage.removeItem("isLoggedIn"); // Dọn dẹp
+        console.error("User ID not found in LocalStorage.");
+        return;
       }
-      const tempData = await axios.get(
-        `http://localhost:8080/api/users/${userId}`
-      );
-
 
       // Lấy logic từ INCOMING
       const islogined = Boolean(localStorage.getItem("isLoggedIn"));
-      setIsLogin(islogined);
-      setDataUser(tempData.data);
+      setIsLogin(islogined); // Set trạng thái login
 
+      // Nếu không login thì không cần fetch data
+      if (!islogined) {
+        return;
+      }
+
+      const tempData = await axios.get(
+        `http://localhost:8080/api/users/${userId}`
+      );
+      setDataUser(tempData.data);
       console.log("Lấy dữ liệu user thành công");
     } catch (error) {
       console.log("Lỗi khi lấy dữ liệu user", error);
       toast.error("Cannot get data user");
+      // Nếu lỗi (ví dụ: user bị xóa, token hết hạn), đăng xuất user
+      setIsLogin(false);
+      localStorage.removeItem("isLoggedIn");
+      localStorage.removeItem("userId");
     }
   };
 
-  //----------------------------------------delete user------------------------------------------------------
   const deleteDataUser = async () => {
     try {
       const userId = String(localStorage.getItem("userId")).replaceAll('"', "");
-      // console.log(userId);
       if (!userId) {
-        console.error("Logged in but userId not found in LocalStorage.");
         toast.error("User session error. Please log in again.");
-        return; // Dừng thực thi
+        return;
       }
-      const deleteData = await axios.delete(
-        `http://localhost:8080/api/users/${userId}`
-      );
-
-
-      // Lấy logic từ INCOMIN
+      await axios.delete(`http://localhost:8080/api/users/${userId}`);
 
       console.log("Xóa user thành công");
       toast.success("Delete user successfully!");
       localStorage.removeItem("isLoggedIn");
       localStorage.removeItem("userId");
+      setIsLogin(false); // Cập nhật state
+      setDataUser(null); // Cập nhật state
       navigate("/");
     } catch (error) {
       console.log("Không thể xóa user", error);
       toast.error("Cannot delete user");
     }
   };
-  useEffect(() => {
-    fetchDataUser();
-  }, []);
+
+  const getUserPost = async () => {
+    try {
+      const userId = String(localStorage.getItem("userId")).replaceAll('"', "");
+      if (!userId) {
+        // Không cần toast vì fetchDataUser đã xử lý
+        return;
+      }
+      const blogs = await axios.get(
+        `http://localhost:8080/api/v1/blogs/${userId}/all`
+      );
+
+      // SỬA LỖI 2.1: Giả sử blogs.data là một mảng. Không bọc nó trong [].
+      if (Array.isArray(blogs.data)) {
+        setUserBlogs(blogs.data);
+      } else {
+        // Nếu API trả về cấu trúc lạ, set mảng rỗng để tránh crash
+        setUserBlogs([]);
+        console.warn("Expected an array of blogs, but received:", blogs.data);
+      }
+      console.log("Lay bai viet user thanh cong");
+    } catch (error) {
+      console.log("Khong the lay cai bai post cua user", error);
+      toast.error("Cannot get user's blogs");
+    }
+  };
 
   useEffect(() => {
-    if (isDelete) deleteDataUser();
-  }, [isDelete])
+    // Chỉ gọi getUserPost KHI ĐÃ CÓ dataUser
+    // Điều này đảm bảo chúng ta chỉ fetch post khi đã login thành công
+    const init = async () => {
+      await fetchDataUser();
+    };
+    init();
+  }, []);
+
+  // Tách riêng useEffect cho getUserPost,
+  // nó sẽ chạy khi dataUser thay đổi từ null -> object
+  useEffect(() => {
+    if (dataUser && isLogin) {
+      getUserPost();
+    }
+  }, [dataUser, isLogin]); // Phụ thuộc vào dataUser và isLogin
+
+  useEffect(() => {
+    if (isDelete) {
+      deleteDataUser();
+      setIsDelete(false); // Reset lại state sau khi gọi
+    }
+  }, [isDelete]); // Xóa mảng phụ thuộc [deleteDataUser] để tránh vòng lặp vô hạn
 
   const handleSave = (updatedUser) => {
     setDataUser(updatedUser);
@@ -84,29 +130,32 @@ export default function UserPage() {
   };
 
   const handleDelete = () => {
-    setIsDelete(true);
+    // Thêm một bước xác nhận
+    if (
+      window.confirm(
+        "Are you sure you want to delete your account? This action cannot be undone."
+      )
+    ) {
+      setIsDelete(true);
+    }
   };
 
-  // === Mâu thuẫn 1: Lấy logic từ INCOMING ===
   const handleLogout = () => {
     localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("userId");
+    setIsLogin(false);
+    setDataUser(null);
+    setUserBlogs([]); // Xóa các bài post khỏi state
     toast.success("Signed out successfully!");
     navigate("/");
   };
 
-
-  // === Mâu thuẫn 2: Gộp logic ===
   return (
     <div className="user-page">
-      {/* Lấy nav-bar từ HEAD (menu 3 chấm) */}
       <nav className="nav-bar">
         <h1>
           <span>Profile</span>
         </h1>
-        {/* Mình kết hợp logic "isLogin" (từ INCOMING) 
-                  với cấu trúc menu 3 chấm (từ HEAD)
-                  vì chỉ nên hiển thị menu khi đã đăng nhập 
-                */}
         {isLogin && (
           <div className="menu-wrapper" ref={menuRef}>
             <button className="btn" onClick={() => setMenuOpen(!menuOpen)}>
@@ -114,7 +163,6 @@ export default function UserPage() {
             </button>
             {menuOpen && (
               <div className="dropdown-menu">
-                {/* Dùng text "Log out" (từ INCOMING) */}
                 <button onClick={handleLogout}>Log out</button>
                 <button onClick={handleDelete}>Remove account</button>
               </div>
@@ -123,47 +171,91 @@ export default function UserPage() {
         )}
       </nav>
 
-      {/* Lấy toàn bộ logic hiển thị còn lại từ INCOMING */}
       {isLogin ? (
-        // === PHẦN NÀY DÀNH CHO USER ĐÃ LOGIN (Giữ nguyên) ===
         <>
-          <nav className="profile">
-            <div className="profile-in4">
-              <h1>{dataUser.fullname}</h1>
-              <p className="name">@{dataUser.username}</p>
+          {/* SỬA LỖI 1: Thêm kiểm tra loading state */}
+          {!dataUser ? (
+            <div className="loading-container">
+              <p>Loading profile...</p>
             </div>
+          ) : (
+            <>
+              {/* Chỉ render phần này khi dataUser đã tồn tại */}
+              <nav className="profile">
+                <div className="profile-in4">
+                  <h1>{dataUser.fullname}</h1>
+                  <p className="name">@{dataUser.username}</p>
+                </div>
 
-            <div className="profile-avt">
-              <img src={dataUser.userAvatarUrl} alt="avatar" className="avt" />
-              <button
-                className="edit-btn"
-                onMouseDown={() => setShowEdit(true)}
-              >
-                Edit profile
-              </button>
-            </div>
-          </nav>
-          <nav className="tab">
-            {["thread", "reply", "media", "repost"].map((tab) => (
-              <button
-                key={tab}
-                className={`tab-btn ${activeTab === tab ? "active" : ""}`}
-                onMouseDown={() => setActiveTab(tab)}
-              >
-                {tab.charAt(0).toUpperCase() + tab.slice(1)}
-              </button>
-            ))}
-          </nav>
-          {showEdit && (
-            <Edit
-              user={dataUser}
-              onClose={() => setShowEdit(false)}
-              onSave={handleSave}
-            />
+                <div className="profile-avt">
+                  <img
+                    src={dataUser.userAvatarUrl}
+                    alt="avatar"
+                    className="avt"
+                  />
+                  <button
+                    className="edit-btn"
+                    onMouseDown={() => setShowEdit(true)}
+                  >
+                    Edit profile
+                  </button>
+                </div>
+              </nav>
+
+              <div className="layout">
+                {/* SỬA LỖI 2.2: Dùng spread operator ...userBlog */}
+                {[...userBlog].reverse().map((post) => (
+                  <div key={post.id} className="box">
+                    {/* --- Header post --- */}
+                    <div className="post-content">
+                      <div className="header_post">
+                        <div className="avatar_user">
+                          <img
+                            src={post.userAvatarUrl || "/default-avatar.png"}
+                            alt="User Avatar"
+                          />
+                        </div>
+                        <div className="user-box">
+                          {post.userName ? "@" + post.userName : "Unknown user"}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="desc-box">{post.content}</div>
+
+                    {Array.isArray(post.imageContentUrls) &&
+                      post.imageContentUrls.map((url, index) => (
+                        <img
+                          key={index}
+                          src={url}
+                          className="picture"
+                          alt={`Post image ${index}`}
+                        />
+                      ))}
+
+                    <span
+                      style={{ color: "grey", fontSize: 13, opacity: "70%" }}
+                    >
+                      {new Date(post.createdAt).toLocaleString("vi-VN", {
+                        hour12: false,
+                      })}
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              {showEdit && (
+                <Edit
+                  user={dataUser}
+                  onClose={() => setShowEdit(false)}
+                  onSave={handleSave}
+                />
+              )}
+            </>
           )}
         </>
       ) : (
-        // === SỬA ĐỔI: PHẦN NÀY DÀNH CHO USER CHƯA LOGIN ===
+        // Phần dành cho user chưa login
         <div className="logged-out-container">
           <h2>Bạn chưa đăng nhập</h2>
           <p>Vui lòng đăng nhập hoặc đăng ký để xem trang cá nhân.</p>
