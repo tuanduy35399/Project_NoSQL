@@ -28,7 +28,9 @@
 .box:last-child{ border: none; }
 
 .user-box{ font-weight: bold; }
-.desc-box{ }
+.desc-box{ 
+  margin: 20px 0;
+}
 
 .status-bar{
   display: flex;

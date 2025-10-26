@@ -67,74 +67,69 @@ export default function ListPost() {
   return (
     <>
       <div className={style.layout}>
-        {[...data] 
-          .reverse()
-          .map((post) => (
-            <div key={post.id} className={style.box}>
-              {/* --- Header post --- */}
-              <div className={style["post-content"]}>
-                <div className={style.header_post}>
-                  <div className={style.avatar_user}>
-                    <img
-                      src={post.userAvatarUrl || "/default-avatar.png"}
-                      alt="User Avatar"
-                    />
-                  </div>
-                  <div className={style["user-box"]}>
-                    {post.userName ?? "Unknown user"}
-                  </div>
+        {[...data].reverse().map((post) => (
+          <div key={post.id} className={style.box}>
+            {/* --- Header post --- */}
+            <div className={style["post-content"]}>
+              <div className={style.header_post}>
+                <div className={style.avatar_user}>
+                  <img
+                    src={post.userAvatarUrl || "/default-avatar.png"}
+                    alt="User Avatar"
+                  />
+                </div>
+                <div className={style["user-box"]}>
+                  {post.userName ? "@" + post.userName : "Unknown user"}
                 </div>
               </div>
-
-              {/* --- Nội dung bài viết --- */}
-              <div className={style["desc-box"]}>{post.content}</div>
-
-              {/* --- Hình ảnh bài viết --- */}
-              {Array.isArray(post.imageContentUrls) &&
-                post.imageContentUrls.map((url, index) => (
-                  <img
-                    key={index}
-                    src={url}
-                    className={style["picture"]}
-                    alt={`Post image ${index}`}
-                  />
-                ))}
-
-              {/* --- Thời gian đăng --- */}
-              <span style={{ color: "grey" }}>
-                {new Date(post.createdAt).toLocaleString("vi-VN", {
-                  hour12: false,
-                })}
-              </span>
-
-              {/* --- Thanh trạng thái (like / comment) --- */}
-              <div className={style["status-bar"]}>
-                {/* LIKE */}
-                <button
-                  type="button"
-                  className={`${style.btn} ${style["btn-like"]} ${
-                    post.liked ? style["btn-like-active"] : ""
-                  }`}
-                  aria-label="Like"
-                  onClick={() => handleAction(post.id, "LIKE")}
-                >
-                  <span className={style.icon} />
-                </button>
-                <span>{post.likeCount}</span>
-
-                {/* COMMENT */}
-                <button
-                  type="button"
-                  className={`${style.btn} ${style["btn-comment"]}`}
-                  aria-label="Comment"
-                  onClick={() => handleAction(post.id, "COMMENT")}
-                >
-                  <span className={style.icon} />
-                </button>
-                <span>{post.commentCount}</span>
-              </div>
             </div>
-          ))}
+
+            <div className={style["desc-box"]}>{post.content}</div>
+
+            {Array.isArray(post.imageContentUrls) &&
+              post.imageContentUrls.map((url, index) => (
+                <img
+                  key={index}
+                  src={url}
+                  className={style["picture"]}
+                  alt={`Post image ${index}`}
+                />
+              ))}
+
+            <span style={{ color: "grey", fontSize:13, opacity: "70%" }}>
+              {new Date(post.createdAt).toLocaleString("vi-VN", {
+                hour12: false,
+              })}
+            </span>
+
+            {/* --- Thanh trạng thái (like / comment) --- */}
+            <div className={style["status-bar"]}>
+              {/* LIKE */}
+              <button
+                type="button"
+                className={`${style.btn} ${style["btn-like"]} ${
+                  post.liked ? style["btn-like-active"] : ""
+                }`}
+                aria-label="Like"
+                onClick={() => handleAction(post.id, "LIKE")}
+              >
+                <span className={style.icon} />
+              </button>
+              <span>{post.likeCount}</span>
+
+              {/* COMMENT */}
+              <button
+                type="button"
+                className={`${style.btn} ${style["btn-comment"]}`}
+                aria-label="Comment"
+                onClick={() => handleAction(post.id, "COMMENT")}
+              >
+                <span className={style.icon} />
+              </button>
+              <span>{post.commentCount}</span>
+            </div>
+          </div>
+        ))}
       </div>
 
       {/* --- Comment Popup --- */}
