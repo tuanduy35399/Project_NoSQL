@@ -64,7 +64,7 @@ export default function UserPage() {
       toast.success("Delete user successfully!");
       localStorage.removeItem("isLoggedIn");
       localStorage.removeItem("userId");
-      navigate("/signin");
+      navigate("/");
     } catch (error) {
       console.log("Không thể xóa user", error);
       toast.error("Cannot delete user");
