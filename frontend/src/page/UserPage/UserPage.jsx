@@ -12,11 +12,11 @@ export default function UserPage() {
   const [dataUser, setDataUser] = useState(null);
   const [isLogin, setIsLogin] = useState(false);
   const navigate = useNavigate();
+  const [isDelete, setIsDelete] = useState(false);
 
   // Thêm state và ref cho dropdown menu 3 chấm (từ HEAD)
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
-
   const fetchDataUser = async () => {
     try {
       const userId = String(localStorage.getItem("userId")).replaceAll('"', "");
@@ -29,6 +29,8 @@ export default function UserPage() {
       const tempData = await axios.get(
         `http://localhost:8080/api/users/${userId}`
       );
+
+
       // Lấy logic từ INCOMING
       const islogined = Boolean(localStorage.getItem("isLoggedIn"));
       setIsLogin(islogined);
@@ -41,21 +43,57 @@ export default function UserPage() {
     }
   };
 
+  //----------------------------------------delete user------------------------------------------------------
+  const deleteDataUser = async () => {
+    try {
+      const userId = String(localStorage.getItem("userId")).replaceAll('"', "");
+      // console.log(userId);
+      if (!userId) {
+        console.error("Logged in but userId not found in LocalStorage.");
+        toast.error("User session error. Please log in again.");
+        return; // Dừng thực thi
+      }
+      const deleteData = await axios.delete(
+        `http://localhost:8080/api/users/${userId}`
+      );
+
+
+      // Lấy logic từ INCOMIN
+
+      console.log("Xóa user thành công");
+      toast.success("Delete user successfully!");
+      localStorage.removeItem("isLoggedIn");
+      localStorage.removeItem("userId");
+      navigate("/signin");
+    } catch (error) {
+      console.log("Không thể xóa user", error);
+      toast.error("Cannot delete user");
+    }
+  };
   useEffect(() => {
     fetchDataUser();
   }, []);
+
+  useEffect(() => {
+    if (isDelete) deleteDataUser();
+  }, [isDelete])
 
   const handleSave = (updatedUser) => {
     setDataUser(updatedUser);
     setShowEdit(false);
   };
 
+  const handleDelete = () => {
+    setIsDelete(true);
+  };
+
   // === Mâu thuẫn 1: Lấy logic từ INCOMING ===
   const handleLogout = () => {
     localStorage.removeItem("isLoggedIn");
-    toast.success("Logged out successfully!");
+    toast.success("Signed out successfully!");
     navigate("/");
   };
+
 
   // === Mâu thuẫn 2: Gộp logic ===
   return (
@@ -78,6 +116,7 @@ export default function UserPage() {
               <div className="dropdown-menu">
                 {/* Dùng text "Log out" (từ INCOMING) */}
                 <button onClick={handleLogout}>Log out</button>
+                <button onClick={handleDelete}>Remove account</button>
               </div>
             )}
           </div>

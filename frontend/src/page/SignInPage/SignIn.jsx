@@ -40,9 +40,7 @@ const SignIn = () => {
       if (error.response) {
         const { status, data } = error.response;
         if (status === 400) {
-          toast.error(data.message || "Invalid input! Please check your username and password.");
-        } else if (status === 401) {
-          toast.error("Unauthorized! Incorrect username or password.");
+          toast.error(data.message || "Acoount does not exist. Please sign up first.");
         } else if (status === 500) {
           toast.error("Server error! Please try again later.");
         }
