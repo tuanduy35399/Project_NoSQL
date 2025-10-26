@@ -9,7 +9,7 @@ export default function ListPost() {
   const [isCommentPopupOpen, setIsCommentPopupOpen] = useState(false);
   const [selectedPostId, setSelectedPostId] = useState(null);
 
-  // ✅ Lấy dữ liệu từ backend
+  //Lấy dữ liệu từ backend
   const fetchPosts = async () => {
     try {
       const rs = await axios.get("http://localhost:8080/api/v1/soulspaces");
@@ -19,7 +19,6 @@ export default function ListPost() {
         return;
       }
 
-      // ✅ Thêm field local (liked, count fallback)
       const processedData = rs.data.map((post) => ({
         ...post,
         liked: false,
@@ -35,12 +34,10 @@ export default function ListPost() {
     }
   };
 
-  // ✅ Chạy khi component mount
   useEffect(() => {
     fetchPosts();
   }, []);
 
-  // ✅ Xử lý like/comment
   const handleAction = (postId, type) => {
     if (type === "LIKE") {
       setData((prevData) =>
@@ -54,9 +51,6 @@ export default function ListPost() {
             : post
         )
       );
-
-      // Gợi ý: Gọi API like ở đây nếu backend có hỗ trợ
-      // axios.post(`http://localhost:8080/api/v1/posts/${postId}/like`);
     }
 
     if (type === "COMMENT") {
@@ -65,7 +59,6 @@ export default function ListPost() {
     }
   };
 
-  // ✅ Đóng popup
   const handleClosePopup = () => {
     setIsCommentPopupOpen(false);
     setSelectedPostId(null);
@@ -74,7 +67,7 @@ export default function ListPost() {
   return (
     <>
       <div className={style.layout}>
-        {[...data] // tránh mutate data khi reverse
+        {[...data] 
           .reverse()
           .map((post) => (
             <div key={post.id} className={style.box}>

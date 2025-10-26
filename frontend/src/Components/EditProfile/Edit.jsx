@@ -22,7 +22,7 @@ export default function Edit({ user, onClose, onSave }) {
       }
       //doi Hieu Nhan viet API response de lay id tu localStorage 
 
-      const response = await axios.put(
+      const response = await axios.patch(
         `http://localhost:8080/api/users/${userId}`,
         formData,
         { headers: { "Content-Type": "application/json" } }
