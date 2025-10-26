@@ -174,3 +174,79 @@
 .dropdown-menu button:hover {
   background: #f5f5f5;
 }
+/*
+========================================
+  STYLES CHO PHẦN CHƯA ĐĂNG NHẬP
+========================================
+*/
+.logged-out-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 20px;
+  margin-top: 50px;
+  /* Khoảng cách với nav-bar */
+  max-width: 500px;
+  /* Giới hạn chiều rộng */
+  margin-left: auto;
+  margin-right: auto;
+  background-color: #f9f9f9;
+  /* Nền xám rất nhạt */
+  border-radius: 12px;
+  border: 1px solid #eee;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.logged-out-container h2 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #222;
+  margin-bottom: 10px;
+}
+
+.logged-out-container p {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 25px;
+}
+
+.auth-buttons {
+  display: flex;
+  gap: 15px;
+  /* Khoảng cách giữa 2 nút */
+}
+
+.auth-btn {
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.login-btn {
+  background-color: #007bff;
+  /* Màu xanh dương chính */
+  color: white;
+}
+
+.login-btn:hover {
+  background-color: #0056b3;
+  /* Xanh đậm hơn khi hover */
+}
+
+.register-btn {
+  background-color: #f0f0f0;
+  /* Nền xám nhạt */
+  color: #333;
+  border: 1px solid #ddd;
+}
+
+.register-btn:hover {
+  background-color: #e0e0e0;
+  /* Xám đậm hơn khi hover */
+}

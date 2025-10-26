@@ -8,13 +8,13 @@ export default function Edit({ user, onClose, onSave }) {
   const [loading, setLoading] = useState(false);
 
   const handleChange = (field, value) => {
-    setFormData({ ...formData,["password"]:1234567, [field]: value });
+    setFormData({ ...formData, [field]: value });
   };
 
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      const userId = localStorage.getItem("userId");
+      const userId = String(localStorage.getItem("userId")).replaceAll('"', ""); 
       if (!userId) {
         console.error("Logged in but userId not found in LocalStorage.");
         toast.error("User session error. Please log in again.");
