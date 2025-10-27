@@ -57,14 +57,15 @@ export default function EditAvt({ onClose, currentAvatar, onSave }) {
           <h2>Edit Avatar</h2>
           <button className="close-icon" onClick={onClose}>×</button>
         </div>
-
-        <div className="edit-btn">
+        <div className="edit-bottom">
           <input type="file" accept="image/*" onChange={handleAvatarChange} />
           <button onClick={handleSubmit} disabled={loading}>
             {loading ? "Đang lưu..." : "Lưu thay đổi"}
           </button>
+
+           </div>
         </div>
-      </div>
+         
     </div>
   );
 }

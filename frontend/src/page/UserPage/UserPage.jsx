@@ -15,6 +15,7 @@ export default function UserPage() {
   const [isLogin, setIsLogin] = useState(false);
   const navigate = useNavigate();
   const [isDelete, setIsDelete] = useState(false);
+  const [userBlog, setUserBlogs] = useState([]); // Bắt đầu là mảng rỗng
 
   // Thêm state và ref cho dropdown menu 3 chấm (từ HEAD)
   const [menuOpen, setMenuOpen] = useState(false);
@@ -72,26 +73,86 @@ export default function UserPage() {
       toast.error("Cannot delete user");
     }
   };
+
+  // ----------------------------------------get user post------------------------------------------------------
+  const getUserPost = async () => {
+    try {
+      const userId = String(localStorage.getItem("userId")).replaceAll('"', "");
+      if (!userId) {
+        // Không cần toast vì fetchDataUser đã xử lý
+        return;
+      }
+      const blogs = await axios.get(
+        `http://localhost:8080/api/v1/blogs/${userId}/all`
+      );
+
+      // SỬA LỖI 2.1: Giả sử blogs.data là một mảng. Không bọc nó trong [].
+      if (Array.isArray(blogs.data)) {
+        setUserBlogs(blogs.data);
+      } else {
+        // Nếu API trả về cấu trúc lạ, set mảng rỗng để tránh crash
+        setUserBlogs([]);
+        console.warn("Expected an array of blogs, but received:", blogs.data);
+      }
+      console.log("Lay bai viet user thanh cong");
+    } catch (error) {
+      console.log("Khong the lay cai bai post cua user", error);
+      toast.error("Cannot get user's blogs");
+    }
+  };
+
+  useEffect(() => {
+    // Chỉ gọi getUserPost KHI ĐÃ CÓ dataUser
+    // Điều này đảm bảo chúng ta chỉ fetch post khi đã login thành công
+    const init = async () => {
+      await fetchDataUser();
+    };
+    init();
+  }, []);
+
+  // Tách riêng useEffect cho getUserPost,
+  // nó sẽ chạy khi dataUser thay đổi từ null -> object
+  useEffect(() => {
+    if (dataUser && isLogin) {
+      getUserPost();
+    }
+  }, [dataUser, isLogin]); // Phụ thuộc vào dataUser và isLogin
+
   useEffect(() => {
     fetchDataUser();
   }, []);
 
   useEffect(() => {
-    if (isDelete) deleteDataUser();
-  }, [isDelete])
+    if (isDelete) {
+      deleteDataUser();
+      setIsDelete(false); // Reset lại state sau khi gọi
+    }
+  }, [isDelete]); // Xóa mảng phụ thuộc [deleteDataUser] để tránh vòng lặp vô hạn
 
+
+  //-------------------------Xử lý đóng menu khi click ra ngoài (từ HEAD)
   const handleSave = (updatedUser) => {
     setDataUser(updatedUser);
     setShowEdit(false);
   };
 
   const handleDelete = () => {
-    setIsDelete(true);
+    // Thêm một bước xác nhận
+    if (
+      window.confirm(
+        "Are you sure you want to delete your account? This action cannot be undone."
+      )
+    ) {
+      setIsDelete(true);
+    }
   };
 
-  // === Mâu thuẫn 1: Lấy logic từ INCOMING ===
   const handleLogout = () => {
     localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("userId");
+    setIsLogin(false);
+    setDataUser(null);
+    setUserBlogs([]); // Xóa các bài post khỏi state
     toast.success("Signed out successfully!");
     navigate("/");
   };
@@ -120,9 +181,7 @@ export default function UserPage() {
         )}
       </nav>
 
-      {/* Lấy toàn bộ logic hiển thị còn lại từ INCOMING */}
       {isLogin ? (
-        // === PHẦN NÀY DÀNH CHO USER ĐÃ LOGIN (Giữ nguyên) ===
         <>
 
           {/*------------------------------------thông tin profile----------------------------------------  */}
@@ -148,7 +207,7 @@ export default function UserPage() {
             </button>
           </nav>
 
-          
+
 
 
           {/*----------------------------------thông tin tab----------------------------------------  */}
@@ -172,6 +231,48 @@ export default function UserPage() {
               onSave={handleSave}
             />
           )}
+
+          <div className="layout">
+            {/* SỬA LỖI 2.2: Dùng spread operator ...userBlog */}
+            {[...userBlog].reverse().map((post) => (
+              <div key={post.id} className="box">
+                {/* --- Header post --- */}
+                <div className="post-content">
+                  <div className="header_post">
+                    <div className="avatar_user">
+                      <img
+                        src={post.userAvatarUrl || "/default-avatar.png"}
+                        alt="User Avatar"
+                      />
+                    </div>
+                    <div className="user-box">
+                      {post.userName ? "@" + post.userName : "Unknown user"}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="desc-box">{post.content}</div>
+
+                {Array.isArray(post.imageContentUrls) &&
+                  post.imageContentUrls.map((url, index) => (
+                    <img
+                      key={index}
+                      src={url}
+                      className="picture"
+                      alt={`Post image ${index}`}
+                    />
+                  ))}
+
+                <span
+                  style={{ color: "grey", fontSize: 13, opacity: "70%" }}
+                >
+                  {new Date(post.createdAt).toLocaleString("vi-VN", {
+                    hour12: false,
+                  })}
+                </span>
+              </div>
+            ))}
+          </div>
 
           {showEditAvt && (
             <EditAvt

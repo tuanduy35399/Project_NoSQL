@@ -268,7 +268,6 @@
   background-color: #e0e0e0;
   /* Xám đậm hơn khi hover */
 }
-<<<<<<< HEAD
 
 /*------------------------profile-avt--------------------------------------*/
 .avatar-wrapper {
@@ -307,7 +306,8 @@
 
 .edit-avatar-btn:hover {
   background-color: rgba(0, 0, 0, 0.85);
-=======
+}
+
 .picture {
   max-width: 500px;
   max-height: 500px;
@@ -318,8 +318,8 @@
   border: 1px solid #ccc;
   background-color: #f9f9f9;
   padding: 3px;
-}
-.layout {
+} 
+ .layout {
   width: 100%;
   height: 100%;
   background-color: #FFFF;
@@ -365,5 +365,4 @@
 
 .desc-box {
   margin: 20px 0;
->>>>>>> 3cf102f015f8c017d7d6f049f0389a031627ea63
 }
