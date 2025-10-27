@@ -8,13 +8,13 @@ export default function Navigation({showPage}){
       <nav>
         <div className={navcss["layout-navigation"]}>
           <div className={navcss["top-bar"]}>
-            <Link to="/">
-              <img
-                className={`${navcss["logo"]}`}
-                src="/logo_nobg.svg"
-                alt="logo"
-              />
-            </Link>
+              <a href="/">
+                <img
+                  className={`${navcss["logo"]}`}
+                  src="/logo_nobg.svg"
+                  alt="logo"
+                />
+              </a>
           </div>
           <div className={navcss["center-bar"]}>
             <NavLink
