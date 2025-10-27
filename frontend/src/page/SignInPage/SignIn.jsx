@@ -28,6 +28,7 @@ const SignIn = () => {
         localStorage.setItem("isLoggedIn", "true"); // Lưu trạng thái đăng nhập thành công
         localStorage.setItem("userId", JSON.stringify(response.data.user.id));
         localStorage.setItem("username", JSON.stringify(response.data.user.username)); // Lưu thông tin user nếu cần
+        localStorage.setItem("userAvatarUrl", JSON.stringify(response.data.user.avatarUrl)); // Lưu thông tin user nếu cần
 
         navigate("/");
       } else {

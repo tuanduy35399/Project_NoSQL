@@ -86,6 +86,22 @@
 }
 
 /*-------------------------- EDIT PROFILE BUTTON --------------------------*/
+/* .edit-profile-btn {
+  position: absolute;
+  top: 180px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  padding: 5px 12px;
+  font-size: 15px;
+  font-family: 'Roboto';
+  font-weight: 550;
+  border: 1px solid #afafaf9a;
+  border-radius: 10px;
+  background: #ffffff;
+  cursor: pointer;
+} */
+
 .edit-btn {
   position: absolute;
   top: 180px;
@@ -107,7 +123,7 @@
   display: flex;
   justify-content: space-around;
   position: fixed;
-  top: 230px;
+  top: 220px;
   width: 90%;
   border-bottom: 1px solid #ddd;
   background-color: #ffffff;
@@ -163,12 +179,13 @@
 
 .dropdown-menu button {
   width: 100%;
-  padding: 10px 14px;
+  padding: 10px 25px;
   background: none;
   border: none;
   text-align: left;
   font-size: 14px;
   cursor: pointer;
+  font-family: 'Roboto';
 }
 
 .dropdown-menu button:hover {
@@ -249,4 +266,43 @@
 .register-btn:hover {
   background-color: #e0e0e0;
   /* Xám đậm hơn khi hover */
+}
+
+/*------------------------profile-avt--------------------------------------*/
+.avatar-wrapper {
+  position: relative;
+  width: 120px;
+  height: 120px;
+}
+
+/* Ảnh đại diện tròn */
+.avatar-wrapper .avt {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ddd;
+}
+
+/* Nút chỉnh sửa avatar — nằm ngay trên avatar */
+.edit-avatar-btn {
+  position: absolute;
+  bottom: 4px;     /* điều chỉnh vị trí icon */
+  right: 4px;
+  background-color: rgba(0, 0, 0, 0.65);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.edit-avatar-btn:hover {
+  background-color: rgba(0, 0, 0, 0.85);
 }

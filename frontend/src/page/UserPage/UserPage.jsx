@@ -4,11 +4,13 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import "./UserPage.css";
 import Edit from "../../Components/EditProfile/Edit";
+import EditAvt from "../../Components/EditAvatar/EditAvt";
 import { BsThreeDots } from "react-icons/bs"; // Thêm icon cho menu 3 chấm
 
 export default function UserPage() {
   const [activeTab, setActiveTab] = useState("thread");
   const [showEdit, setShowEdit] = useState(false);
+  const [showEditAvt, setShowEditAvt] = useState(false);
   const [dataUser, setDataUser] = useState(null);
   const [isLogin, setIsLogin] = useState(false);
   const navigate = useNavigate();
@@ -58,7 +60,7 @@ export default function UserPage() {
       );
 
 
-      // Lấy logic từ INCOMIN
+      // Lấy logic từ INCOMING
 
       console.log("Xóa user thành công");
       toast.success("Delete user successfully!");
@@ -98,15 +100,10 @@ export default function UserPage() {
   // === Mâu thuẫn 2: Gộp logic ===
   return (
     <div className="user-page">
-      {/* Lấy nav-bar từ HEAD (menu 3 chấm) */}
       <nav className="nav-bar">
-        <h1>
-          <span>Profile</span>
-        </h1>
-        {/* Mình kết hợp logic "isLogin" (từ INCOMING) 
-                  với cấu trúc menu 3 chấm (từ HEAD)
-                  vì chỉ nên hiển thị menu khi đã đăng nhập 
-                */}
+        <h1><span>Profile</span></h1>
+        {/* Mình kết hợp logic "isLogin" (từ INCOMING) với cấu trúc menu 3 chấm (từ HEAD)
+        vì chỉ nên hiển thị menu khi đã đăng nhập */}
         {isLogin && (
           <div className="menu-wrapper" ref={menuRef}>
             <button className="btn" onClick={() => setMenuOpen(!menuOpen)}>
@@ -115,8 +112,8 @@ export default function UserPage() {
             {menuOpen && (
               <div className="dropdown-menu">
                 {/* Dùng text "Log out" (từ INCOMING) */}
-                <button onClick={handleLogout}>Log out</button>
-                <button onClick={handleDelete}>Remove account</button>
+                <button onClick={handleLogout}>Sign out</button>
+                <button onClick={handleDelete}>Delete account</button>
               </div>
             )}
           </div>
@@ -127,6 +124,8 @@ export default function UserPage() {
       {isLogin ? (
         // === PHẦN NÀY DÀNH CHO USER ĐÃ LOGIN (Giữ nguyên) ===
         <>
+
+          {/*------------------------------------thông tin profile----------------------------------------  */}
           <nav className="profile">
             <div className="profile-in4">
               <h1>{dataUser.fullname}</h1>
@@ -134,15 +133,26 @@ export default function UserPage() {
             </div>
 
             <div className="profile-avt">
-              <img src={dataUser.userAvatarUrl} alt="avatar" className="avt" />
-              <button
-                className="edit-btn"
-                onMouseDown={() => setShowEdit(true)}
-              >
-                Edit profile
-              </button>
+              <div className="avatar-wrapper">  {/* Thêm wrapper để chứa cả ảnh và nút chỉnh sửa */}
+                <img src={dataUser.userAvatarUrl} alt="avatar" className="avt" />
+                <button className="edit-avatar-btn" onMouseDown={() => setShowEditAvt(true)}
+                  title="Edit Avatar">
+                  ✎
+                </button>
+              </div>
             </div>
+
+            {/* <nav className="edit-profile-btn"> */}
+            <button className="edit-btn" onMouseDown={() => setShowEdit(true)}>
+              Edit profile
+            </button>
+          {/* </nav> */}
           </nav>
+
+          
+
+
+          {/*----------------------------------thông tin tab----------------------------------------  */}
           <nav className="tab">
             {["thread", "reply", "media", "repost"].map((tab) => (
               <button
@@ -154,6 +164,8 @@ export default function UserPage() {
               </button>
             ))}
           </nav>
+
+
           {showEdit && (
             <Edit
               user={dataUser}
@@ -161,6 +173,18 @@ export default function UserPage() {
               onSave={handleSave}
             />
           )}
+
+          {showEditAvt && (
+            <EditAvt
+              user={dataUser}
+              onClose={() => setShowEditAvt(false)}
+              onSave={(updatedAvatarUrl) => {
+                setDataUser({ ...dataUser, userAvatarUrl: updatedAvatarUrl });
+                setShowEditAvt(false);
+              }}
+            />
+          )}
+
         </>
       ) : (
         // === SỬA ĐỔI: PHẦN NÀY DÀNH CHO USER CHƯA LOGIN ===
