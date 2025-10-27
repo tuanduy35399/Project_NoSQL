@@ -20,7 +20,7 @@ export default function PostPage() {
   const [isLoggedIn, setIsLogin] = useState(false);
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
-
+  console.log(files)
   // ✅ Khi chọn file — hiển thị preview
   const handleFileChange = (e) => {
     const selectedFiles = Array.from(e.target.files);
@@ -97,7 +97,8 @@ export default function PostPage() {
       return;
     }
 
-    if (body.trim() === "") {
+    if (body.trim() === "" && files.length===0) {
+      console.log("Khong co hinh va content");
       toast.warning("Content cannot be blank!");
       return;
     }
