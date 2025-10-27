@@ -125,7 +125,7 @@ export default function PostPage() {
               </div>
               <strong>
                 <span>
-                  {localStorage.getItem("username")?.replaceAll('"', "") ||
+                  {"@"+ localStorage.getItem("username")?.replaceAll('"', "")||
                     "unknown"}
                 </span>
               </strong>
