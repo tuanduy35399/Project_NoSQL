@@ -132,10 +132,11 @@ textarea {
 }
 .infor{
   width: auto;
-  height: 47px;
+  height: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
+  border-bottom: 1px solid #d1cfcf;
 }
 
 .toastSuccess {

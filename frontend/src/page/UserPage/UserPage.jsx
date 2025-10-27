@@ -146,7 +146,6 @@ export default function UserPage() {
             <button className="edit-btn" onMouseDown={() => setShowEdit(true)}>
               Edit profile
             </button>
-          {/* </nav> */}
           </nav>
 
           
