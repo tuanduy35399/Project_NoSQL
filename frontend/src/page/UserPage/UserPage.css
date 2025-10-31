@@ -130,6 +130,7 @@
   background-color: #ffffff;
   z-index: 10;
   margin-top: 50px;
+  color: #ca2121
 }
 
 .tab-btn {
@@ -308,6 +309,8 @@
   background-color: rgba(0, 0, 0, 0.85);
 }
 
+//------------------------ POSTS author TD------------------------*/
+
 .picture {
   max-width: 500px;
   max-height: 500px;
@@ -324,6 +327,7 @@
   height: 100%;
   background-color: #FFFF;
   overflow-y: auto;
+  margin-top: 50px;
 }
 
 .header_post {
@@ -352,7 +356,7 @@
 .box {
   height: auto;
   border-bottom: 1.5px solid rgb(193, 192, 192);
-  padding: 10px;
+  padding: 10px 10px;
 }
 
 .box:last-child {

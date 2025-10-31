@@ -25,10 +25,12 @@ export default function UserPage() {
       const userId = String(localStorage.getItem("userId")).replaceAll('"', "");
       // console.log(userId);
       if (!userId) {
-        console.error("Logged in but userId not found in LocalStorage.");
-        toast.error("User session error. Please log in again.");
-        return; // Dừng thực thi
+        setIsLogin(false);
+        localStorage.removeItem("isLoggedIn"); // Dọn dẹp
+        console.error("User ID not found in LocalStorage.");
+        return;
       }
+
       const tempData = await axios.get(
         `http://localhost:8080/api/users/${userId}`
       );
@@ -36,13 +38,22 @@ export default function UserPage() {
 
       // Lấy logic từ INCOMING
       const islogined = Boolean(localStorage.getItem("isLoggedIn"));
-      setIsLogin(islogined);
-      setDataUser(tempData.data);
+      setIsLogin(islogined); // Set trạng thái login
+      // Nếu không login thì không cần fetch data
+      if (!islogined) {
+        return;
+      }
 
+      setDataUser(tempData.data);
       console.log("Lấy dữ liệu user thành công");
     } catch (error) {
       console.log("Lỗi khi lấy dữ liệu user", error);
       toast.error("Cannot get data user");
+
+      // Nếu lỗi (ví dụ: user bị xóa, token hết hạn), đăng xuất user
+      setIsLogin(false);
+      localStorage.removeItem("isLoggedIn");
+      localStorage.removeItem("userId");
     }
   };
 
@@ -52,17 +63,17 @@ export default function UserPage() {
       const userId = String(localStorage.getItem("userId")).replaceAll('"', "");
       // console.log(userId);
       if (!userId) {
-        console.error("Logged in but userId not found in LocalStorage.");
+        //console.error("Logged in but userId not found in LocalStorage.");
         toast.error("User session error. Please log in again.");
         return; // Dừng thực thi
       }
-      const deleteData = await axios.delete(
-        `http://localhost:8080/api/users/${userId}`
-      );
+      // const deleteData = await axios.delete(
+      //   `http://localhost:8080/api/users/${userId}`
+      // );
 
 
       // Lấy logic từ INCOMING
-
+      await axios.delete(`http://localhost:8080/api/users/${userId}`);
       console.log("Xóa user thành công");
       toast.success("Delete user successfully!");
       localStorage.removeItem("isLoggedIn");
@@ -118,9 +129,9 @@ export default function UserPage() {
     }
   }, [dataUser, isLogin]); // Phụ thuộc vào dataUser và isLogin
 
-  useEffect(() => {
-    fetchDataUser();
-  }, []);
+  // useEffect(() => {
+  //   fetchDataUser();
+  // }, []);
 
   useEffect(() => {
     if (isDelete) {
@@ -183,98 +194,104 @@ export default function UserPage() {
 
       {isLogin ? (
         <>
-
-          {/*------------------------------------thông tin profile----------------------------------------  */}
-          <nav className="profile">
-            <div className="profile-in4">
-              <h1>{dataUser.fullname}</h1>
-              <p className="name">@{dataUser.username}</p>
+          {/* SỬA LỖI 1: Thêm kiểm tra loading state */}
+          {!dataUser ? (
+            <div className="loading-container">
+              <p>Loading profile...</p>
             </div>
+          ) : (
+            <>
+              {/* Chỉ render phần này khi dataUser đã tồn tại */}
+              <nav className="profile">
+                <div className="profile-in4">
+                  <h1>{dataUser.fullname}</h1>
+                  <p className="name">@{dataUser.username}</p>
+                </div>
 
-            <div className="profile-avt">
-              <div className="avatar-wrapper">  {/* Thêm wrapper để chứa cả ảnh và nút chỉnh sửa */}
-                <img src={dataUser.userAvatarUrl} alt="avatar" className="avt" />
-                <button className="edit-avatar-btn" onMouseDown={() => setShowEditAvt(true)}
-                  title="Edit Avatar">
-                  ✎
-                </button>
-              </div>
-            </div>
-
-            {/* <nav className="edit-profile-btn"> */}
-            <button className="edit-btn" onMouseDown={() => setShowEdit(true)}>
-              Edit profile
-            </button>
-          </nav>
-
-
-
-
-          {/*----------------------------------thông tin tab----------------------------------------  */}
-          <nav className="tab">
-            {["thread", "reply", "media", "repost"].map((tab) => (
-              <button
-                key={tab}
-                className={`tab-btn ${activeTab === tab ? "active" : ""}`}
-                onMouseDown={() => setActiveTab(tab)}
-              >
-                {tab.charAt(0).toUpperCase() + tab.slice(1)}
-              </button>
-            ))}
-          </nav>
-
-
-          {showEdit && (
-            <Edit
-              user={dataUser}
-              onClose={() => setShowEdit(false)}
-              onSave={handleSave}
-            />
-          )}
-
-          <div className="layout">
-            {/* SỬA LỖI 2.2: Dùng spread operator ...userBlog */}
-            {[...userBlog].reverse().map((post) => (
-              <div key={post.id} className="box">
-                {/* --- Header post --- */}
-                <div className="post-content">
-                  <div className="header_post">
-                    <div className="avatar_user">
-                      <img
-                        src={post.userAvatarUrl || "/default-avatar.png"}
-                        alt="User Avatar"
-                      />
-                    </div>
-                    <div className="user-box">
-                      {post.userName ? "@" + post.userName : "Unknown user"}
-                    </div>
+                <div className="profile-avt">
+                  <div className="avatar-wrapper">  {/* Thêm wrapper để chứa cả ảnh và nút chỉnh sửa */}
+                    <img src={dataUser.userAvatarUrl} alt="avatar" className="avt" />
+                    <button className="edit-avatar-btn" onMouseDown={() => setShowEditAvt(true)}
+                      title="Edit Avatar">
+                      ✎
+                    </button>
                   </div>
                 </div>
 
-                <div className="desc-box">{post.content}</div>
+                {/* <nav className="edit-profile-btn"> */}
+                <button className="edit-btn" onMouseDown={() => setShowEdit(true)}>
+                  Edit profile
+                </button>
+              </nav>
 
-                {Array.isArray(post.imageContentUrls) &&
-                  post.imageContentUrls.map((url, index) => (
-                    <img
-                      key={index}
-                      src={url}
-                      className="picture"
-                      alt={`Post image ${index}`}
-                    />
-                  ))}
 
-                <span
-                  style={{ color: "grey", fontSize: 13, opacity: "70%" }}
-                >
-                  {new Date(post.createdAt).toLocaleString("vi-VN", {
-                    hour12: false,
-                  })}
-                </span>
+
+
+              {/*----------------------------------thông tin tab----------------------------------------  */}
+              <nav className="tab">
+                {["thread", "reply", "media", "repost"].map((tab) => (
+                  <button
+                    key={tab}
+                    className={`tab-btn ${activeTab === tab ? "active" : ""}`}
+                    onMouseDown={() => setActiveTab(tab)}
+                  >
+                    {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                  </button>
+                ))}
+              </nav>
+
+
+              {showEdit && (
+                <Edit
+                  user={dataUser}
+                  onClose={() => setShowEdit(false)}
+                  onSave={handleSave}
+                />
+              )}
+
+              <div className="layout">
+                {/* SỬA LỖI 2.2: Dùng spread operator ...userBlog */}
+                {[...userBlog].reverse().map((post) => (
+                  <div key={post.id} className="box">
+                    {/* --- Header post --- */}
+                    <div className="post-content">
+                      <div className="header_post">
+                        <div className="avatar_user">
+                          <img
+                            src={post.userAvatarUrl || "/default-avatar.png"}
+                            alt="User Avatar"
+                          />
+                        </div>
+                        <div className="user-box">
+                          {post.userName ? "@" + post.userName : "Unknown user"}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="desc-box">{post.content}</div>
+
+                    {Array.isArray(post.imageContentUrls) &&
+                      post.imageContentUrls.map((url, index) => (
+                        <img
+                          key={index}
+                          src={url}
+                          className="picture"
+                          alt={`Post image ${index}`}
+                        />
+                      ))}
+
+                    <span
+                      style={{ color: "grey", fontSize: 13, opacity: "70%" }}
+                    >
+                      {new Date(post.createdAt).toLocaleString("vi-VN", {
+                        hour12: false,
+                      })}
+                    </span>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
 
-          {showEditAvt && (
+              {/* {showEditAvt && (
             <EditAvt
               user={dataUser}
               onClose={() => setShowEditAvt(false)}
@@ -283,30 +300,40 @@ export default function UserPage() {
                 setShowEditAvt(false);
               }}
             />
+          )} */}
+        
+              {showEdit && (
+                <Edit
+                  user={dataUser}
+                  onClose={() => setShowEdit(false)}
+                  onSave={handleSave}
+                />
+              )}
+          
+            </>
           )}
-
         </>
       ) : (
-        // === SỬA ĐỔI: PHẦN NÀY DÀNH CHO USER CHƯA LOGIN ===
-        <div className="logged-out-container">
-          <h2>Bạn chưa đăng nhập</h2>
-          <p>Vui lòng đăng nhập hoặc đăng ký để xem trang cá nhân.</p>
-          <div className="auth-buttons">
-            <button
-              className="auth-btn login-btn"
-              onClick={() => navigate("/signin")}
-            >
-              Đăng nhập
-            </button>
-            <button
-              className="auth-btn register-btn"
-              onClick={() => navigate("/signup")}
-            >
-              Đăng ký
-            </button>
+          // === SỬA ĐỔI: PHẦN NÀY DÀNH CHO USER CHƯA LOGIN ===
+          <div className="logged-out-container">
+            <h2>Bạn chưa đăng nhập</h2>
+            <p>Vui lòng đăng nhập hoặc đăng ký để xem trang cá nhân.</p>
+            <div className="auth-buttons">
+              <button
+                className="auth-btn login-btn"
+                onClick={() => navigate("/signin")}
+              >
+                Đăng nhập
+              </button>
+              <button
+                className="auth-btn register-btn"
+                onClick={() => navigate("/signup")}
+              >
+                Đăng ký
+              </button>
+            </div>
           </div>
+        )}
         </div>
-      )}
-    </div>
-  );
+      );
 }
