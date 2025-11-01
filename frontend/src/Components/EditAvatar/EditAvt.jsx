@@ -133,21 +133,5 @@ export default function EditAvt({ onClose, currentAvatar, onSave }) {
           </div>
       </div>
     </div>
-          /* <img src={previewUrl} alt="Avatar Preview" className="avatar-preview" />
-          <button onClick={handleRemoveImage}>Remove</button>
-          <div className="modal-actions">
-            <button onClick={onClose}>Cancel</button>
-            <button onClick={handleSubmit} disabled={!avatarFile}>Save Changes</button>
-          </div>
-      </div>
-    </div> */
-
-  /* <div className="edit-bottom">
-          <input type="file" accept="image/*" onChange={handleAvatarChange} />
-          <button onClick={handleSubmit} disabled={loading}>
-            {loading ? "Đang lưu..." : "Lưu thay đổi"}
-          </button>
-
-        </div> */
   );
 }

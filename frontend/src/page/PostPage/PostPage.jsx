@@ -10,7 +10,25 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/Components/ui/select";
-
+import { Button } from "@/Components/ui/button";
+const UploadIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="w-6 h-6 block text-gray-700 group-hover:text-blue-600 transition-colors"
+  >
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+    <polyline points="17 8 12 3 7 8" />
+    <line x1="12" x2="12" y1="3" y2="15" />
+  </svg>
+);
 export default function PostPage() {
   const [body, setBody] = useState("");
   const [publish, setPublish] = useState(true);
@@ -56,7 +74,7 @@ export default function PostPage() {
     checkLogin();
   }, []);
 
-  // ✅ Gửi bài viết lên BE
+  // Gửi bài viết lên BE
   const postNews = async (storedUserId, storedUserName) => {
     const loadingToast = toast.loading("Uploading...");
 
@@ -86,7 +104,7 @@ export default function PostPage() {
     }
   };
 
-  // ✅ Khi nhấn "Post"
+  // Khi nhấn "Post"
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -110,10 +128,10 @@ export default function PostPage() {
   };
 
   return (
-    <div>
+    <div className={style.boxlayout}>
       {/* --- Tiêu đề --- */}
       <div className={style.infor}>
-        <span style={{ fontSize: 17, fontWeight: 560, marginBottom:15 }}>
+        <span style={{ fontSize: 17, fontWeight: 560, marginBottom: 15 }}>
           Make your new post
         </span>
       </div>
@@ -128,7 +146,8 @@ export default function PostPage() {
               </div>
               <strong>
                 <span>
-                  {"@"+ localStorage.getItem("username")?.replaceAll('"', "")||
+                  {"@" +
+                    localStorage.getItem("username")?.replaceAll('"', "") ||
                     "unknown"}
                 </span>
               </strong>
@@ -163,47 +182,42 @@ export default function PostPage() {
 
           {/* --- Tuỳ chọn & nút Post --- */}
           <div className={style.option}>
-            <Select
-              onValueChange={(value) => {
-                setPublish(value === "true");
-              }}
-              defaultValue={String(publish)}
-            >
-              <SelectTrigger className="w-[180px] border-accent-foreground">
-                <SelectValue placeholder="Option" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="true">
-                  <span style={{ fontWeight: "bold" }}>Publish</span>
-                </SelectItem>
-                <SelectItem value="false">
-                  <span style={{ fontWeight: "bold" }}>Private</span>
-                </SelectItem>
-              </SelectContent>
-            </Select>
-
-            {/* --- Nút chọn file --- */}
-            <label
-              htmlFor="fileInput"
-              className={style["buttonPost-2"]}
-            ></label>
-            <input
-              id="fileInput"
-              type="file"
-              multiple
-              ref={fileInputRef}
-              onChange={handleFileChange}
-              className={style.fileInput}
-            />
-
-            {/* --- Nút post --- */}
-            <button
-              className={style["buttonPost-1"]}
-              onClick={handleSubmit}
-            ></button>
+            <div className={style.leftbuttons}>
+              <Select
+                onValueChange={(value) => {
+                  setPublish(value === "true");
+                }}
+                defaultValue={String(publish)}
+              >
+                <SelectTrigger className="w-[180px] border-accent-foreground cursor-pointer">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="true">
+                    <span style={{ fontWeight: "bold" }}>Publish</span>
+                  </SelectItem>
+                  <SelectItem value="false">
+                    <span style={{ fontWeight: "bold" }}>Private</span>
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+              <label htmlFor="fileInput"
+              className="group cursor-pointer  rounded-lg border flex items-center justify-center bg-white shadow-sm transition-all h-10 w-10">
+                <UploadIcon />
+              </label>
+              
+              <input
+                id="fileInput"
+                type="file"
+                multiple
+                ref={fileInputRef}
+                onChange={handleFileChange}
+                className={style.fileInput}
+              />
+            </div>
+            <Button onClick={handleSubmit} className="w-30 h-10 cursor-pointer">Post</Button>
           </div>
 
-          {/* --- Thanh tiến trình --- */}
           {progress > 0 && progress < 100 && (
             <div className={style.progressBar}>
               <div
@@ -214,7 +228,6 @@ export default function PostPage() {
           )}
         </>
       ) : (
-        // === Dành cho user chưa đăng nhập ===
         <div className="logged-out-container">
           <h2>Bạn chưa đăng nhập</h2>
           <p>Vui lòng đăng nhập hoặc đăng ký để xem trang cá nhân.</p>

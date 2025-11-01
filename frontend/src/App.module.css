@@ -44,7 +44,7 @@ box-shadow: 10px 10px 46px -21px rgba(0, 0, 0, 0.75);
   overflow: hidden;
   background: #fff;
   display: flex;
-  justify-content: center;
+  /* justify-content: center; */
   align-items: flex-start;
   animation: pop 0.2s ease 0s normal forwards;
   padding: 20px;

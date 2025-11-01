@@ -155,9 +155,11 @@ export default function UserPage() {
   return (
     <div className="user-page">
       <nav className="nav-bar">
-        <h1><span>Profile</span></h1>
+        <h1>
+          <span>Profile</span>
+        </h1>
         {/* Mình kết hợp logic "isLogin" (từ INCOMING) với cấu trúc menu 3 chấm (từ HEAD)
-        vì chỉ nên hiển thị menu khi đã đăng nhập */}
+          vì chỉ nên hiển thị menu khi đã đăng nhập */}
         {isLogin && (
           <div className="menu-wrapper" ref={menuRef}>
             <button className="btn" onClick={() => setMenuOpen(!menuOpen)}>
@@ -183,37 +185,51 @@ export default function UserPage() {
             </div>
           ) : (
             <>
-            
-          {/*----------------------------------thông tin profile----------------------------------------  */}          
-              <nav className="profile">
-                <div className="profile-in4">
-                  <h1>{dataUser.fullname}</h1>
-                  <p className="name">@{dataUser.username}</p>
-                </div>
-                <div className="profile-avt">
-                  <div className="avatar-wrapper">  {/* Thêm wrapper để chứa cả ảnh và nút chỉnh sửa */}
-                    <img src={dataUser.userAvatarUrl} alt="avatar" className="avt" />
-                    <button className="edit-avatar-btn" onMouseDown={() => setShowEditAvt(true)}title="Edit Avatar">
-                      ✎</button>
+              {/*----------------------------------thông tin profile----------------------------------------  */}
+                <nav className="profile">
+                  <div className="profile-in4">
+                    <h1>{dataUser.fullname}</h1>
+                    <p className="name">@{dataUser.username}</p>
                   </div>
-                </div>
-                <button className="edit-btn" onMouseDown={() => setShowEdit(true)}>Edit profile</button>
-              </nav>
-
-          {/*----------------------------------thông tin tab----------------------------------------  */}
-              <nav className="tab">
-                {["thread", "reply", "media", "repost"].map((tab) => (
+                  <div className="profile-avt">
+                    <div className="avatar-wrapper">
+                      {" "}
+                      {/* Thêm wrapper để chứa cả ảnh và nút chỉnh sửa */}
+                      <img
+                        src={dataUser.userAvatarUrl}
+                        alt="avatar"
+                        className="avt"
+                      />
+                      <button
+                        className="edit-avatar-btn"
+                        onMouseDown={() => setShowEditAvt(true)}
+                        title="Edit Avatar"
+                      >
+                        ✎
+                      </button>
+                    </div>
+                  </div>
                   <button
-                    key={tab}
-                    className={`tab-btn ${activeTab === tab ? "active" : ""}`}
-                    onMouseDown={() => setActiveTab(tab)}
+                    className="edit-btn"
+                    onMouseDown={() => setShowEdit(true)}
                   >
-                    {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                    Edit profile
                   </button>
-                ))}
-              </nav>
+                </nav>
 
-          {/* -----------------------------Hiện bài đăng--------------------------------------------- */}
+                {/*----------------------------------thông tin tab----------------------------------------  */}
+                <nav className="tab">
+                  {["thread", "reply", "media", "repost"].map((tab) => (
+                    <button
+                      key={tab}
+                      className={`tab-btn ${activeTab === tab ? "active" : ""}`}
+                      onMouseDown={() => setActiveTab(tab)}
+                    >
+                      {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                    </button>
+                  ))}
+                </nav>
+              {/* -----------------------------Hiện bài đăng--------------------------------------------- */}
               <div className="layout">
                 {/* SỬA LỖI 2.2: Dùng spread operator ...userBlog */}
                 {[...userBlog].reverse().map((post) => (
@@ -255,7 +271,7 @@ export default function UserPage() {
                   </div>
                 ))}
               </div>
-        
+
               {showEdit && (
                 <Edit
                   user={dataUser}
@@ -269,38 +285,32 @@ export default function UserPage() {
                   user={dataUser}
                   onClose={() => setShowEditAvt(false)}
                   onSave={handleSave}
-                  //   => {
-                  //   setDataUser({ ...dataUser, userAvatarUrl: updatedAvatarUrl });
-                  //   setShowEditAvt(false);
-                  // }}
                 />
               )}
-          
             </>
           )}
         </>
       ) : (
-
-//---------------------------------SỬA ĐỔI: PHẦN NÀY DÀNH CHO USER CHƯA LOGIN------------------------------
-          <div className="logged-out-container">
-            <h2>Bạn chưa đăng nhập</h2>
-            <p>Vui lòng đăng nhập hoặc đăng ký để xem trang cá nhân.</p>
-            <div className="auth-buttons">
-              <button
-                className="auth-btn login-btn"
-                onClick={() => navigate("/signin")}
-              >
-                Đăng nhập
-              </button>
-              <button
-                className="auth-btn register-btn"
-                onClick={() => navigate("/signup")}
-              >
-                Đăng ký
-              </button>
-            </div>
+        //---------------------------------SỬA ĐỔI: PHẦN NÀY DÀNH CHO USER CHƯA LOGIN------------------------------
+        <div className="logged-out-container">
+          <h2>Bạn chưa đăng nhập</h2>
+          <p>Vui lòng đăng nhập hoặc đăng ký để xem trang cá nhân.</p>
+          <div className="auth-buttons">
+            <button
+              className="auth-btn login-btn"
+              onClick={() => navigate("/signin")}
+            >
+              Đăng nhập
+            </button>
+            <button
+              className="auth-btn register-btn"
+              onClick={() => navigate("/signup")}
+            >
+              Đăng ký
+            </button>
           </div>
-        )}
         </div>
-      );
+      )}
+    </div>
+  );
 }
