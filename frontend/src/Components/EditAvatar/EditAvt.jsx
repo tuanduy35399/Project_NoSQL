@@ -16,6 +16,7 @@ export default function EditAvt({ onClose, currentAvatar, onSave }) {
 
   const deleteAvatar = async () => {
     const loadingToast = toast.loading("Deleting...");
+    const storedUserId = localStorage.getItem("userId")?.replaceAll('"', "");
     try {
       await axios.delete(`http://localhost:8080/api/users/${storedUserId}/avatar`);
       console.log("Avatar deleted successfully");
@@ -25,6 +26,7 @@ export default function EditAvt({ onClose, currentAvatar, onSave }) {
         onClose();
       }
     }catch (error){
+      console.error("Delete avatar error:", error); // thêm dòng này để dễ debug
       toast.error("Delete failed!", { id: loadingToast });
     }
   };
@@ -150,7 +152,7 @@ export default function EditAvt({ onClose, currentAvatar, onSave }) {
           {/* {previewUrl && ( */}
           <button 
             onClick={deleteAvatar} 
-            // disabled={!avatarFile || loading}  
+            // disabled={!avatarFile || loading}
             className="remove-btn">
             Remove
           </button>
