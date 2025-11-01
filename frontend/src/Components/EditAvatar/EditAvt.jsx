@@ -10,7 +10,6 @@ export default function EditAvt({ onClose, currentAvatar, onSave }) {
   const [previewUrl, setPreviewUrl] = useState(null); //lấy dữ liệu đã chuyển thành url để hiển thị preview 
   const fileInputRef = useRef(null); //để có thể reset input sau khi xóa file
   const [isLoggedIn, setIsLogin] = useState(false);
-  const [files, setFiles] = useState([]);
 
   //Chọn file - hiển thị preview
   const handleFileChange = (e) => {
@@ -26,7 +25,7 @@ export default function EditAvt({ onClose, currentAvatar, onSave }) {
   }
 
   //Xóa file 
-  const handleRemoveImage = (index) => {
+  const handleRemoveImage = () => {
     setAvatarFile(null);
     if (previewUrl) {
       URL.revokeObjectURL(previewUrl); //thu hồi URL cũ nếu có
@@ -77,7 +76,7 @@ export default function EditAvt({ onClose, currentAvatar, onSave }) {
         onClose();
       }
     } catch (error) {
-      toast.error("Upload failed!");
+      toast.error("Upload failed!", error);
     }
   };
 
