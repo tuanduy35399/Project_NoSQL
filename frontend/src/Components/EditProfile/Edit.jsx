@@ -44,11 +44,8 @@ export default function Edit({ user, onClose, onSave }) {
       <div className="edit-modal">
         <div className="edit-header">
           <h2>Edit Profile</h2>
-          <button className="close-icon" onClick={onClose}>
-            ×
-          </button>
         </div>
-
+        
         <div className="profile-field">
           <label className="profile-label">Full Name</label>
           <input
@@ -68,27 +65,6 @@ export default function Edit({ user, onClose, onSave }) {
             className="profile-input"
           />
         </div>
-
-        {/* <div className="profile-field">
-          <label className="profile-label">Bio</label>
-          <textarea
-            placeholder="Write biography"
-            value={formData.bio || ""}
-            onChange={(e) => handleChange("bio", e.target.value)}
-            className="profile-textarea"
-          />
-        </div> */}
-
-        {/* <div className="profile-field">
-          <label className="profile-label">Link</label>
-          <input
-            placeholder="Add link"
-            value={formData.link || ""}
-            onChange={(e) => handleChange("link", e.target.value)}
-            className="profile-input"
-          />
-        </div> */}
-
         <button
           className="profile-button"
           onClick={handleSubmit}

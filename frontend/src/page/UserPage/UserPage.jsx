@@ -82,7 +82,6 @@ export default function UserPage() {
     try {
       const userId = String(localStorage.getItem("userId")).replaceAll('"', "");
       if (!userId) {
-        // Không cần toast vì fetchDataUser đã xử lý
         return;
       }
       const blogs = await axios.get(
@@ -237,10 +236,11 @@ export default function UserPage() {
                     {/* --- Header post --- */}
                     <div className="post-content">
                       <div className="header_post">
-                        <div className="avatar_user">
+                        <div className="avatar_mini_wrapper">
                           <img
                             src={post.userAvatarUrl || "/default-avatar.png"}
                             alt="User Avatar"
+                            className="avatar"
                           />
                         </div>
                         <div className="user-box">

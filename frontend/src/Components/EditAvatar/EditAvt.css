@@ -96,7 +96,7 @@
   background-color: #f4f4f4;
 }
 
-.remove-button {
+.remove-btn {
   display: block; /* Để căn giữa bằng margin auto */
   margin: 0 auto 16px auto; /* Căn giữa và tạo khoảng cách dưới */
   background-color: transparent;
@@ -106,6 +106,9 @@
   font-weight: 500;
   cursor: pointer;
   transition: 0.2s;
+  width: auto;
+  height: 30px;
+  /* border: 2px solid black; */
 }
 
 .remove-button:hover {

@@ -11,11 +11,17 @@
   margin-bottom: 5px;
   gap: 10px;
 }
-.avatar_user {
+.avatar_mini_wrapper {
+  width: 50px;
+  height: 50px;
+  position: relative;
+}
+
+.avatar_mini_wrapper .avatar {
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  overflow: hidden;
+  object-fit: cover;
 }
 .layout::-webkit-scrollbar { display: none; }
 .layout { -ms-overflow-style: none; scrollbar-width: none; }

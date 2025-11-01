@@ -72,10 +72,11 @@ export default function ListPost() {
             {/* --- Header post --- */}
             <div className={style["post-content"]}>
               <div className={style.header_post}>
-                <div className={style.avatar_user}>
+                <div className={style.avatar_mini_wrapper}>
                   <img
                     src={post.userAvatarUrl || "/default-avatar.png"}
                     alt="User Avatar"
+                    className={style.avatar}
                   />
                 </div>
                 <div className={style["user-box"]}>
@@ -96,7 +97,7 @@ export default function ListPost() {
                 />
               ))}
 
-            <span style={{ color: "grey", fontSize:13, opacity: "70%" }}>
+            <span style={{ color: "grey", fontSize: 13, opacity: "70%" }}>
               {new Date(post.createdAt).toLocaleString("vi-VN", {
                 hour12: false,
               })}

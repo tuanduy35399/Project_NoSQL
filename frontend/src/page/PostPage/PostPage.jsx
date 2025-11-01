@@ -141,8 +141,8 @@ export default function PostPage() {
         <>
           <div className={style["post-content"]}>
             <div className={style.header_post}>
-              <div className={style.avatar_user}>
-                <img src={data.userAvatarUrl} alt="AvatarUser" />
+              <div className={style.avatar_mini_wrapper}>
+                <img src={data.userAvatarUrl} alt="AvatarUser" className={style.avatar } />
               </div>
               <strong>
                 <span>
@@ -201,11 +201,13 @@ export default function PostPage() {
                   </SelectItem>
                 </SelectContent>
               </Select>
-              <label htmlFor="fileInput"
-              className="group cursor-pointer  rounded-lg border flex items-center justify-center bg-white shadow-sm transition-all h-10 w-10">
+              <label
+                htmlFor="fileInput"
+                className="group cursor-pointer  rounded-lg border flex items-center justify-center bg-white shadow-sm transition-all h-10 w-10"
+              >
                 <UploadIcon />
               </label>
-              
+
               <input
                 id="fileInput"
                 type="file"
@@ -215,7 +217,9 @@ export default function PostPage() {
                 className={style.fileInput}
               />
             </div>
-            <Button onClick={handleSubmit} className="w-30 h-10 cursor-pointer">Post</Button>
+            <Button onClick={handleSubmit} className="w-30 h-10 cursor-pointer">
+              Post
+            </Button>
           </div>
 
           {progress > 0 && progress < 100 && (
