@@ -74,7 +74,7 @@ export default function EditAvt({ onClose, currentAvatar, onSave }) {
   const handleSubmit = async () => {
     const loadingToast = toast.loading("Updating...");
     if (!avatarFile) {
-      toast.error("Vui lòng chọn ảnh!");
+      toast.error("Please choose a image!");
       return;
     }
     // Lấy userId từ localStorage
@@ -148,7 +148,10 @@ export default function EditAvt({ onClose, currentAvatar, onSave }) {
         {/* Tách ra khỏi header cho đúng cấu trúc */}
         <div className="modal-actions">
           {/* {previewUrl && ( */}
-          <button onClick={deleteAvatar} className="remove-btn">
+          <button 
+            onClick={deleteAvatar} 
+            // disabled={!avatarFile || loading}  
+            className="remove-btn">
             Remove
           </button>
           {/* )} */}

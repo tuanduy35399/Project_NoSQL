@@ -142,7 +142,7 @@
 }
 
 .modal-actions button:last-child:disabled {
-  background-color: #000000d2;
+  background-color: #000000a4;
   cursor: not-allowed;
 }
 

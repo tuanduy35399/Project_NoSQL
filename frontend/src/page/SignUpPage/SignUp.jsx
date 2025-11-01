@@ -11,6 +11,8 @@ export default function SignUp() {
   const [birthday, setBirthday] = useState("");
   const navigate = useNavigate(); // dùng để chuyển page sau khi đky thành công
 
+  const today = new Date().toISOString().split("T")[0];
+
   const handleSubmit = async (e) => {
     e.preventDefault(); // tránh reload page khi submit form
     const formData = { fullname, username, birthday, password }; //tạo object chứa data form
@@ -87,7 +89,7 @@ export default function SignUp() {
         <input
           type="date"
           value={birthday}
-          max="9999-12-31"
+          max={today} 
           onChange={(e) => setBirthday(e.target.value)}
           required
         />
