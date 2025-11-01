@@ -2,7 +2,7 @@ import { useState } from "react";
 import "./Edit.css";
 import axios from "axios";
 import { toast } from "sonner";
-
+import { Button } from "../ui/button";
 export default function Edit({ user, onClose, onSave }) {
   const [formData, setFormData] = useState(user);
   const [loading, setLoading] = useState(false);
@@ -44,8 +44,11 @@ export default function Edit({ user, onClose, onSave }) {
       <div className="edit-modal">
         <div className="edit-header">
           <h2>Edit Profile</h2>
+          <button className="close-icon" onClick={onClose}>
+            ×
+          </button>
         </div>
-        
+
         <div className="profile-field">
           <label className="profile-label">Full Name</label>
           <input

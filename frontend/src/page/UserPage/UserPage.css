@@ -169,7 +169,7 @@
   position: absolute;
   top: 35px;
   right: 0;
-  width: 110px;
+  width: 130px;
   background: #fff;
   border: 1px solid #dcdcdc;
   border-radius: 8px;
@@ -375,4 +375,10 @@
 
 .desc-box {
   margin: 20px 0;
+}
+.modifileButton{
+  width: 100%;
+  display: flex;
+  justify-content: end;
+  gap:10px
 }
