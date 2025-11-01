@@ -9,8 +9,8 @@ export default function EditAvt({ onClose, currentAvatar, onSave }) {
   const [avatarFile, setAvatarFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null); //lấy dữ liệu đã chuyển thành url để hiển thị preview 
   const fileInputRef = useRef(null); //để có thể reset input sau khi xóa file
-  const [isLoggedIn, setIsLogin] = useState(false);
-  const [isDelete, setIsDelete] = useState(false);
+  // const [isLoggedIn, setIsLogin] = useState(false);
+  // const [isDelete, setIsDelete] = useState(false);
   const [loading, setLoading] = useState(false);
 
 
@@ -60,15 +60,15 @@ export default function EditAvt({ onClose, currentAvatar, onSave }) {
   };
 
   //Kiểm tra trạng thái đăng nhập
-  const checkLogin = async () => {
-    const login = localStorage.getItem("isLoggedIn"); //cập nhật trạng thái đăng nhập
-    setIsLogin(login);
-  };
+  // const checkLogin = async () => {
+  //   const login = localStorage.getItem("isLoggedIn"); //cập nhật trạng thái đăng nhập
+  //   setIsLogin(login);
+  // };
 
   //Chạy kiểm tra đăng nhập khi component mount
-  useEffect(() => {
-    checkLogin();
-  }, []);
+  // useEffect(() => {
+  //   checkLogin();
+  // }, []);
 
   //Hàm submit file ảnh lên server
   const handleSubmit = async () => {
@@ -148,13 +148,13 @@ export default function EditAvt({ onClose, currentAvatar, onSave }) {
         {/* Tách ra khỏi header cho đúng cấu trúc */}
         <div className="modal-actions">
           {/* {previewUrl && ( */}
-          <button onClick={handleRemoveImage} className="remove-btn">
+          <button onClick={deleteAvatar} className="remove-btn">
             Remove
           </button>
           {/* )} */}
           <button
             onClick={handleSubmit}
-            disabled={!avatarFile}
+            disabled={!avatarFile || loading}
             className="save-btn"
           > Save Change
             {/* {loading ? "Saving..." : "Save Changes"} */}
