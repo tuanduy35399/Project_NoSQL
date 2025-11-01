@@ -18,6 +18,7 @@ export default function PostPage() {
   const [previewUrls, setPreviewUrls] = useState([]);
   const [progress, setProgress] = useState(0);
   const [isLoggedIn, setIsLogin] = useState(false);
+  const [data, setData] = useState({});
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
   console.log(files)
@@ -46,6 +47,8 @@ export default function PostPage() {
 
   const checkLogin = async () => {
     const login = localStorage.getItem("isLoggedIn");
+    const userData= await axios.get(`http://localhost:8080/api/users/${localStorage.getItem("userId")?.replaceAll('"', "")}`)
+    setData(userData.data);
     setIsLogin(login);
   };
 
@@ -121,7 +124,7 @@ export default function PostPage() {
           <div className={style["post-content"]}>
             <div className={style.header_post}>
               <div className={style.avatar_user}>
-                {/* <img src={userAvatarUrl} alt="AvatarUser" /> */}
+                <img src={data.userAvatarUrl} alt="AvatarUser" />
               </div>
               <strong>
                 <span>

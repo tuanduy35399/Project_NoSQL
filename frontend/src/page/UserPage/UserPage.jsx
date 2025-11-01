@@ -131,6 +131,7 @@ export default function UserPage() {
   const handleSave = (updatedUser) => {
     setDataUser(updatedUser);
     setShowEdit(false);
+    setShowEditAvt(false);
   };
 
   const handleDelete = () => {
@@ -267,10 +268,11 @@ export default function UserPage() {
                 <EditAvt
                   user={dataUser}
                   onClose={() => setShowEditAvt(false)}
-                  onSave={(updatedAvatarUrl) => {
-                    setDataUser({ ...dataUser, userAvatarUrl: updatedAvatarUrl });
-                    setShowEditAvt(false);
-                  }}
+                  onSave={handleSave}
+                  //   => {
+                  //   setDataUser({ ...dataUser, userAvatarUrl: updatedAvatarUrl });
+                  //   setShowEditAvt(false);
+                  // }}
                 />
               )}
           

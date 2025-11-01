@@ -2,6 +2,7 @@ import "./EditAvt.css";
 import axios from "axios";
 import { toast } from "sonner";
 import { useState, useRef, useEffect } from "react";
+import { CloudCog } from "lucide-react";
 
 export default function EditAvt({ onClose, currentAvatar, onSave }) {
   // State để lưu file ảnh và URL preview
@@ -9,6 +10,7 @@ export default function EditAvt({ onClose, currentAvatar, onSave }) {
   const [previewUrl, setPreviewUrl] = useState(null); //lấy dữ liệu đã chuyển thành url để hiển thị preview 
   const fileInputRef = useRef(null); //để có thể reset input sau khi xóa file
   const [isLoggedIn, setIsLogin] = useState(false);
+  const [files, setFiles] = useState([]);
 
   //Chọn file - hiển thị preview
   const handleFileChange = (e) => {
@@ -56,22 +58,23 @@ export default function EditAvt({ onClose, currentAvatar, onSave }) {
     const storedUserId = localStorage.getItem("userId")?.replaceAll('"', "");
     // formData để gửi file
     const formData = new FormData();
-    formData.append("avatar", avatarFile);
-    formData.append("userId", storedUserId);
+    // formData.append("userId", storedUserId);
+    formData.append("file", avatarFile);
 
     // Gửi yêu cầu POST lên server
     try {
       console.log("Uploading avatar for userId:", storedUserId);
-      console.log("Avatar file:", avatarFile);
-      const response = await axios.post(`https://6904dec96b8dabde49656fa6.mockapi.io/api/v1/avatar/users/${storedUserId}`, formData, { //lấy tạm api post blogs để test
+          console.log("Avatar:",avatarFile );
+      // console.log("Avatar file:", avatarFile);
+      const response = await axios.patch(`http://localhost:8080/api/users/${storedUserId}/avatar`, formData, { //lấy tạm api post blogs để test
         headers: { "Content-Type": "multipart/form-data" },
       });
       toast.success("Avatar updated successfully!");
       
       //lưu lại URL ảnh mới sau khi upload thành công
       if (onSave) {
-        onSave(newAvatarUrl);
-
+        onSave(response.data);
+        onClose();
       }
     } catch (error) {
       toast.error("Upload failed!");
@@ -116,7 +119,7 @@ export default function EditAvt({ onClose, currentAvatar, onSave }) {
 
           {/* Chỉ hiện nút 'Remove' khi đã có ảnh */}
           {previewUrl && (
-            <button onClick={handleRemoveImage}>Remove</button>
+            <button onClick={handleRemoveImage} className="remove-btn">Remove</button>
           )}
 
           {/* Tách ra khỏi header cho đúng cấu trúc */}

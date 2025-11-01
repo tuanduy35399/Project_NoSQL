@@ -57,6 +57,7 @@
   border: 2px dashed #ccc;
   background-color: #f4f4f4;
   padding: 10px;
+
   
   /* Căn giữa chữ "Avatar Preview" */
   display: flex;
@@ -90,7 +91,7 @@
   width: 100px;
   height: 100px;
   border-radius: 50%;
-  border: 2px solid #ccc;
+  /* border: 2px solid #ccc; */
   object-fit: cover;
   background-color: #f4f4f4;
 }
@@ -168,4 +169,19 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+.upload-button{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 10px 0;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.25s, transform 0.1s;
 }

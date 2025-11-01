@@ -1,19 +1,29 @@
 textarea {
-  width: 35vw;
+  min-width: 40vw;
   padding-left: 20px;
-  font-size: 20px;
-  min-height: 300px;
-  resize:none;
+  font-size: 16x;
+  /* min-height: 300px; */
+  resize: he;
   border-left: 2px solid rgba(0, 0, 0, 0.281);
   border-top: none;
   border-right: none;
   border-bottom: none;
   outline: none;
+  overflow: hidden;
+}
+body::-webkit-scrollbar {
+  display: none;
+}
+
+/* Ẩn thanh cuộn (Firefox) */
+body {
+  scrollbar-width: none;
 }
 .avatar_user{
   width: 50px;
   height: 50px;
   border-radius: 50%;
+  overflow: hidden;
 }
 .selectForm{
   border-radius: 5px;
@@ -136,7 +146,6 @@ textarea {
   display: flex;
   justify-content: center;
   align-items: center;
-  border-bottom: 1px solid #d1cfcf;
 }
 
 .toastSuccess {
