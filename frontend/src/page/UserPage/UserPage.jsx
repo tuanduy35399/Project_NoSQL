@@ -152,6 +152,7 @@ export default function UserPage() {
     toast.success("Signed out successfully!");
     navigate("/");
   };
+
   const handleDeletePost = async (blogId) => {
     const loadingToast= toast.loading("Deleting...")
     try {
@@ -166,6 +167,7 @@ export default function UserPage() {
       toast.error("Cannot delete blog", { id: loadingToast });
     }
   };
+
   return (
     <div className="user-page">
       <nav className="nav-bar">
@@ -247,6 +249,7 @@ export default function UserPage() {
                   </button>
                 ))}
               </nav>
+              
               {/* -----------------------------Hiện bài đăng--------------------------------------------- */}
               <div className="layout">
                 {/* SỬA LỖI 2.2: Dùng spread operator ...userBlog */}
@@ -322,24 +325,25 @@ export default function UserPage() {
           )}
         </>
       ) : (
+    
         //---------------------------------SỬA ĐỔI: PHẦN NÀY DÀNH CHO USER CHƯA LOGIN------------------------------
         <div className="logged-out-container">
-          <h2>Bạn chưa đăng nhập</h2>
-          <p>Vui lòng đăng nhập hoặc đăng ký để xem trang cá nhân.</p>
-          <div className="auth-buttons">
+          <h2>You are not signed in</h2>
+          <p>Please sign in or sign up to view your profile.</p>
+          {/* <div className="auth-buttons">
             <button
               className="auth-btn login-btn"
               onClick={() => navigate("/signin")}
             >
-              Đăng nhập
+              Sign in
             </button>
             <button
               className="auth-btn register-btn"
               onClick={() => navigate("/signup")}
             >
-              Đăng ký
+              Sign up
             </button>
-          </div>
+          </div> */}
         </div>
       )}
     </div>

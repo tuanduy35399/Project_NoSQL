@@ -233,9 +233,9 @@ export default function PostPage() {
         </>
       ) : (
         <div className="logged-out-container">
-          <h2>Bạn chưa đăng nhập</h2>
-          <p>Vui lòng đăng nhập hoặc đăng ký để xem trang cá nhân.</p>
-          <div className="auth-buttons">
+          <h2>You are not signed in</h2>
+          <p>Please sign in or sign up to view your profile.</p>
+          {/* <div className="auth-buttons">
             <button
               className="auth-btn login-btn"
               onClick={() => navigate("/signin")}
@@ -248,7 +248,7 @@ export default function PostPage() {
             >
               Đăng ký
             </button>
-          </div>
+          </div> */}
         </div>
       )}
     </div>

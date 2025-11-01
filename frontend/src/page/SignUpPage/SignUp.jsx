@@ -13,10 +13,10 @@ export default function SignUp() {
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // tránh reload page khi submit form
-    const formData = {fullname, username, birthday, password}; //tạo object chứa data form
+    const formData = { fullname, username, birthday, password }; //tạo object chứa data form
 
     try {
-      const response = await axios.post("http://localhost:8080/api/users/sign-up",formData);
+      const response = await axios.post("http://localhost:8080/api/users/sign-up", formData);
 
       console.log("Sign up success:", response.data);
       toast.success("Sign up successfully! Please sign in.");
@@ -87,6 +87,7 @@ export default function SignUp() {
         <input
           type="date"
           value={birthday}
+          max="9999-12-31"
           onChange={(e) => setBirthday(e.target.value)}
           required
         />

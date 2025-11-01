@@ -10,7 +10,24 @@ export default function EditAvt({ onClose, currentAvatar, onSave }) {
   const [previewUrl, setPreviewUrl] = useState(null); //lấy dữ liệu đã chuyển thành url để hiển thị preview 
   const fileInputRef = useRef(null); //để có thể reset input sau khi xóa file
   const [isLoggedIn, setIsLogin] = useState(false);
+  const [isDelete, setIsDelete] = useState(false);
   const [loading, setLoading] = useState(false);
+
+
+  const deleteAvatar = async () => {
+    const loadingToast = toast.loading("Deleting...");
+    try {
+      await axios.delete(`http://localhost:8080/api/users/${storedUserId}/avatar`);
+      console.log("Avatar deleted successfully");
+      toast.success("Avatar deleted successfully!", { id: loadingToast });
+      if (onSave) {
+        onSave(null); //gọi onSave với null để xóa avatar ở component cha
+        onClose();
+      }
+    }catch (error){
+      toast.error("Delete failed!", { id: loadingToast });
+    }
+  };
 
   //để khi mở edit avatar sẽ có avt hiện tại 
   const handleAvatarClick = () => {
@@ -128,22 +145,19 @@ export default function EditAvt({ onClose, currentAvatar, onSave }) {
           )}
         </label>
 
-        {/* Chỉ hiện nút 'Remove' khi đã có ảnh */}
-        {previewUrl && (
+        {/* Tách ra khỏi header cho đúng cấu trúc */}
+        <div className="modal-actions">
+          {/* {previewUrl && ( */}
           <button onClick={handleRemoveImage} className="remove-btn">
             Remove
           </button>
-        )}
-
-        {/* Tách ra khỏi header cho đúng cấu trúc */}
-        <div className="modal-actions">
-          <button onClick={onClose}>Cancel</button>
+          {/* )} */}
           <button
             onClick={handleSubmit}
             disabled={!avatarFile}
             className="save-btn"
-          >
-            {loading ? "Saving..." : "Save Changes"}
+          > Save Change
+            {/* {loading ? "Saving..." : "Save Changes"} */}
           </button>
         </div>
       </div>

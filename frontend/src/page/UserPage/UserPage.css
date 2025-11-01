@@ -6,7 +6,6 @@
   box-sizing: border-box;
 }
 
-
 /*----------------------------- NAV BAR -----------------------------*/
 .nav-bar {
   position: fixed;
@@ -26,10 +25,11 @@
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  margin: 0;
-  font-size: 16px;
+  /* margin: 0; */
+  margin-top: 26px;
+  font-size: 17px;
   z-index: 4500;
-  font-weight: 600;
+  font-weight: 560;
 }
 
 .nav-bar .btn {
@@ -87,7 +87,7 @@
   object-fit: cover;
 }
 
-/*-------------------------- EDIT PROFILE BUTTON --------------------------*/
+/*-------------------------- EDIT BUTTON --------------------------*/
 /* .edit-profile-btn {
   position: absolute;
   top: 180px;
@@ -206,7 +206,7 @@
   justify-content: center;
   text-align: center;
   padding: 40px 20px;
-  margin-top: 50px;
+  margin-top: 200px;
   /* Khoảng cách với nav-bar */
   max-width: 500px;
   /* Giới hạn chiều rộng */
@@ -220,16 +220,18 @@
 }
 
 .logged-out-container h2 {
-  font-size: 24px;
+  font-size: 23px;
   font-weight: 600;
-  color: #222;
-  margin-bottom: 10px;
+  color: #000000;
+  margin-bottom: 15px;
+  margin-top: 20px;
 }
 
 .logged-out-container p {
   font-size: 16px;
-  color: #666;
+  color: #757575;
   margin-bottom: 25px;
+  font-family: 'Roboto';
 }
 
 .auth-buttons {
@@ -296,8 +298,6 @@
 .edit-avatar-btn:hover {
   background-color: rgba(0, 0, 0, 0.85);
 }
-
-
 
 .picture {
   max-width: 500px;
