@@ -12,7 +12,7 @@ export default function EditAvt({ onClose, currentAvatar, onSave }) {
   // const [isLoggedIn, setIsLogin] = useState(false);
   // const [isDelete, setIsDelete] = useState(false);
   const [loading, setLoading] = useState(false);
-
+  const [user, setUser] = useState({});
 
   const deleteAvatar = async () => {
     const loadingToast = toast.loading("Deleting...");
@@ -21,11 +21,15 @@ export default function EditAvt({ onClose, currentAvatar, onSave }) {
       await axios.delete(`http://localhost:8080/api/users/${storedUserId}/avatar`);
       console.log("Avatar deleted successfully");
       toast.success("Avatar deleted successfully!", { id: loadingToast });
+
+      const updatedUser = await axios.get(`http://localhost:8080/api/users/${storedUserId}`);
+      setUser(updatedUser.data); // gán lại user mới
       if (onSave) {
-        onSave(null); //gọi onSave với null để xóa avatar ở component cha
-        onClose();
+      onSave(updatedUser.data); // 👈 Gửi luôn dữ liệu user mới (chứa avatar mặc định)
+      onClose();
       }
-    }catch (error){
+        
+    } catch (error) {
       console.error("Delete avatar error:", error); // thêm dòng này để dễ debug
       toast.error("Delete failed!", { id: loadingToast });
     }
@@ -150,8 +154,8 @@ export default function EditAvt({ onClose, currentAvatar, onSave }) {
         {/* Tách ra khỏi header cho đúng cấu trúc */}
         <div className="modal-actions">
           {/* {previewUrl && ( */}
-          <button 
-            onClick={deleteAvatar} 
+          <button
+            onClick={deleteAvatar}
             // disabled={!avatarFile || loading}
             className="remove-btn">
             Remove

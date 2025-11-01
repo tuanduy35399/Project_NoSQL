@@ -19,6 +19,7 @@ export default function UserPage() {
   const navigate = useNavigate();
   const [isDelete, setIsDelete] = useState(false);
   const [userBlog, setUserBlogs] = useState([]); // Bắt đầu là mảng rỗng
+  
 
 
   // Thêm state và ref cho dropdown menu 3 chấm (từ HEAD)
@@ -168,6 +169,9 @@ export default function UserPage() {
     }
   };
 
+  const handleAvatarUpdate = (newUserData) => {
+  setDataUser(newUserData);   // ✅ Dùng đúng state
+};
   return (
     <div className="user-page">
       <nav className="nav-bar">
@@ -318,7 +322,7 @@ export default function UserPage() {
                   user={dataUser}
                   currentAvatar={dataUser.userAvatarUrl}
                   onClose={() => setShowEditAvt(false)}
-                  onSave={handleSave}
+                  onSave={handleAvatarUpdate}   // ✅ callback đúng
                 />
               )}
             </>
