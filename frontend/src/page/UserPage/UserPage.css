@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
 .user-page {
-  padding-top: 250px;
+  /* padding-top: 250px; */
   width: 100%;
   box-sizing: border-box;
 }
@@ -20,7 +20,6 @@
   height: 40px;
   padding: 8px 20px;
   z-index: 4000;
-  border-bottom: 1px solid #ddd;
 }
 
 .nav-bar h1 {
@@ -273,20 +272,7 @@
 }
 
 /*------------------------profile-avt--------------------------------------*/
-.avatar-wrapper {
-  position: relative;
-  width: 120px;
-  height: 120px;
-}
 
-/* Ảnh đại diện tròn */
-.avatar-wrapper .avt {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid #ddd;
-}
 
 /*Nút chỉnh sửa avatar — nằm ngay trên avatar */
 .edit-avatar-btn {
@@ -311,7 +297,7 @@
   background-color: rgba(0, 0, 0, 0.85);
 }
 
-//------------------------ POSTS author TD------------------------*/
+
 
 .picture {
   max-width: 500px;
@@ -329,7 +315,7 @@
   height: 100%;
   background-color: #FFFF;
   overflow-y: auto;
-  margin-top: 50px;
+  margin-top: 300px;
 }
 
 .header_post {
@@ -339,12 +325,30 @@
   margin-bottom: 5px;
   gap: 10px;
 }
+.avatar-wrapper {
+  position: relative;
+  width: 120px;
+  height: 120px;
+}
 
-.avatar_user {
+/* Ảnh đại diện tròn */
+.avatar-wrapper .avt {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ddd;
+}
+.avatar_mini_wrapper {
+  width: 50px;
+  height: 50px;
+  position: relative;
+}
+.avatar_mini_wrapper .avatar{
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  overflow: hidden;
+  object-fit: cover;
 }
 .layout::-webkit-scrollbar {
   display: none;

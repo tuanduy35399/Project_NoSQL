@@ -10,7 +10,12 @@ export default function EditAvt({ onClose, currentAvatar, onSave }) {
   const [previewUrl, setPreviewUrl] = useState(null); //lấy dữ liệu đã chuyển thành url để hiển thị preview 
   const fileInputRef = useRef(null); //để có thể reset input sau khi xóa file
   const [isLoggedIn, setIsLogin] = useState(false);
-  const [files, setFiles] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  //để khi mở edit avatar sẽ có avt hiện tại 
+  const handleAvatarClick = () => {
+    fileInputRef.current.click();
+  };
 
   //Chọn file - hiển thị preview
   const handleFileChange = (e) => {
@@ -26,7 +31,7 @@ export default function EditAvt({ onClose, currentAvatar, onSave }) {
   }
 
   //Xóa file 
-  const handleRemoveImage = (index) => {
+  const handleRemoveImage = () => {
     setAvatarFile(null);
     if (previewUrl) {
       URL.revokeObjectURL(previewUrl); //thu hồi URL cũ nếu có
@@ -50,105 +55,98 @@ export default function EditAvt({ onClose, currentAvatar, onSave }) {
 
   //Hàm submit file ảnh lên server
   const handleSubmit = async () => {
+    const loadingToast = toast.loading("Updating...");
     if (!avatarFile) {
       toast.error("Vui lòng chọn ảnh!");
       return;
     }
     // Lấy userId từ localStorage
     const storedUserId = localStorage.getItem("userId")?.replaceAll('"', "");
+
     // formData để gửi file
     const formData = new FormData();
-    // formData.append("userId", storedUserId);
     formData.append("file", avatarFile);
 
     // Gửi yêu cầu POST lên server
     try {
-      console.log("Uploading avatar for userId:", storedUserId);
-          console.log("Avatar:",avatarFile );
-      // console.log("Avatar file:", avatarFile);
+      setLoading(true);
       const response = await axios.patch(`http://localhost:8080/api/users/${storedUserId}/avatar`, formData, { //lấy tạm api post blogs để test
         headers: { "Content-Type": "multipart/form-data" },
       });
-      toast.success("Avatar updated successfully!");
-      
+      toast.success("Avatar updated successfully!", { id: loadingToast });
+
       //lưu lại URL ảnh mới sau khi upload thành công
       if (onSave) {
         onSave(response.data);
         onClose();
       }
     } catch (error) {
-      toast.error("Upload failed!");
+      toast.error("Upload failed!", { id: loadingToast });
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="overlay">
       <div className="edit-avt-modal">
+
         {/* Tiêu đề */}
         <div className="edit-header">
           <h2>Edit Avatar</h2>
-          <button className="close-icon" onClick={onClose}>×</button>
         </div>
+        <button className="close-icon" onClick={onClose}>×</button>
 
         {/* Đầu vào cho file ảnh */}
-          <input
-            id="fileInput"
-            type="file"
-            accept="image/*"
-            ref={fileInputRef}
-            onChange={handleFileChange}
-            style={{ display: "none" }}
-          />
+        <input
+          id="fileInput"
+          type="file"
+          accept="image/*"
+          ref={fileInputRef}
+          onChange={handleFileChange}
+          style={{ display: "none" }}
+        />
 
-          {/* Hiển thị preview và nút remove */}
-          <label htmlFor="fileInput" className="upload-button">
-            {previewUrl ? (
-              // Nếu có ảnh preview, thì hiển thị ảnh
-              <img 
-                src = {previewUrl}
-                alt="Avatar Preview"
-                className="avatar-preview"
-              />
-            ) : (
-              // Nếu không có ảnh preview, hiển thị avatar hiện tại hoặc placeholder
-              <div className="avatar-placeholder">
-                Avatar
-              </div>
-            )}
-          </label>
-
-          {/* Chỉ hiện nút 'Remove' khi đã có ảnh */}
-          {previewUrl && (
-            <button onClick={handleRemoveImage} className="remove-btn">Remove</button>
+        {/* Hiển thị preview và nút remove */}
+        <label htmlFor="fileInput" className="upload-button">
+          {previewUrl ? (
+            // Nếu có ảnh preview, thì hiển thị ảnh
+            <img
+              src={previewUrl}
+              alt="Avatar Preview"
+              className="avatar-preview"
+            />
+          ) : currentAvatar ? (
+            <img
+              src={currentAvatar}
+              alt="Current Avatar"
+              className="avatar-preview"
+            />
+          ) : (
+            // Nếu không có ảnh preview, hiển thị avatar hiện tại hoặc placeholder
+            <div className="avatar-placeholder">Avatar</div>
           )}
+        </label>
 
-          {/* Tách ra khỏi header cho đúng cấu trúc */}
-          <div className="modal-actions">
-            <button onClick={onClose}>Cancel</button>
-            <button 
-              onMouseDown={handleSubmit} 
-              disabled={!avatarFile}
-              className="save-btn">
-              Save Changes
-            </button>
-          </div>
+        {/* Chỉ hiện nút 'Remove' khi đã có ảnh */}
+        {previewUrl && (
+          <button onClick={handleRemoveImage} className="remove-btn">
+            Remove
+          </button>
+        )}
+
+        {/* Tách ra khỏi header cho đúng cấu trúc */}
+        <div className="modal-actions">
+          <button onClick={onClose}>Cancel</button>
+          <button
+            onClick={handleSubmit}
+            disabled={!avatarFile}
+            className="save-btn"
+          >
+            {loading ? "Saving..." : "Save Changes"}
+          </button>
+        </div>
       </div>
     </div>
-          /* <img src={previewUrl} alt="Avatar Preview" className="avatar-preview" />
-          <button onClick={handleRemoveImage}>Remove</button>
-          <div className="modal-actions">
-            <button onClick={onClose}>Cancel</button>
-            <button onClick={handleSubmit} disabled={!avatarFile}>Save Changes</button>
-          </div>
-      </div>
-    </div> */
-
-  /* <div className="edit-bottom">
-          <input type="file" accept="image/*" onChange={handleAvatarChange} />
-          <button onClick={handleSubmit} disabled={loading}>
-            {loading ? "Đang lưu..." : "Lưu thay đổi"}
-          </button>
-
-        </div> */
   );
 }
