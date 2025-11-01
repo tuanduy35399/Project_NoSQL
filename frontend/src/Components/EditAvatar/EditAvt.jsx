@@ -126,7 +126,7 @@ export default function EditAvt({ onClose, currentAvatar, onSave }) {
           <div className="modal-actions">
             <button onClick={onClose}>Cancel</button>
             <button 
-              onClick={handleSubmit} 
+              onMouseDown={handleSubmit} 
               disabled={!avatarFile}
               className="save-btn">
               Save Changes

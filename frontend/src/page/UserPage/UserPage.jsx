@@ -269,10 +269,6 @@ export default function UserPage() {
                   user={dataUser}
                   onClose={() => setShowEditAvt(false)}
                   onSave={handleSave}
-                  //   => {
-                  //   setDataUser({ ...dataUser, userAvatarUrl: updatedAvatarUrl });
-                  //   setShowEditAvt(false);
-                  // }}
                 />
               )}
           
