@@ -6,6 +6,8 @@ import "./UserPage.css";
 import Edit from "../../Components/EditProfile/Edit";
 import EditAvt from "../../Components/EditAvatar/EditAvt";
 import { BsThreeDots } from "react-icons/bs"; // Thêm icon cho menu 3 chấm
+import { Button } from "@/Components/ui/button";
+import { use } from "react";
 
 
 export default function UserPage() {
@@ -150,7 +152,20 @@ export default function UserPage() {
     toast.success("Signed out successfully!");
     navigate("/");
   };
-
+  const handleDeletePost = async (blogId) => {
+    const loadingToast= toast.loading("Deleting...")
+    try {
+      await axios.delete(`http://localhost:8080/api/v1/blogs/${blogId}`);
+      console.log("Xoa blog thanh cong");
+      toast.success("Delete blog successful", { id: loadingToast });
+      setUserBlogs((currentBlogs) =>
+        currentBlogs.filter((blog) => blog.id !== blogId)
+      );
+    } catch (error) {
+      console.log("Khong the xoa blog", error);
+      toast.error("Cannot delete blog", { id: loadingToast });
+    }
+  };
   return (
     <div className="user-page">
       <nav className="nav-bar">
@@ -167,8 +182,12 @@ export default function UserPage() {
             {menuOpen && (
               <div className="dropdown-menu">
                 {/* Dùng text "Log out" (từ INCOMING) */}
-                <button onClick={handleLogout}>Sign out</button>
-                <button onClick={handleDelete}>Delete account</button>
+                <Button onClick={handleLogout} className="text-black">
+                  Sign out
+                </Button>
+                <Button onClick={handleDelete} className="text-black">
+                  Delete account
+                </Button>
               </div>
             )}
           </div>
@@ -185,49 +204,49 @@ export default function UserPage() {
           ) : (
             <>
               {/*----------------------------------thông tin profile----------------------------------------  */}
-                <nav className="profile">
-                  <div className="profile-in4">
-                    <h1>{dataUser.fullname}</h1>
-                    <p className="name">@{dataUser.username}</p>
-                  </div>
-                  <div className="profile-avt">
-                    <div className="avatar-wrapper">
-                      {" "}
-                      {/* Thêm wrapper để chứa cả ảnh và nút chỉnh sửa */}
-                      <img
-                        src={dataUser.userAvatarUrl}
-                        alt="avatar"
-                        className="avt"
-                      />
-                      <button
-                        className="edit-avatar-btn"
-                        onMouseDown={() => setShowEditAvt(true)}
-                        title="Edit Avatar"
-                      >
-                        ✎
-                      </button>
-                    </div>
-                  </div>
-                  <button
-                    className="edit-btn"
-                    onMouseDown={() => setShowEdit(true)}
-                  >
-                    Edit profile
-                  </button>
-                </nav>
-
-                {/*----------------------------------thông tin tab----------------------------------------  */}
-                <nav className="tab">
-                  {["thread", "reply", "media", "repost"].map((tab) => (
+              <nav className="profile">
+                <div className="profile-in4">
+                  <h1>{dataUser.fullname}</h1>
+                  <p className="name">@{dataUser.username}</p>
+                </div>
+                <div className="profile-avt">
+                  <div className="avatar-wrapper">
+                    {" "}
+                    {/* Thêm wrapper để chứa cả ảnh và nút chỉnh sửa */}
+                    <img
+                      src={dataUser.userAvatarUrl}
+                      alt="avatar"
+                      className="avt"
+                    />
                     <button
-                      key={tab}
-                      className={`tab-btn ${activeTab === tab ? "active" : ""}`}
-                      onMouseDown={() => setActiveTab(tab)}
+                      className="edit-avatar-btn"
+                      onMouseDown={() => setShowEditAvt(true)}
+                      title="Edit Avatar"
                     >
-                      {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                      ✎
                     </button>
-                  ))}
-                </nav>
+                  </div>
+                </div>
+                <button
+                  className="edit-btn"
+                  onMouseDown={() => setShowEdit(true)}
+                >
+                  Edit profile
+                </button>
+              </nav>
+
+              {/*----------------------------------thông tin tab----------------------------------------  */}
+              <nav className="tab">
+                {["thread", "reply", "media", "repost"].map((tab) => (
+                  <button
+                    key={tab}
+                    className={`tab-btn ${activeTab === tab ? "active" : ""}`}
+                    onMouseDown={() => setActiveTab(tab)}
+                  >
+                    {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                  </button>
+                ))}
+              </nav>
               {/* -----------------------------Hiện bài đăng--------------------------------------------- */}
               <div className="layout">
                 {/* SỬA LỖI 2.2: Dùng spread operator ...userBlog */}
@@ -268,6 +287,17 @@ export default function UserPage() {
                         hour12: false,
                       })}
                     </span>
+                    <div className="modifileButton">
+                      <Button className="w-26 bg-black cursor-pointer">
+                        Update
+                      </Button>
+                      <Button
+                        className="w-26 bg-black cursor-pointer"
+                        onClick={()=>handleDeletePost(post.id)}
+                      >
+                        Delete
+                      </Button>
+                    </div>
                   </div>
                 ))}
               </div>
