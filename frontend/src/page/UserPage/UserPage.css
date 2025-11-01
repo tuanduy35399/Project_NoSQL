@@ -8,6 +8,7 @@
 
 /*----------------------------- NAV BAR -----------------------------*/
 .nav-bar {
+  position: fixed;
   display: flex;
   align-items: center;
   justify-content: flex-start; /* để menu-wrapper dùng margin-left:auto */
@@ -130,7 +131,7 @@
   background-color: #ffffff;
   z-index: 10;
   margin-top: 50px;
-  color: #ca2121
+  color: #000000
 }
 
 .tab-btn {
@@ -286,10 +287,10 @@
   border: 2px solid #ddd;
 }
 
-/* Nút chỉnh sửa avatar — nằm ngay trên avatar */
+/*Nút chỉnh sửa avatar — nằm ngay trên avatar */
 .edit-avatar-btn {
   position: absolute;
-  bottom: 4px;     /* điều chỉnh vị trí icon */
+  bottom: 4px;     /*điều chỉnh vị trí icon*/
   right: 4px;
   background-color: rgba(0, 0, 0, 0.65);
   color: white;

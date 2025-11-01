@@ -7,6 +7,7 @@ import Edit from "../../Components/EditProfile/Edit";
 import EditAvt from "../../Components/EditAvatar/EditAvt";
 import { BsThreeDots } from "react-icons/bs"; // Thêm icon cho menu 3 chấm
 
+
 export default function UserPage() {
   const [activeTab, setActiveTab] = useState("thread");
   const [showEdit, setShowEdit] = useState(false);
@@ -16,6 +17,7 @@ export default function UserPage() {
   const navigate = useNavigate();
   const [isDelete, setIsDelete] = useState(false);
   const [userBlog, setUserBlogs] = useState([]); // Bắt đầu là mảng rỗng
+
 
   // Thêm state và ref cho dropdown menu 3 chấm (từ HEAD)
   const [menuOpen, setMenuOpen] = useState(false);
@@ -30,12 +32,9 @@ export default function UserPage() {
         console.error("User ID not found in LocalStorage.");
         return;
       }
-
       const tempData = await axios.get(
         `http://localhost:8080/api/users/${userId}`
       );
-
-
       // Lấy logic từ INCOMING
       const islogined = Boolean(localStorage.getItem("isLoggedIn"));
       setIsLogin(islogined); // Set trạng thái login
@@ -43,7 +42,6 @@ export default function UserPage() {
       if (!islogined) {
         return;
       }
-
       setDataUser(tempData.data);
       console.log("Lấy dữ liệu user thành công");
     } catch (error) {
@@ -57,21 +55,15 @@ export default function UserPage() {
     }
   };
 
-  //----------------------------------------delete user------------------------------------------------------
+//----------------------------------------delete user------------------------------------------------------
   const deleteDataUser = async () => {
     try {
       const userId = String(localStorage.getItem("userId")).replaceAll('"', "");
-      // console.log(userId);
       if (!userId) {
         //console.error("Logged in but userId not found in LocalStorage.");
         toast.error("User session error. Please log in again.");
         return; // Dừng thực thi
       }
-      // const deleteData = await axios.delete(
-      //   `http://localhost:8080/api/users/${userId}`
-      // );
-
-
       // Lấy logic từ INCOMING
       await axios.delete(`http://localhost:8080/api/users/${userId}`);
       console.log("Xóa user thành công");
@@ -85,7 +77,7 @@ export default function UserPage() {
     }
   };
 
-  // ----------------------------------------get user post------------------------------------------------------
+  //----------------------------------------get user post------------------------------------------------------
   const getUserPost = async () => {
     try {
       const userId = String(localStorage.getItem("userId")).replaceAll('"', "");
@@ -121,17 +113,11 @@ export default function UserPage() {
     init();
   }, []);
 
-  // Tách riêng useEffect cho getUserPost,
-  // nó sẽ chạy khi dataUser thay đổi từ null -> object
   useEffect(() => {
     if (dataUser && isLogin) {
       getUserPost();
     }
   }, [dataUser, isLogin]); // Phụ thuộc vào dataUser và isLogin
-
-  // useEffect(() => {
-  //   fetchDataUser();
-  // }, []);
 
   useEffect(() => {
     if (isDelete) {
@@ -140,8 +126,8 @@ export default function UserPage() {
     }
   }, [isDelete]); // Xóa mảng phụ thuộc [deleteDataUser] để tránh vòng lặp vô hạn
 
+//---------------------------------------Các hàm xử lý--------------------------------------------------     
 
-  //-------------------------Xử lý đóng menu khi click ra ngoài (từ HEAD)
   const handleSave = (updatedUser) => {
     setDataUser(updatedUser);
     setShowEdit(false);
@@ -149,13 +135,10 @@ export default function UserPage() {
 
   const handleDelete = () => {
     // Thêm một bước xác nhận
-    if (
-      window.confirm(
+    if (window.confirm(
         "Are you sure you want to delete your account? This action cannot be undone."
-      )
-    ) {
-      setIsDelete(true);
-    }
+      )) 
+    {setIsDelete(true);}
   };
 
   const handleLogout = () => {
@@ -168,8 +151,6 @@ export default function UserPage() {
     navigate("/");
   };
 
-
-  // === Mâu thuẫn 2: Gộp logic ===
   return (
     <div className="user-page">
       <nav className="nav-bar">
@@ -201,33 +182,24 @@ export default function UserPage() {
             </div>
           ) : (
             <>
-              {/* Chỉ render phần này khi dataUser đã tồn tại */}
+            
+          {/*----------------------------------thông tin profile----------------------------------------  */}          
               <nav className="profile">
                 <div className="profile-in4">
                   <h1>{dataUser.fullname}</h1>
                   <p className="name">@{dataUser.username}</p>
                 </div>
-
                 <div className="profile-avt">
                   <div className="avatar-wrapper">  {/* Thêm wrapper để chứa cả ảnh và nút chỉnh sửa */}
                     <img src={dataUser.userAvatarUrl} alt="avatar" className="avt" />
-                    <button className="edit-avatar-btn" onMouseDown={() => setShowEditAvt(true)}
-                      title="Edit Avatar">
-                      ✎
-                    </button>
+                    <button className="edit-avatar-btn" onMouseDown={() => setShowEditAvt(true)}title="Edit Avatar">
+                      ✎</button>
                   </div>
                 </div>
-
-                {/* <nav className="edit-profile-btn"> */}
-                <button className="edit-btn" onMouseDown={() => setShowEdit(true)}>
-                  Edit profile
-                </button>
+                <button className="edit-btn" onMouseDown={() => setShowEdit(true)}>Edit profile</button>
               </nav>
 
-
-
-
-              {/*----------------------------------thông tin tab----------------------------------------  */}
+          {/*----------------------------------thông tin tab----------------------------------------  */}
               <nav className="tab">
                 {["thread", "reply", "media", "repost"].map((tab) => (
                   <button
@@ -240,15 +212,7 @@ export default function UserPage() {
                 ))}
               </nav>
 
-
-              {showEdit && (
-                <Edit
-                  user={dataUser}
-                  onClose={() => setShowEdit(false)}
-                  onSave={handleSave}
-                />
-              )}
-
+          {/* -----------------------------Hiện bài đăng--------------------------------------------- */}
               <div className="layout">
                 {/* SỬA LỖI 2.2: Dùng spread operator ...userBlog */}
                 {[...userBlog].reverse().map((post) => (
@@ -290,17 +254,6 @@ export default function UserPage() {
                   </div>
                 ))}
               </div>
-
-              {/* {showEditAvt && (
-            <EditAvt
-              user={dataUser}
-              onClose={() => setShowEditAvt(false)}
-              onSave={(updatedAvatarUrl) => {
-                setDataUser({ ...dataUser, userAvatarUrl: updatedAvatarUrl });
-                setShowEditAvt(false);
-              }}
-            />
-          )} */}
         
               {showEdit && (
                 <Edit
@@ -309,12 +262,24 @@ export default function UserPage() {
                   onSave={handleSave}
                 />
               )}
+
+              {showEditAvt && (
+                <EditAvt
+                  user={dataUser}
+                  onClose={() => setShowEditAvt(false)}
+                  onSave={(updatedAvatarUrl) => {
+                    setDataUser({ ...dataUser, userAvatarUrl: updatedAvatarUrl });
+                    setShowEditAvt(false);
+                  }}
+                />
+              )}
           
             </>
           )}
         </>
       ) : (
-          // === SỬA ĐỔI: PHẦN NÀY DÀNH CHO USER CHƯA LOGIN ===
+
+//---------------------------------SỬA ĐỔI: PHẦN NÀY DÀNH CHO USER CHƯA LOGIN------------------------------
           <div className="logged-out-container">
             <h2>Bạn chưa đăng nhập</h2>
             <p>Vui lòng đăng nhập hoặc đăng ký để xem trang cá nhân.</p>
