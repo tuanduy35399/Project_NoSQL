@@ -3,6 +3,7 @@ import "./Edit.css";
 import axios from "axios";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
+import { createPortal } from "react-dom";
 export default function Edit({ user, onClose, onSave }) {
   const [formData, setFormData] = useState(user);
   const [loading, setLoading] = useState(false);
@@ -39,7 +40,7 @@ export default function Edit({ user, onClose, onSave }) {
     }
   };
 
-  return (
+  return createPortal(
     <div className="overlay">
       <div className="edit-modal">
         <div className="edit-header">
@@ -76,6 +77,7 @@ export default function Edit({ user, onClose, onSave }) {
           {loading ? "Saving..." : "Done"}
         </button>
       </div>
-    </div>
+    </div>,
+    document.body  //đi chung với createPortal
   );
 }

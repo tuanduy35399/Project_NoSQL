@@ -3,6 +3,7 @@ import axios from "axios";
 import { toast } from "sonner";
 import { useState, useRef, useEffect } from "react";
 import { CloudCog } from "lucide-react";
+import { createPortal } from "react-dom";
 
 export default function EditAvt({ onClose, currentAvatar, onSave }) {
   // State để lưu file ảnh và URL preview
@@ -66,6 +67,24 @@ export default function EditAvt({ onClose, currentAvatar, onSave }) {
     }
   };
 
+  const handleCancelChange = () => {
+    if (previewUrl){
+      URL.revokeObjectURL(previewUrl); //thu hồi URl cũ
+      setPreviewUrl(null);  //xóa preview
+    }
+
+    setAvatarFile(null);
+
+    //reset input file
+    if (fileInputRef.current){
+      fileInputRef.current.value="";
+    }
+
+    //quay lại avt hiện tại
+    setPreviewUrl(currentAvatar || null);
+  }
+
+
   //Kiểm tra trạng thái đăng nhập
   // const checkLogin = async () => {
   //   const login = localStorage.getItem("isLoggedIn"); //cập nhật trạng thái đăng nhập
@@ -117,8 +136,8 @@ export default function EditAvt({ onClose, currentAvatar, onSave }) {
       setLoading(false);
     }
   };
-
-  return (
+  // createPortal cho khung hiện trên tất cả
+  return createPortal(  
     <div className="overlay">
       <div className="edit-avt-modal">
 
@@ -136,6 +155,7 @@ export default function EditAvt({ onClose, currentAvatar, onSave }) {
           ref={fileInputRef}
           onChange={handleFileChange}
           style={{ display: "none" }}
+          disabled={isSubmit}
         />
 
         {/* Hiển thị preview và nút remove */}
@@ -158,6 +178,12 @@ export default function EditAvt({ onClose, currentAvatar, onSave }) {
             <div className="avatar-placeholder">Avatar</div>
           )}
         </label>
+        <button
+            onClick={handleCancelChange}
+            disabled={isSubmit}
+            className="cancel-btn">
+            Cancel change 
+        </button>
 
         {/* Tách ra khỏi header cho đúng cấu trúc */}
         <div className="modal-actions">
@@ -178,6 +204,7 @@ export default function EditAvt({ onClose, currentAvatar, onSave }) {
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body  //đi chung với createPortal
   );
 }

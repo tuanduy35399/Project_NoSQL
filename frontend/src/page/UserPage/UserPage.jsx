@@ -188,10 +188,10 @@ export default function UserPage() {
             {menuOpen && (
               <div className="dropdown-menu">
                 {/* Dùng text "Log out" (từ INCOMING) */}
-                <Button onClick={handleLogout} className="text-black">
+                <Button onClick={handleLogout} className="signout-btn">
                   Sign out
                 </Button>
-                <Button onClick={handleDelete} className="text-black">
+                <Button onClick={handleDelete} className="deleteacc-btn">
                   Delete account
                 </Button>
               </div>

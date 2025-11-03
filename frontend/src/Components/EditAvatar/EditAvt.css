@@ -14,7 +14,8 @@
 .edit-avt-modal {
   display: flex;
   flex-direction: column;
-  
+  /* justify-content: center; */
+  align-items: center;
   background: #fff;
   border-radius: 16px;
   padding: 24px 28px;
@@ -153,6 +154,7 @@
 .save-btn{
   background-color: #000000;
   color: #fff;
+  transition: background-color 0.25s;
 }
 
 
@@ -172,7 +174,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
+  width: 150px;
   padding: 10px 0;
   color: white;
   border: none;
@@ -183,4 +185,22 @@
   transition: background-color 0.25s, transform 0.1s;
 }
 
+.cancel-btn{
+  font-size: 15px;
+  text-decoration: underline;
+  color: #000f92;
+  font-family: Roboto;
+  cursor: pointer;
+}
+
+.cancel-btn:hover{
+  color: #0e005f;
+  background: #afafaf;
+  border-radius: 5px;
+}
+
+.edit-avt-modal .cancel-btn:disabled {
+  cursor: default;
+  opacity: 0.6; /* thêm hiệu ứng nhìn rõ hơn */
+}
 
