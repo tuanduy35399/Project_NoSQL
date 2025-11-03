@@ -166,7 +166,7 @@ export default function UserPage() {
     } catch (error) {
       console.log("Khong the xoa blog", error);
       toast.error("Cannot delete blog", { id: loadingToast });
-    }
+    } 
   };
 
   const handleAvatarUpdate = (newUserData) => {
@@ -242,7 +242,7 @@ export default function UserPage() {
               </nav>
 
               {/*----------------------------------thông tin tab----------------------------------------  */}
-              <nav className="tab">
+              {/* <nav className="tab">
                 {["thread", "reply", "media", "repost"].map((tab) => (
                   <button
                     key={tab}
@@ -252,7 +252,7 @@ export default function UserPage() {
                     {tab.charAt(0).toUpperCase() + tab.slice(1)}
                   </button>
                 ))}
-              </nav>
+              </nav> */}
               
               {/* -----------------------------Hiện bài đăng--------------------------------------------- */}
               <div className="layout">

@@ -137,6 +137,10 @@
   background-color: #e6e6e6;
 }
 
+.modal-actions button:disabled{
+  cursor: not-allowed;
+}
+
 .modal-actions button:first-child:hover {
   background-color: #c5c5c5;
 }

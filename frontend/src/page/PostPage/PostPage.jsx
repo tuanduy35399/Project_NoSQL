@@ -39,6 +39,7 @@ export default function PostPage() {
   const [data, setData] = useState({});
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
+  const [isSubmit, setIsSubmit] = useState(false);
   console.log(files)
   // ✅ Khi chọn file — hiển thị preview
   const handleFileChange = (e) => {
@@ -107,6 +108,10 @@ export default function PostPage() {
   // Khi nhấn "Post"
   const handleSubmit = (e) => {
     e.preventDefault();
+
+     if (isSubmit) return;
+
+    setIsSubmit(true); // chặn click nút lần 2
 
     const storedUserId = localStorage.getItem("userId")?.replaceAll('"', "");
     const storedUserName = localStorage
@@ -217,7 +222,7 @@ export default function PostPage() {
                 className={style.fileInput}
               />
             </div>
-            <Button onClick={handleSubmit} className="w-30 h-10 cursor-pointer">
+            <Button onClick={handleSubmit} disabled={isSubmit} className="w-30 h-10 cursor-pointer">
               Post
             </Button>
           </div>

@@ -13,6 +13,7 @@ export default function EditAvt({ onClose, currentAvatar, onSave }) {
   // const [isDelete, setIsDelete] = useState(false);
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState({});
+  const [isSubmit, setIsSubmit] = useState(false);
 
   const deleteAvatar = async () => {
     const loadingToast = toast.loading("Deleting...");
@@ -78,6 +79,12 @@ export default function EditAvt({ onClose, currentAvatar, onSave }) {
 
   //Hàm submit file ảnh lên server
   const handleSubmit = async () => {
+
+    if (isSubmit) return;
+
+    setIsSubmit(true); // chặn click nút lần 2
+
+
     const loadingToast = toast.loading("Updating...");
     if (!avatarFile) {
       toast.error("Please choose a image!");
@@ -106,6 +113,7 @@ export default function EditAvt({ onClose, currentAvatar, onSave }) {
     } catch (error) {
       toast.error("Upload failed!", { id: loadingToast });
     } finally {
+      setIsSubmit(false);
       setLoading(false);
     }
   };
@@ -118,7 +126,7 @@ export default function EditAvt({ onClose, currentAvatar, onSave }) {
         <div className="edit-header">
           <h2>Edit Avatar</h2>
         </div>
-        <button className="close-icon" onClick={onClose}>×</button>
+        <button className="close-icon" onClick={onClose} title="Cancel change">×</button>
 
         {/* Đầu vào cho file ảnh */}
         <input
@@ -156,7 +164,7 @@ export default function EditAvt({ onClose, currentAvatar, onSave }) {
           {/* {previewUrl && ( */}
           <button
             onClick={deleteAvatar}
-            // disabled={!avatarFile || loading}
+            disabled={isSubmit}
             className="remove-btn">
             Remove
           </button>
