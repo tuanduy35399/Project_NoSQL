@@ -270,7 +270,7 @@ export default function UserPage() {
                           />
                         </div>
                         <div className="user-box">
-                          {post.userName ? "@" + post.userName : "Unknown user"}
+                          {post.username ? "@" + post.username : "Unknown user"}
                         </div>
                       </div>
                     </div>

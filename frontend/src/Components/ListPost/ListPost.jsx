@@ -80,7 +80,7 @@ export default function ListPost() {
                   />
                 </div>
                 <div className={style["user-box"]}>
-                  {post.userName ? "@" + post.userName : "Unknown user"}
+                  {post.username ? "@" + post.username : "Unknown user"}
                 </div>
               </div>
             </div>

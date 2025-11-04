@@ -76,13 +76,13 @@ export default function PostPage() {
   }, []);
 
   // Gửi bài viết lên BE
-  const postNews = async (storedUserId, storedUserName) => {
+  const postNews = async (storedUserId, storedUsername) => {
     const loadingToast = toast.loading("Uploading...");
 
     try {
       const formData = new FormData();
       formData.append("userId", storedUserId);
-      formData.append("userName", storedUserName);
+      formData.append("username", storedUsername);
       formData.append("content", body);
       formData.append("published", publish ? "true" : "false");
       files.forEach((file) => formData.append("files", file));
@@ -114,7 +114,7 @@ export default function PostPage() {
     setIsSubmit(true); // chặn click nút lần 2
 
     const storedUserId = localStorage.getItem("userId")?.replaceAll('"', "");
-    const storedUserName = localStorage
+    const storedUsername = localStorage
       .getItem("username")
       ?.replaceAll('"', "");
 
@@ -129,7 +129,7 @@ export default function PostPage() {
       return;
     }
 
-    postNews(storedUserId, storedUserName);
+    postNews(storedUserId, storedUsername);
   };
 
   return (
