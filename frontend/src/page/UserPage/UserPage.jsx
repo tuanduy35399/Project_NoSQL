@@ -153,9 +153,23 @@ export default function UserPage() {
     navigate("/");
   };
   const handleDeletePost = async (blogId) => {
-    const loadingToast= toast.loading("Deleting...")
+    const loadingToast= toast.loading("Deleting blog...")
     try {
       await axios.delete(`http://localhost:8080/api/v1/blogs/${blogId}`);
+      console.log("Xoa blog thanh cong");
+      toast.success("Delete blog successful", { id: loadingToast });
+      setUserBlogs((currentBlogs) =>
+        currentBlogs.filter((blog) => blog.id !== blogId)
+      );
+    } catch (error) {
+      console.log("Khong the xoa blog", error);
+      toast.error("Cannot delete blog", { id: loadingToast });
+    }
+  };
+  const handleUpdatePost = async (blogId) => {
+    const loadingToast = toast.loading("Updating blog...");
+    try {
+      await axios.patch(`http://localhost:8080/api/v1/blogs/${blogId}`);
       console.log("Xoa blog thanh cong");
       toast.success("Delete blog successful", { id: loadingToast });
       setUserBlogs((currentBlogs) =>
@@ -288,7 +302,9 @@ export default function UserPage() {
                       })}
                     </span>
                     <div className="modifileButton">
-                      <Button className="w-26 bg-black cursor-pointer">
+                      <Button className="w-26 bg-black cursor-pointer"
+                        onClick={()=>handleUpdatePost(post.id)}
+                      >
                         Update
                       </Button>
                       <Button
