@@ -434,6 +434,9 @@ export default function UserPage() {
                                             </>
                                           ) : (
                                             <>
+                                              <FieldLabel>
+                                                Current Images
+                                              </FieldLabel>
                                               <div className="image-preview-container">
                                                 {Array.isArray(editingImage) &&
                                                   editingImage.map(
