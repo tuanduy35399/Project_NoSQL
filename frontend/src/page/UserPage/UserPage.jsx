@@ -1,11 +1,11 @@
-import { useEffect, useState, useRef } from "react"; // Thêm useRef
+import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import "./UserPage.css";
 import Edit from "../../Components/EditProfile/Edit";
 import EditAvt from "../../Components/EditAvatar/EditAvt";
-import { BsThreeDots } from "react-icons/bs"; // Thêm icon cho menu 3 chấm
+import { BsThreeDots } from "react-icons/bs";
 import { Button } from "@/Components/ui/button";
 import {
   DropdownMenu,
@@ -25,11 +25,16 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { MoreHorizontalIcon } from "lucide-react";
+import { MoreHorizontalIcon, UploadIcon } from "lucide-react";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/Components/ui/select";
 
 export default function UserPage() {
   const [activeTab, setActiveTab] = useState("thread");
@@ -39,29 +44,30 @@ export default function UserPage() {
   const [isLogin, setIsLogin] = useState(false);
   const navigate = useNavigate();
   const [isDelete, setIsDelete] = useState(false);
-  const [userBlog, setUserBlogs] = useState([]); 
+  const [userBlog, setUserBlogs] = useState([]);
   const [editingContent, setEditingContent] = useState("");
-  const [editingImage, setEditingImage] = useState("");
-  // Thêm state và ref cho dropdown menu 3 chấm (từ HEAD)
+  const [editingImage, setEditingImage] = useState([]); // Đây là mảng ảnh CŨ (URL)
+  const [publish, setPublish] = useState(true);
+  const [newImages, setNewImages] = useState([]); // Đây là mảng ảnh MỚI (File)
+  const fileInputRef = useRef(null);
+
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
+
   const fetchDataUser = async () => {
     try {
       const userId = String(localStorage.getItem("userId")).replaceAll('"', "");
-      // console.log(userId);
       if (!userId) {
         setIsLogin(false);
-        localStorage.removeItem("isLoggedIn"); // Dọn dẹp
+        localStorage.removeItem("isLoggedIn");
         console.error("User ID not found in LocalStorage.");
         return;
       }
       const tempData = await axios.get(
         `http://localhost:8080/api/users/${userId}`
       );
-      // Lấy logic từ INCOMING
       const islogined = Boolean(localStorage.getItem("isLoggedIn"));
-      setIsLogin(islogined); // Set trạng thái login
-      // Nếu không login thì không cần fetch data
+      setIsLogin(islogined);
       if (!islogined) {
         return;
       }
@@ -70,24 +76,20 @@ export default function UserPage() {
     } catch (error) {
       console.log("Lỗi khi lấy dữ liệu user", error);
       toast.error("Cannot get data user");
-
-      // Nếu lỗi (ví dụ: user bị xóa, token hết hạn), đăng xuất user
       setIsLogin(false);
       localStorage.removeItem("isLoggedIn");
       localStorage.removeItem("userId");
     }
   };
 
-//----------------------------------------delete user------------------------------------------------------
+  //----------------------------------------delete user------------------------------------------------------
   const deleteDataUser = async () => {
     try {
       const userId = String(localStorage.getItem("userId")).replaceAll('"', "");
       if (!userId) {
-        //console.error("Logged in but userId not found in LocalStorage.");
         toast.error("User session error. Please log in again.");
-        return; // Dừng thực thi
+        return;
       }
-      // Lấy logic từ INCOMING
       await axios.delete(`http://localhost:8080/api/users/${userId}`);
       console.log("Xóa user thành công");
       toast.success("Delete user successfully!");
@@ -111,11 +113,9 @@ export default function UserPage() {
         `http://localhost:8080/api/v1/blogs/${userId}/all`
       );
 
-      // SỬA LỖI 2.1: Giả sử blogs.data là một mảng. Không bọc nó trong [].
       if (Array.isArray(blogs.data)) {
         setUserBlogs(blogs.data);
       } else {
-        // Nếu API trả về cấu trúc lạ, set mảng rỗng để tránh crash
         setUserBlogs([]);
         console.warn("Expected an array of blogs, but received:", blogs.data);
       }
@@ -127,8 +127,6 @@ export default function UserPage() {
   };
 
   useEffect(() => {
-    // Chỉ gọi getUserPost KHI ĐÃ CÓ dataUser
-    // Điều này đảm bảo chúng ta chỉ fetch post khi đã login thành công
     const init = async () => {
       await fetchDataUser();
     };
@@ -139,33 +137,56 @@ export default function UserPage() {
     if (dataUser && isLogin) {
       getUserPost();
     }
-  }, [dataUser, isLogin]); // Phụ thuộc vào dataUser và isLogin
+  }, [dataUser, isLogin]);
 
   useEffect(() => {
     if (isDelete) {
       deleteDataUser();
-      setIsDelete(false); // Reset lại state sau khi gọi
+      setIsDelete(false);
     }
-  }, [isDelete]); // Xóa mảng phụ thuộc [deleteDataUser] để tránh vòng lặp vô hạn
+  }, [isDelete]);
 
-//---------------------------------------Các hàm xử lý--------------------------------------------------     
+  //---------------------------------------Các hàm xử lý--------------------------------------------------
 
   const handleSave = (updatedUser) => {
     setDataUser(updatedUser);
     setShowEdit(false);
     setShowEditAvt(false);
   };
-const handleRemoveImage = (index) => {
-  const newFiles = [...editingImage];
-  newFiles.splice(index, 1);
-  setEditingImage(newFiles);
-};
+
+  // Xóa ảnh CŨ (URL)
+  const handleRemoveImage = (index) => {
+    const newFiles = [...editingImage];
+    newFiles.splice(index, 1);
+    setEditingImage(newFiles);
+  };
+
+  // Xóa ảnh MỚI (File)
+  const handleRemoveNewImage = (index) => {
+    const updatedFiles = [...newImages];
+    updatedFiles.splice(index, 1);
+    setNewImages(updatedFiles);
+  };
+
+  // Xử lý chọn file MỚI (Logic "ghi đè")
+  const handleFileChange = (event) => {
+    const files = Array.from(event.target.files);
+
+    // Chỉ ghi đè khi người dùng thực sự chọn file mới
+    if (files.length > 0) {
+      setNewImages(files);
+      setEditingImage([]); // GHI ĐÈ: Xóa danh sách ảnh cũ
+    }
+  };
+
   const handleDelete = () => {
-    // Thêm một bước xác nhận
-    if (window.confirm(
+    if (
+      window.confirm(
         "Are you sure you want to delete your account? This action cannot be undone."
-      )) 
-    {setIsDelete(true);}
+      )
+    ) {
+      setIsDelete(true);
+    }
   };
 
   const handleLogout = () => {
@@ -173,13 +194,13 @@ const handleRemoveImage = (index) => {
     localStorage.removeItem("userId");
     setIsLogin(false);
     setDataUser(null);
-    setUserBlogs([]); // Xóa các bài post khỏi state
+    setUserBlogs([]);
     toast.success("Signed out successfully!");
     navigate("/");
   };
 
   const handleDeletePost = async (blogId) => {
-    const loadingToast= toast.loading("Deleting blog...")
+    const loadingToast = toast.loading("Deleting blog...");
     try {
       await axios.delete(`http://localhost:8080/api/v1/blogs/${blogId}`);
       console.log("Xoa blog thanh cong");
@@ -190,56 +211,66 @@ const handleRemoveImage = (index) => {
     } catch (error) {
       console.log("Khong the xoa blog", error);
       toast.error("Cannot delete blog", { id: loadingToast });
-    } 
+    }
   };
+
+  // Hàm Update Post đã bao gồm logic gửi ảnh mới và xóa ảnh cũ
   const handleUpdatePost = async (blogId, originalImageUrls) => {
     const loadingToast = toast.loading("Updating post...");
     try {
       const formData = new FormData();
       formData.append("blogId", blogId);
       formData.append("content", editingContent);
-      // Tìm các ảnh đã bị xóa (so sánh mảng ảnh gốc với mảng ảnh đang sửa)
+      
+
+      // 1. Gửi các URL ảnh CŨ bị xóa
+      // Do logic "ghi đè", editingImage sẽ là mảng rỗng nếu có ảnh mới
       const removedUrls = originalImageUrls.filter(
         (originalUrl) => !editingImage.includes(originalUrl)
       );
-
-      // Phải append từng URL một
       removedUrls.forEach((url) => {
         formData.append("removeImagesUrl", url);
       });
-      await axios.patch(`http://localhost:8080/api/v1/blogs-details`, formData);
 
+      // 2. Gửi các file ảnh MỚI
+      newImages.forEach((file) => {
+        formData.append("newImages", file);
+      });
+
+      // 3. Gửi request
+      await axios.patch("http://localhost:8080/api/v1/blogs-details", formData);
+      await axios.patch(
+        "http://localhost:8080/api/v1/blogs/access",
+        {
+          blogId: blogId,
+          published: publish
+        }
+      );
       console.log("Cap nhat blog thanh cong");
       toast.success("Update post successful", { id: loadingToast });
 
-      // 2. Cập nhật lại state userBlog ở local
-      setUserBlogs((currentBlogs) =>
-        currentBlogs.map((blog) =>
-          blog.id === blogId
-            ? {
-                ...blog,
-                content: editingContent,
-                imageContentUrls: editingImage,
-              }
-            : blog
-        )
-      );
+      // 4. Tải lại danh sách post để có dữ liệu mới nhất từ server
+      getUserPost();
+      // Bỏ cách cập nhật state local cũ đi, gọi API luôn cho chính xác
+
+      // 5. Reset state
+      setNewImages([]);
     } catch (error) {
       console.log("Khong the cap nhat blog", error);
       toast.error("Cannot update post", { id: loadingToast });
     }
   };
+
   const handleAvatarUpdate = (newUserData) => {
-  setDataUser(newUserData);   // ✅ Dùng đúng state
-};
+    setDataUser(newUserData);
+  };
+
   return (
     <div className="user-page">
       <nav className="nav-bar">
         <h1>
           <span>Profile</span>
         </h1>
-        {/* Mình kết hợp logic "isLogin" (từ INCOMING) với cấu trúc menu 3 chấm (từ HEAD)
-          vì chỉ nên hiển thị menu khi đã đăng nhập */}
         {isLogin && (
           <div className="menu-wrapper" ref={menuRef}>
             <button className="btn" onClick={() => setMenuOpen(!menuOpen)}>
@@ -247,7 +278,6 @@ const handleRemoveImage = (index) => {
             </button>
             {menuOpen && (
               <div className="dropdown-menu">
-                {/* Dùng text "Log out" (từ INCOMING) */}
                 <Button onClick={handleLogout} className="signout-btn">
                   Sign out
                 </Button>
@@ -262,7 +292,6 @@ const handleRemoveImage = (index) => {
 
       {isLogin ? (
         <>
-          {/* SỬA LỖI 1: Thêm kiểm tra loading state */}
           {!dataUser ? (
             <div className="loading-container">
               <p>Loading profile...</p>
@@ -277,8 +306,6 @@ const handleRemoveImage = (index) => {
                 </div>
                 <div className="profile-avt">
                   <div className="avatar-wrapper">
-                    {" "}
-                    {/* Thêm wrapper để chứa cả ảnh và nút chỉnh sửa */}
                     <img
                       src={dataUser.userAvatarUrl}
                       alt="avatar"
@@ -301,19 +328,7 @@ const handleRemoveImage = (index) => {
                 </button>
               </nav>
 
-              {/*----------------------------------thông tin tab----------------------------------------  */}
-              {/* <nav className="tab">
-                {["thread", "reply", "media", "repost"].map((tab) => (
-                  <button
-                    key={tab}
-                    className={`tab-btn ${activeTab === tab ? "active" : ""}`}
-                    onMouseDown={() => setActiveTab(tab)}
-                  >
-                    {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                  </button>
-                ))}
-              </nav> */}
-
+              {/*---------------------------------- layout ----------------------------------------  */}
               <div className="layout">
                 {[...userBlog].reverse().map((post) => (
                   <div key={post.id} className="box">
@@ -342,6 +357,7 @@ const handleRemoveImage = (index) => {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent className="w-40" align="end">
                               <DropdownMenuGroup>
+                                {/* ------------------- UPDATE DIALOG ------------------- */}
                                 <AlertDialog>
                                   <AlertDialogTrigger asChild>
                                     <DropdownMenuItem
@@ -349,6 +365,8 @@ const handleRemoveImage = (index) => {
                                         e.preventDefault();
                                         setEditingContent(post.content);
                                         setEditingImage(post.imageContentUrls);
+                                        setPublish(post.published || true);
+                                        setNewImages([]); // Reset ảnh mới
                                       }}
                                     >
                                       <span>Update</span>
@@ -359,6 +377,14 @@ const handleRemoveImage = (index) => {
                                       <AlertDialogTitle>
                                         Update post
                                       </AlertDialogTitle>
+                                      <AlertDialogDescription>
+                                        Make changes to your post and upload new
+                                        images.
+                                      </AlertDialogDescription>
+                                    </AlertDialogHeader>
+
+                                    {/* PHẦN NỘI DUNG CUỘN */}
+                                    <div className="flex-1 min-h-0 overflow-y-auto pr-4">
                                       <FieldGroup className="py-3">
                                         <Field>
                                           <Textarea
@@ -369,31 +395,116 @@ const handleRemoveImage = (index) => {
                                               setEditingContent(e.target.value)
                                             }
                                           />
-                                          {Array.isArray(editingImage) &&
-                                            editingImage.map((url, index) => (
-                                              <div
-                                                key={index}
-                                                className="previewWrapper"
-                                              >
-                                                <img
-                                                  src={url}
-                                                  className="previewImage"
-                                                />
-                                                <button
-                                                  type="button"
-                                                  className="removeButton"
-                                                  onClick={() =>
-                                                    handleRemoveImage(index)
-                                                  }
-                                                >
-                                                  ✕
-                                                </button>
+
+                                          {/* LOGIC HIỂN THỊ "GHI ĐÈ" */}
+                                          {newImages.length > 0 ? (
+                                            <>
+                                              <FieldLabel>
+                                                New Images
+                                              </FieldLabel>
+                                              <div className="image-preview-container">
+                                                {newImages.map(
+                                                  (file, index) => (
+                                                    <div
+                                                      key={index}
+                                                      className="previewWrapper"
+                                                    >
+                                                      <img
+                                                        src={URL.createObjectURL(
+                                                          file
+                                                        )}
+                                                        className="previewImage"
+                                                        alt={file.name}
+                                                      />
+                                                      <button
+                                                        type="button"
+                                                        className="removeButton"
+                                                        onClick={() =>
+                                                          handleRemoveNewImage(
+                                                            index
+                                                          )
+                                                        }
+                                                      >
+                                                        ✕
+                                                      </button>
+                                                    </div>
+                                                  )
+                                                )}
                                               </div>
-                                            ))}
+                                            </>
+                                          ) : (
+                                            <>
+                                              <div className="image-preview-container">
+                                                {Array.isArray(editingImage) &&
+                                                  editingImage.map(
+                                                    (url, index) => (
+                                                      <div
+                                                        key={index}
+                                                        className="previewWrapper"
+                                                      >
+                                                        <img
+                                                          src={url}
+                                                          className="previewImage"
+                                                        />
+                                                        <button
+                                                          type="button"
+                                                          className="removeButton"
+                                                          onClick={() =>
+                                                            handleRemoveImage(
+                                                              index
+                                                            )
+                                                          }
+                                                        >
+                                                          ✕
+                                                        </button>
+                                                      </div>
+                                                    )
+                                                  )}
+                                              </div>
+                                            </>
+                                          )}
+                                          {/* KẾT THÚC LOGIC "GHI ĐÈ" */}
                                         </Field>
                                       </FieldGroup>
-                                    </AlertDialogHeader>
+                                    </div>
+
                                     <AlertDialogFooter>
+                                      <div className="flex-1 flex-row justify-between gap-2.5">
+                                        <div className="flex items-center gap-2.5">
+                                          <Select
+                                            onValueChange={(value) => {
+                                              setPublish(value === "true");
+                                            }}
+                                            defaultValue={String(publish)}
+                                          >
+                                            <SelectTrigger className="w-[120px] border-accent-foreground cursor-pointer">
+                                              <SelectValue />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                              <SelectItem value="true">
+                                                <span>Publish</span>
+                                              </SelectItem>
+                                              <SelectItem value="false">
+                                                <span>Private</span>
+                                              </SelectItem>
+                                            </SelectContent>
+                                          </Select>
+                                          <label
+                                            htmlFor="fileInput"
+                                            className="group cursor-pointer rounded-lg border flex items-center justify-center bg-white shadow-sm transition-all h-10 w-10"
+                                          >
+                                            <UploadIcon />
+                                          </label>
+                                          <input
+                                            id="fileInput"
+                                            type="file"
+                                            multiple
+                                            ref={fileInputRef}
+                                            onChange={handleFileChange}
+                                            className="hidden"
+                                          />
+                                        </div>
+                                      </div>
                                       <AlertDialogCancel>
                                         Cancel
                                       </AlertDialogCancel>
@@ -410,6 +521,8 @@ const handleRemoveImage = (index) => {
                                     </AlertDialogFooter>
                                   </AlertDialogContent>
                                 </AlertDialog>
+
+                                {/* ------------------- DELETE DIALOG ------------------- */}
                                 <AlertDialog>
                                   <AlertDialogTrigger asChild>
                                     <DropdownMenuItem
@@ -483,14 +596,13 @@ const handleRemoveImage = (index) => {
                   user={dataUser}
                   currentAvatar={dataUser.userAvatarUrl}
                   onClose={() => setShowEditAvt(false)}
-                  onSave={handleAvatarUpdate} // ✅ callback đúng
+                  onSave={handleAvatarUpdate}
                 />
               )}
             </>
           )}
         </>
       ) : (
-        //---------------------------------SỬA ĐỔI: PHẦN NÀY DÀNH CHO USER CHƯA LOGIN------------------------------
         <div className="logged-out-container">
           <h2>You are not signed in</h2>
           <p>Please sign in or sign up to view your profile.</p>
