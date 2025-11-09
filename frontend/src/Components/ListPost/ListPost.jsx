@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+  import { useState, useEffect } from "react";
 import style from "./ListPost.module.css";
 import axios from "axios";
 import { toast } from "sonner";
@@ -100,24 +100,23 @@ export default function ListPost() {
   return (
     <>
       <div className={style.layout}>
-        {data.length > 0 ? (
-          [...data].reverse().map((post) => (
-            <div key={post.id} className={style.box}>
-              {/* --- Header post --- */}
-              <div className={style["post-content"]}>
-                <div className={style.header_post}>
-                  <div className={style.avatar_mini_wrapper}>
-                    <img
-                      src={post.userAvatarUrl || "/default-avatar.png"}
-                      alt="User Avatar"
-                      className={style.avatar}
-                    />
-                  </div>
-                  <div className={style["user-box"]}>
-                    {post.userName ? "@" + post.userName : "Unknown user"}
-                  </div>
+        {data.length>0 ? ([...data].reverse().map((post) => (
+          <div key={post.id} className={style.box}>
+            {/* --- Header post --- */}
+            <div className={style["post-content"]}>
+              <div className={style.header_post}>
+                <div className={style.avatar_mini_wrapper}>
+                  <img
+                    src={post.userAvatarUrl || "/default-avatar.png"}
+                    alt="User Avatar"
+                    className={style.avatar}
+                  />
+                </div>
+                <div className={style["user-box"]}>
+                  {post.username ? "@" + post.username : "Unknown user"}
                 </div>
               </div>
+            </div>
 
               <div className={style["desc-box"]}>{post.content}</div>
 

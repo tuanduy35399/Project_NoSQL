@@ -12,8 +12,16 @@ export default function HomePage() {
     }, []);
 
     return (
-        <>
-            <ListPost />
-        </>
+        // <motion.div
+        //     initial={{ opacity: 0, y: 20 }}     // trạng thái lúc mới xuất hiện
+        //     animate={{ opacity: 1, y: 0 }}      // khi đã hiện ra
+        //     exit={{ opacity: 0, y: -20 }}       // khi rời khỏi
+        //     transition={{ duration: 0.4, ease: "easeInOut" }}
+        //     className="page"
+        // >
+            <>
+                <ListPost />
+            </>
+        // </motion.div> */}
     );
 }

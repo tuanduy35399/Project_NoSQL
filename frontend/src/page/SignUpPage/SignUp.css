@@ -66,6 +66,11 @@
   transition: 0.2s;
 }
 
+.signup-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .signup-btn:hover {
   background: #333;
 }

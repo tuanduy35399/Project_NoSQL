@@ -9,14 +9,22 @@ export default function SignUp() {
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [birthday, setBirthday] = useState("");
+  const [isSubmit, setIsSubmit] = useState(false);  // để tránh click đăng ký nhiều lần
   const navigate = useNavigate(); // dùng để chuyển page sau khi đky thành công
+  const today = new Date().toISOString().split("T")[0];
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // tránh reload page khi submit form
-    const formData = {fullname, username, birthday, password}; //tạo object chứa data form
+
+    // nếu đang gửi request thì bỏ qua
+    if (isSubmit) return;
+
+    setIsSubmit(true); // chặn click nút lần 2
+
+    const formData = { fullname, username, birthday, password }; //tạo object chứa data form
 
     try {
-      const response = await axios.post("http://localhost:8080/api/users/sign-up",formData);
+      const response = await axios.post("http://localhost:8080/api/users/sign-up", formData);
 
       console.log("Sign up success:", response.data);
       toast.success("Sign up successfully! Please sign in.");
@@ -49,6 +57,8 @@ export default function SignUp() {
         console.error("Error setting up the request:", error.message);
         toast.error("Something went wrong in the app. Check the console for details.");
       }
+    }finally{
+      setIsSubmit(false);
     }
   };
 
@@ -87,6 +97,7 @@ export default function SignUp() {
         <input
           type="date"
           value={birthday}
+          max={today} 
           onChange={(e) => setBirthday(e.target.value)}
           required
         />
@@ -100,7 +111,11 @@ export default function SignUp() {
           required
         />
 
-        <button type="submit" className="signup-btn">
+        <button 
+          type="submit" 
+          className="signup-btn"
+          disabled={isSubmit}>  
+          {/* tránh click nhiều lần => gây lỗi */}
           Sign Up
         </button>
 

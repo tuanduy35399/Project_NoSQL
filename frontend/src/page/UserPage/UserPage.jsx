@@ -7,8 +7,29 @@ import Edit from "../../Components/EditProfile/Edit";
 import EditAvt from "../../Components/EditAvatar/EditAvt";
 import { BsThreeDots } from "react-icons/bs"; // Thêm icon cho menu 3 chấm
 import { Button } from "@/Components/ui/button";
-import { use } from "react";
-
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { MoreHorizontalIcon } from "lucide-react";
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
 export default function UserPage() {
   const [activeTab, setActiveTab] = useState("thread");
@@ -18,9 +39,9 @@ export default function UserPage() {
   const [isLogin, setIsLogin] = useState(false);
   const navigate = useNavigate();
   const [isDelete, setIsDelete] = useState(false);
-  const [userBlog, setUserBlogs] = useState([]); // Bắt đầu là mảng rỗng
-
-
+  const [userBlog, setUserBlogs] = useState([]); 
+  const [editingContent, setEditingContent] = useState("");
+  const [editingImage, setEditingImage] = useState("");
   // Thêm state và ref cho dropdown menu 3 chấm (từ HEAD)
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
@@ -134,7 +155,11 @@ export default function UserPage() {
     setShowEdit(false);
     setShowEditAvt(false);
   };
-
+const handleRemoveImage = (index) => {
+  const newFiles = [...editingImage];
+  newFiles.splice(index, 1);
+  setEditingImage(newFiles);
+};
   const handleDelete = () => {
     // Thêm một bước xác nhận
     if (window.confirm(
@@ -152,6 +177,7 @@ export default function UserPage() {
     toast.success("Signed out successfully!");
     navigate("/");
   };
+
   const handleDeletePost = async (blogId) => {
     const loadingToast= toast.loading("Deleting blog...")
     try {
@@ -164,22 +190,48 @@ export default function UserPage() {
     } catch (error) {
       console.log("Khong the xoa blog", error);
       toast.error("Cannot delete blog", { id: loadingToast });
-    }
+    } 
   };
-  const handleUpdatePost = async (blogId) => {
-    const loadingToast = toast.loading("Updating blog...");
+  const handleUpdatePost = async (blogId, originalImageUrls) => {
+    const loadingToast = toast.loading("Updating post...");
     try {
-      await axios.patch(`http://localhost:8080/api/v1/blogs/${blogId}`);
-      console.log("Xoa blog thanh cong");
-      toast.success("Delete blog successful", { id: loadingToast });
+      const formData = new FormData();
+      formData.append("blogId", blogId);
+      formData.append("content", editingContent);
+      // Tìm các ảnh đã bị xóa (so sánh mảng ảnh gốc với mảng ảnh đang sửa)
+      const removedUrls = originalImageUrls.filter(
+        (originalUrl) => !editingImage.includes(originalUrl)
+      );
+
+      // Phải append từng URL một
+      removedUrls.forEach((url) => {
+        formData.append("removeImagesUrl", url);
+      });
+      await axios.patch(`http://localhost:8080/api/v1/blogs-details`, formData);
+
+      console.log("Cap nhat blog thanh cong");
+      toast.success("Update post successful", { id: loadingToast });
+
+      // 2. Cập nhật lại state userBlog ở local
       setUserBlogs((currentBlogs) =>
-        currentBlogs.filter((blog) => blog.id !== blogId)
+        currentBlogs.map((blog) =>
+          blog.id === blogId
+            ? {
+                ...blog,
+                content: editingContent,
+                imageContentUrls: editingImage,
+              }
+            : blog
+        )
       );
     } catch (error) {
-      console.log("Khong the xoa blog", error);
-      toast.error("Cannot delete blog", { id: loadingToast });
+      console.log("Khong the cap nhat blog", error);
+      toast.error("Cannot update post", { id: loadingToast });
     }
   };
+  const handleAvatarUpdate = (newUserData) => {
+  setDataUser(newUserData);   // ✅ Dùng đúng state
+};
   return (
     <div className="user-page">
       <nav className="nav-bar">
@@ -196,10 +248,10 @@ export default function UserPage() {
             {menuOpen && (
               <div className="dropdown-menu">
                 {/* Dùng text "Log out" (từ INCOMING) */}
-                <Button onClick={handleLogout} className="text-black">
+                <Button onClick={handleLogout} className="signout-btn">
                   Sign out
                 </Button>
-                <Button onClick={handleDelete} className="text-black">
+                <Button onClick={handleDelete} className="deleteacc-btn">
                   Delete account
                 </Button>
               </div>
@@ -250,7 +302,7 @@ export default function UserPage() {
               </nav>
 
               {/*----------------------------------thông tin tab----------------------------------------  */}
-              <nav className="tab">
+              {/* <nav className="tab">
                 {["thread", "reply", "media", "repost"].map((tab) => (
                   <button
                     key={tab}
@@ -260,13 +312,11 @@ export default function UserPage() {
                     {tab.charAt(0).toUpperCase() + tab.slice(1)}
                   </button>
                 ))}
-              </nav>
-              {/* -----------------------------Hiện bài đăng--------------------------------------------- */}
+              </nav> */}
+
               <div className="layout">
-                {/* SỬA LỖI 2.2: Dùng spread operator ...userBlog */}
                 {[...userBlog].reverse().map((post) => (
                   <div key={post.id} className="box">
-                    {/* --- Header post --- */}
                     <div className="post-content">
                       <div className="header_post">
                         <div className="avatar_mini_wrapper">
@@ -277,13 +327,129 @@ export default function UserPage() {
                           />
                         </div>
                         <div className="user-box">
-                          {post.userName ? "@" + post.userName : "Unknown user"}
+                          {post.username ? "@" + post.username : "Unknown user"}
+                        </div>
+                        <div className="modifileButton">
+                          <DropdownMenu modal={false}>
+                            <DropdownMenuTrigger asChild>
+                              <Button
+                                variant="outline"
+                                aria-label="Open menu"
+                                size="icon-sm"
+                              >
+                                <MoreHorizontalIcon />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent className="w-40" align="end">
+                              <DropdownMenuGroup>
+                                <AlertDialog>
+                                  <AlertDialogTrigger asChild>
+                                    <DropdownMenuItem
+                                      onSelect={(e) => {
+                                        e.preventDefault();
+                                        setEditingContent(post.content);
+                                        setEditingImage(post.imageContentUrls);
+                                      }}
+                                    >
+                                      <span>Update</span>
+                                    </DropdownMenuItem>
+                                  </AlertDialogTrigger>
+                                  <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                      <AlertDialogTitle>
+                                        Update post
+                                      </AlertDialogTitle>
+                                      <FieldGroup className="py-3">
+                                        <Field>
+                                          <Textarea
+                                            id="content"
+                                            name="content"
+                                            value={editingContent}
+                                            onChange={(e) =>
+                                              setEditingContent(e.target.value)
+                                            }
+                                          />
+                                          {Array.isArray(editingImage) &&
+                                            editingImage.map((url, index) => (
+                                              <div
+                                                key={index}
+                                                className="previewWrapper"
+                                              >
+                                                <img
+                                                  src={url}
+                                                  className="previewImage"
+                                                />
+                                                <button
+                                                  type="button"
+                                                  className="removeButton"
+                                                  onClick={() =>
+                                                    handleRemoveImage(index)
+                                                  }
+                                                >
+                                                  ✕
+                                                </button>
+                                              </div>
+                                            ))}
+                                        </Field>
+                                      </FieldGroup>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                      <AlertDialogCancel>
+                                        Cancel
+                                      </AlertDialogCancel>
+                                      <AlertDialogAction
+                                        onClick={() =>
+                                          handleUpdatePost(
+                                            post.id,
+                                            post.imageContentUrls
+                                          )
+                                        }
+                                      >
+                                        Update
+                                      </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                  </AlertDialogContent>
+                                </AlertDialog>
+                                <AlertDialog>
+                                  <AlertDialogTrigger asChild>
+                                    <DropdownMenuItem
+                                      onSelect={(e) => e.preventDefault()}
+                                    >
+                                      <span style={{ color: "red" }}>
+                                        Delete
+                                      </span>
+                                    </DropdownMenuItem>
+                                  </AlertDialogTrigger>
+                                  <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                      <AlertDialogTitle>
+                                        Are you sure?
+                                      </AlertDialogTitle>
+                                      <AlertDialogDescription>
+                                        This action cannot be undone.
+                                      </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                      <AlertDialogCancel>
+                                        Cancel
+                                      </AlertDialogCancel>
+                                      <AlertDialogAction
+                                        onClick={() =>
+                                          handleDeletePost(post.id)
+                                        }
+                                      >
+                                        Delete
+                                      </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                  </AlertDialogContent>
+                                </AlertDialog>
+                              </DropdownMenuGroup>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
                         </div>
                       </div>
                     </div>
-
                     <div className="desc-box">{post.content}</div>
-
                     {Array.isArray(post.imageContentUrls) &&
                       post.imageContentUrls.map((url, index) => (
                         <img
@@ -293,7 +459,6 @@ export default function UserPage() {
                           alt={`Post image ${index}`}
                         />
                       ))}
-
                     <span
                       style={{ color: "grey", fontSize: 13, opacity: "70%" }}
                     >
@@ -301,19 +466,6 @@ export default function UserPage() {
                         hour12: false,
                       })}
                     </span>
-                    <div className="modifileButton">
-                      <Button className="w-26 bg-black cursor-pointer"
-                        onClick={()=>handleUpdatePost(post.id)}
-                      >
-                        Update
-                      </Button>
-                      <Button
-                        className="w-26 bg-black cursor-pointer"
-                        onClick={()=>handleDeletePost(post.id)}
-                      >
-                        Delete
-                      </Button>
-                    </div>
                   </div>
                 ))}
               </div>
@@ -329,8 +481,9 @@ export default function UserPage() {
               {showEditAvt && (
                 <EditAvt
                   user={dataUser}
+                  currentAvatar={dataUser.userAvatarUrl}
                   onClose={() => setShowEditAvt(false)}
-                  onSave={handleSave}
+                  onSave={handleAvatarUpdate} // ✅ callback đúng
                 />
               )}
             </>
@@ -339,22 +492,8 @@ export default function UserPage() {
       ) : (
         //---------------------------------SỬA ĐỔI: PHẦN NÀY DÀNH CHO USER CHƯA LOGIN------------------------------
         <div className="logged-out-container">
-          <h2>Bạn chưa đăng nhập</h2>
-          <p>Vui lòng đăng nhập hoặc đăng ký để xem trang cá nhân.</p>
-          <div className="auth-buttons">
-            <button
-              className="auth-btn login-btn"
-              onClick={() => navigate("/signin")}
-            >
-              Đăng nhập
-            </button>
-            <button
-              className="auth-btn register-btn"
-              onClick={() => navigate("/signup")}
-            >
-              Đăng ký
-            </button>
-          </div>
+          <h2>You are not signed in</h2>
+          <p>Please sign in or sign up to view your profile.</p>
         </div>
       )}
     </div>

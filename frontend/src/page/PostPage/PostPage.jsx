@@ -39,6 +39,7 @@ export default function PostPage() {
   const [data, setData] = useState({});
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
+  const [isSubmit, setIsSubmit] = useState(false);
   console.log(files)
   // ✅ Khi chọn file — hiển thị preview
   const handleFileChange = (e) => {
@@ -75,13 +76,13 @@ export default function PostPage() {
   }, []);
 
   // Gửi bài viết lên BE
-  const postNews = async (storedUserId, storedUserName) => {
+  const postNews = async (storedUserId, storedUsername) => {
     const loadingToast = toast.loading("Uploading...");
 
     try {
       const formData = new FormData();
       formData.append("userId", storedUserId);
-      formData.append("userName", storedUserName);
+      formData.append("username", storedUsername);
       formData.append("content", body);
       formData.append("published", publish ? "true" : "false");
       files.forEach((file) => formData.append("files", file));
@@ -108,8 +109,12 @@ export default function PostPage() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+     if (isSubmit) return;
+
+    setIsSubmit(true); // chặn click nút lần 2
+
     const storedUserId = localStorage.getItem("userId")?.replaceAll('"', "");
-    const storedUserName = localStorage
+    const storedUsername = localStorage
       .getItem("username")
       ?.replaceAll('"', "");
 
@@ -124,7 +129,7 @@ export default function PostPage() {
       return;
     }
 
-    postNews(storedUserId, storedUserName);
+    postNews(storedUserId, storedUsername);
   };
 
   return (
@@ -217,7 +222,7 @@ export default function PostPage() {
                 className={style.fileInput}
               />
             </div>
-            <Button onClick={handleSubmit} className="w-30 h-10 cursor-pointer">
+            <Button onClick={handleSubmit} disabled={isSubmit} className="w-30 h-10 cursor-pointer">
               Post
             </Button>
           </div>
@@ -233,9 +238,9 @@ export default function PostPage() {
         </>
       ) : (
         <div className="logged-out-container">
-          <h2>Bạn chưa đăng nhập</h2>
-          <p>Vui lòng đăng nhập hoặc đăng ký để xem trang cá nhân.</p>
-          <div className="auth-buttons">
+          <h2>You are not signed in</h2>
+          <p>Please sign in or sign up to view your profile.</p>
+          {/* <div className="auth-buttons">
             <button
               className="auth-btn login-btn"
               onClick={() => navigate("/signin")}
@@ -248,7 +253,7 @@ export default function PostPage() {
             >
               Đăng ký
             </button>
-          </div>
+          </div> */}
         </div>
       )}
     </div>

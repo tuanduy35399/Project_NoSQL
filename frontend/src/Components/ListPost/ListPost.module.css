@@ -30,6 +30,7 @@
   height: auto;
   border-bottom: 1.5px solid rgb(193, 192, 192);
   padding: 10px;
+  white-space: pre-wrap;
 }
 .box:last-child{ border: none; }
 
@@ -110,3 +111,4 @@
   background-color: #f9f9f9;
   padding: 3px;
 }
+

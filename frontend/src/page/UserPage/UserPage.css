@@ -4,6 +4,18 @@
   /* padding-top: 250px; */
   width: 100%;
   box-sizing: border-box;
+  position: relative;
+}
+
+.user-page .edit-avatar-modal {
+  position: absolute; /* hoặc fixed nếu bạn muốn giữa trang */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10; /* Chỉ cao trong vùng userpage */
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
 }
 
 /*----------------------------- NAV BAR -----------------------------*/
@@ -25,10 +37,11 @@
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  margin: 0;
-  font-size: 16px;
+  /* margin: 0; */
+  margin-top: 26px;
+  font-size: 17px;
   z-index: 4500;
-  font-weight: 600;
+  font-weight: 560;
 }
 
 .nav-bar .btn {
@@ -86,7 +99,7 @@
   object-fit: cover;
 }
 
-/*-------------------------- EDIT PROFILE BUTTON --------------------------*/
+/*-------------------------- EDIT BUTTON --------------------------*/
 /* .edit-profile-btn {
   position: absolute;
   top: 180px;
@@ -193,6 +206,50 @@
 .dropdown-menu button:hover {
   background: #f5f5f5;
 }
+
+/* Nút chung */
+.signout-btn,
+.deleteacc-btn {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 10px 16px;
+  font-size: 16px;
+  font-weight: 500;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #000000;
+  transition: background 0.15s ease, color 0.15s ease;
+  border-radius: 8px;
+}
+
+/* Hover nhẹ */
+.signout-btn:hover {
+  background-color: #f3f4f6;
+}
+
+/* Nút Delete đỏ cảnh báo */
+.deleteacc-btn {
+  color: #e74c3c;
+}
+
+.deleteacc-btn:hover {
+  background-color: #fdecea;
+  color: #c0392b;
+}
+
+/* Hiệu ứng popup mượt */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 /*
 ========================================
   STYLES CHO PHẦN CHƯA ĐĂNG NHẬP
@@ -205,7 +262,7 @@
   justify-content: center;
   text-align: center;
   padding: 40px 20px;
-  margin-top: 50px;
+  margin-top: 200px;
   /* Khoảng cách với nav-bar */
   max-width: 500px;
   /* Giới hạn chiều rộng */
@@ -219,16 +276,18 @@
 }
 
 .logged-out-container h2 {
-  font-size: 24px;
+  font-size: 23px;
   font-weight: 600;
-  color: #222;
-  margin-bottom: 10px;
+  color: #000000;
+  margin-bottom: 15px;
+  margin-top: 20px;
 }
 
 .logged-out-container p {
   font-size: 16px;
-  color: #666;
+  color: #757575;
   margin-bottom: 25px;
+  font-family: 'Roboto';
 }
 
 .auth-buttons {
@@ -296,8 +355,6 @@
   background-color: rgba(0, 0, 0, 0.85);
 }
 
-
-
 .picture {
   max-width: 500px;
   max-height: 500px;
@@ -314,7 +371,8 @@
   height: 100%;
   background-color: #FFFF;
   overflow-y: auto;
-  margin-top: 300px;
+  margin-top: 250px;   
+  /* chỉnh vị trí bài đăng lên xuống */
 }
 
 .header_post {
@@ -342,6 +400,7 @@
   width: 50px;
   height: 50px;
   position: relative;
+  /* overflow: hidden; */
 }
 .avatar_mini_wrapper .avatar{
   width: 50px;
@@ -376,8 +435,46 @@
   margin: 20px 0;
 }
 .modifileButton{
-  width: 100%;
+  width: 75%;
   display: flex;
   justify-content: end;
   gap:10px
+}
+.previewWrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.previewImage {
+  /* max-width: 500px; */
+  max-height: 500px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+  padding: 3px;
+}
+
+/* Nút xóa ảnh */
+.removeButton {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: center;
+  transition: 0.2s;
+}
+
+.removeButton:hover {
+  background-color: red;
 }
