@@ -1,14 +1,40 @@
-import { useEffect, useState, useRef } from "react"; // Thêm useRef
+import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import "./UserPage.css";
 import Edit from "../../Components/EditProfile/Edit";
 import EditAvt from "../../Components/EditAvatar/EditAvt";
-import { BsThreeDots } from "react-icons/bs"; // Thêm icon cho menu 3 chấm
+import { BsThreeDots } from "react-icons/bs";
 import { Button } from "@/Components/ui/button";
-import { use } from "react";
-
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { MoreHorizontalIcon, UploadIcon } from "lucide-react";
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/Components/ui/select";
 
 export default function UserPage() {
   const [activeTab, setActiveTab] = useState("thread");
@@ -18,30 +44,30 @@ export default function UserPage() {
   const [isLogin, setIsLogin] = useState(false);
   const navigate = useNavigate();
   const [isDelete, setIsDelete] = useState(false);
-  const [userBlog, setUserBlogs] = useState([]); // Bắt đầu là mảng rỗng
-  
+  const [userBlog, setUserBlogs] = useState([]);
+  const [editingContent, setEditingContent] = useState("");
+  const [editingImage, setEditingImage] = useState([]); // Đây là mảng ảnh CŨ (URL)
+  const [publish, setPublish] = useState(true);
+  const [newImages, setNewImages] = useState([]); // Đây là mảng ảnh MỚI (File)
+  const fileInputRef = useRef(null);
 
-
-  // Thêm state và ref cho dropdown menu 3 chấm (từ HEAD)
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
+
   const fetchDataUser = async () => {
     try {
       const userId = String(localStorage.getItem("userId")).replaceAll('"', "");
-      // console.log(userId);
       if (!userId) {
         setIsLogin(false);
-        localStorage.removeItem("isLoggedIn"); // Dọn dẹp
+        localStorage.removeItem("isLoggedIn");
         console.error("User ID not found in LocalStorage.");
         return;
       }
       const tempData = await axios.get(
         `http://localhost:8080/api/users/${userId}`
       );
-      // Lấy logic từ INCOMING
       const islogined = Boolean(localStorage.getItem("isLoggedIn"));
-      setIsLogin(islogined); // Set trạng thái login
-      // Nếu không login thì không cần fetch data
+      setIsLogin(islogined);
       if (!islogined) {
         return;
       }
@@ -50,24 +76,20 @@ export default function UserPage() {
     } catch (error) {
       console.log("Lỗi khi lấy dữ liệu user", error);
       toast.error("Cannot get data user");
-
-      // Nếu lỗi (ví dụ: user bị xóa, token hết hạn), đăng xuất user
       setIsLogin(false);
       localStorage.removeItem("isLoggedIn");
       localStorage.removeItem("userId");
     }
   };
 
-//----------------------------------------delete user------------------------------------------------------
+  //----------------------------------------delete user------------------------------------------------------
   const deleteDataUser = async () => {
     try {
       const userId = String(localStorage.getItem("userId")).replaceAll('"', "");
       if (!userId) {
-        //console.error("Logged in but userId not found in LocalStorage.");
         toast.error("User session error. Please log in again.");
-        return; // Dừng thực thi
+        return;
       }
-      // Lấy logic từ INCOMING
       await axios.delete(`http://localhost:8080/api/users/${userId}`);
       console.log("Xóa user thành công");
       toast.success("Delete user successfully!");
@@ -91,11 +113,9 @@ export default function UserPage() {
         `http://localhost:8080/api/v1/blogs/${userId}/all`
       );
 
-      // SỬA LỖI 2.1: Giả sử blogs.data là một mảng. Không bọc nó trong [].
       if (Array.isArray(blogs.data)) {
         setUserBlogs(blogs.data);
       } else {
-        // Nếu API trả về cấu trúc lạ, set mảng rỗng để tránh crash
         setUserBlogs([]);
         console.warn("Expected an array of blogs, but received:", blogs.data);
       }
@@ -107,8 +127,6 @@ export default function UserPage() {
   };
 
   useEffect(() => {
-    // Chỉ gọi getUserPost KHI ĐÃ CÓ dataUser
-    // Điều này đảm bảo chúng ta chỉ fetch post khi đã login thành công
     const init = async () => {
       await fetchDataUser();
     };
@@ -119,16 +137,16 @@ export default function UserPage() {
     if (dataUser && isLogin) {
       getUserPost();
     }
-  }, [dataUser, isLogin]); // Phụ thuộc vào dataUser và isLogin
+  }, [dataUser, isLogin]);
 
   useEffect(() => {
     if (isDelete) {
       deleteDataUser();
-      setIsDelete(false); // Reset lại state sau khi gọi
+      setIsDelete(false);
     }
-  }, [isDelete]); // Xóa mảng phụ thuộc [deleteDataUser] để tránh vòng lặp vô hạn
+  }, [isDelete]);
 
-//---------------------------------------Các hàm xử lý--------------------------------------------------     
+  //---------------------------------------Các hàm xử lý--------------------------------------------------
 
   const handleSave = (updatedUser) => {
     setDataUser(updatedUser);
@@ -136,12 +154,39 @@ export default function UserPage() {
     setShowEditAvt(false);
   };
 
+  // Xóa ảnh CŨ (URL)
+  const handleRemoveImage = (index) => {
+    const newFiles = [...editingImage];
+    newFiles.splice(index, 1);
+    setEditingImage(newFiles);
+  };
+
+  // Xóa ảnh MỚI (File)
+  const handleRemoveNewImage = (index) => {
+    const updatedFiles = [...newImages];
+    updatedFiles.splice(index, 1);
+    setNewImages(updatedFiles);
+  };
+
+  // Xử lý chọn file MỚI (Logic "ghi đè")
+  const handleFileChange = (event) => {
+    const files = Array.from(event.target.files);
+
+    // Chỉ ghi đè khi người dùng thực sự chọn file mới
+    if (files.length > 0) {
+      setNewImages(files);
+      setEditingImage([]); // GHI ĐÈ: Xóa danh sách ảnh cũ
+    }
+  };
+
   const handleDelete = () => {
-    // Thêm một bước xác nhận
-    if (window.confirm(
+    if (
+      window.confirm(
         "Are you sure you want to delete your account? This action cannot be undone."
-      )) 
-    {setIsDelete(true);}
+      )
+    ) {
+      setIsDelete(true);
+    }
   };
 
   const handleLogout = () => {
@@ -149,13 +194,13 @@ export default function UserPage() {
     localStorage.removeItem("userId");
     setIsLogin(false);
     setDataUser(null);
-    setUserBlogs([]); // Xóa các bài post khỏi state
+    setUserBlogs([]);
     toast.success("Signed out successfully!");
     navigate("/");
   };
 
   const handleDeletePost = async (blogId) => {
-    const loadingToast= toast.loading("Deleting...")
+    const loadingToast = toast.loading("Deleting blog...");
     try {
       await axios.delete(`http://localhost:8080/api/v1/blogs/${blogId}`);
       console.log("Xoa blog thanh cong");
@@ -166,20 +211,66 @@ export default function UserPage() {
     } catch (error) {
       console.log("Khong the xoa blog", error);
       toast.error("Cannot delete blog", { id: loadingToast });
-    } 
+    }
+  };
+
+  // Hàm Update Post đã bao gồm logic gửi ảnh mới và xóa ảnh cũ
+  const handleUpdatePost = async (blogId, originalImageUrls) => {
+    const loadingToast = toast.loading("Updating post...");
+    try {
+      const formData = new FormData();
+      formData.append("blogId", blogId);
+      formData.append("content", editingContent);
+      
+
+      // 1. Gửi các URL ảnh CŨ bị xóa
+      // Do logic "ghi đè", editingImage sẽ là mảng rỗng nếu có ảnh mới
+      const removedUrls = originalImageUrls.filter(
+        (originalUrl) => !editingImage.includes(originalUrl)
+      );
+      removedUrls.forEach((url) => {
+        formData.append("removeImagesUrl", url);
+      });
+
+      // 2. Gửi các file ảnh MỚI
+      newImages.forEach((file) => {
+        formData.append("newImages", file);
+      });
+
+      // 3. Gửi request
+      await axios.patch("http://localhost:8080/api/v1/blogs-details", formData);
+      await axios.patch(
+        "http://localhost:8080/api/v1/blogs/access",
+        {
+          blogId: blogId,
+          published: publish
+        }
+      );
+      console.log("Cap nhat blog thanh cong");
+      toast.success("Update post successful", { id: loadingToast });
+
+      // 4. Tải lại danh sách post để có dữ liệu mới nhất từ server
+      getUserPost();
+      // Bỏ cách cập nhật state local cũ đi, gọi API luôn cho chính xác
+
+      // 5. Reset state
+      setNewImages([]);
+    } catch (error) {
+      console.log("Khong the cap nhat blog", error);
+      toast.error("Cannot update post", { id: loadingToast });
+    }
   };
 
   const handleAvatarUpdate = (newUserData) => {
-  setDataUser(newUserData);   // ✅ Dùng đúng state
-};
+    setDataUser(newUserData);
+  };
+
   return (
     <div className="user-page">
       <nav className="nav-bar">
         <h1>
           <span>Profile</span>
         </h1>
-        {/* Mình kết hợp logic "isLogin" (từ INCOMING) với cấu trúc menu 3 chấm (từ HEAD)
-          vì chỉ nên hiển thị menu khi đã đăng nhập */}
         {isLogin && (
           <div className="menu-wrapper" ref={menuRef}>
             <button className="btn" onClick={() => setMenuOpen(!menuOpen)}>
@@ -187,7 +278,6 @@ export default function UserPage() {
             </button>
             {menuOpen && (
               <div className="dropdown-menu">
-                {/* Dùng text "Log out" (từ INCOMING) */}
                 <Button onClick={handleLogout} className="signout-btn">
                   Sign out
                 </Button>
@@ -202,7 +292,6 @@ export default function UserPage() {
 
       {isLogin ? (
         <>
-          {/* SỬA LỖI 1: Thêm kiểm tra loading state */}
           {!dataUser ? (
             <div className="loading-container">
               <p>Loading profile...</p>
@@ -217,8 +306,6 @@ export default function UserPage() {
                 </div>
                 <div className="profile-avt">
                   <div className="avatar-wrapper">
-                    {" "}
-                    {/* Thêm wrapper để chứa cả ảnh và nút chỉnh sửa */}
                     <img
                       src={dataUser.userAvatarUrl}
                       alt="avatar"
@@ -241,25 +328,10 @@ export default function UserPage() {
                 </button>
               </nav>
 
-              {/*----------------------------------thông tin tab----------------------------------------  */}
-              {/* <nav className="tab">
-                {["thread", "reply", "media", "repost"].map((tab) => (
-                  <button
-                    key={tab}
-                    className={`tab-btn ${activeTab === tab ? "active" : ""}`}
-                    onMouseDown={() => setActiveTab(tab)}
-                  >
-                    {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                  </button>
-                ))}
-              </nav> */}
-              
-              {/* -----------------------------Hiện bài đăng--------------------------------------------- */}
+              {/*---------------------------------- layout ----------------------------------------  */}
               <div className="layout">
-                {/* SỬA LỖI 2.2: Dùng spread operator ...userBlog */}
                 {[...userBlog].reverse().map((post) => (
                   <div key={post.id} className="box">
-                    {/* --- Header post --- */}
                     <div className="post-content">
                       <div className="header_post">
                         <div className="avatar_mini_wrapper">
@@ -272,11 +344,228 @@ export default function UserPage() {
                         <div className="user-box">
                           {post.username ? "@" + post.username : "Unknown user"}
                         </div>
+                        <div className="modifileButton">
+                          <DropdownMenu modal={false}>
+                            <DropdownMenuTrigger asChild>
+                              <Button
+                                variant="outline"
+                                aria-label="Open menu"
+                                size="icon-sm"
+                              >
+                                <MoreHorizontalIcon />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent className="w-40" align="end">
+                              <DropdownMenuGroup>
+                                {/* ------------------- UPDATE DIALOG ------------------- */}
+                                <AlertDialog>
+                                  <AlertDialogTrigger asChild>
+                                    <DropdownMenuItem
+                                      onSelect={(e) => {
+                                        e.preventDefault();
+                                        setEditingContent(post.content);
+                                        setEditingImage(post.imageContentUrls);
+                                        setPublish(post.published || true);
+                                        setNewImages([]); // Reset ảnh mới
+                                      }}
+                                    >
+                                      <span>Update</span>
+                                    </DropdownMenuItem>
+                                  </AlertDialogTrigger>
+                                  <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                      <AlertDialogTitle>
+                                        Update post
+                                      </AlertDialogTitle>
+                                      <AlertDialogDescription>
+                                        Make changes to your post and upload new
+                                        images.
+                                      </AlertDialogDescription>
+                                    </AlertDialogHeader>
+
+                                    {/* PHẦN NỘI DUNG CUỘN */}
+                                    <div className="flex-1 min-h-0 overflow-y-auto pr-4">
+                                      <FieldGroup className="py-3">
+                                        <Field>
+                                          <Textarea
+                                            id="content"
+                                            name="content"
+                                            value={editingContent}
+                                            onChange={(e) =>
+                                              setEditingContent(e.target.value)
+                                            }
+                                          />
+
+                                          {/* LOGIC HIỂN THỊ "GHI ĐÈ" */}
+                                          {newImages.length > 0 ? (
+                                            <>
+                                              <FieldLabel>
+                                                New Images
+                                              </FieldLabel>
+                                              <div className="image-preview-container">
+                                                {newImages.map(
+                                                  (file, index) => (
+                                                    <div
+                                                      key={index}
+                                                      className="previewWrapper"
+                                                    >
+                                                      <img
+                                                        src={URL.createObjectURL(
+                                                          file
+                                                        )}
+                                                        className="previewImage"
+                                                        alt={file.name}
+                                                      />
+                                                      <button
+                                                        type="button"
+                                                        className="removeButton"
+                                                        onClick={() =>
+                                                          handleRemoveNewImage(
+                                                            index
+                                                          )
+                                                        }
+                                                      >
+                                                        ✕
+                                                      </button>
+                                                    </div>
+                                                  )
+                                                )}
+                                              </div>
+                                            </>
+                                          ) : (
+                                            <>
+                                              <FieldLabel>
+                                                Current Images
+                                              </FieldLabel>
+                                              <div className="image-preview-container">
+                                                {Array.isArray(editingImage) &&
+                                                  editingImage.map(
+                                                    (url, index) => (
+                                                      <div
+                                                        key={index}
+                                                        className="previewWrapper"
+                                                      >
+                                                        <img
+                                                          src={url}
+                                                          className="previewImage"
+                                                        />
+                                                        <button
+                                                          type="button"
+                                                          className="removeButton"
+                                                          onClick={() =>
+                                                            handleRemoveImage(
+                                                              index
+                                                            )
+                                                          }
+                                                        >
+                                                          ✕
+                                                        </button>
+                                                      </div>
+                                                    )
+                                                  )}
+                                              </div>
+                                            </>
+                                          )}
+                                          {/* KẾT THÚC LOGIC "GHI ĐÈ" */}
+                                        </Field>
+                                      </FieldGroup>
+                                    </div>
+
+                                    <AlertDialogFooter>
+                                      <div className="flex-1 flex-row justify-between gap-2.5">
+                                        <div className="flex items-center gap-2.5">
+                                          <Select
+                                            onValueChange={(value) => {
+                                              setPublish(value === "true");
+                                            }}
+                                            defaultValue={String(publish)}
+                                          >
+                                            <SelectTrigger className="w-[120px] border-accent-foreground cursor-pointer">
+                                              <SelectValue />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                              <SelectItem value="true">
+                                                <span>Publish</span>
+                                              </SelectItem>
+                                              <SelectItem value="false">
+                                                <span>Private</span>
+                                              </SelectItem>
+                                            </SelectContent>
+                                          </Select>
+                                          <label
+                                            htmlFor="fileInput"
+                                            className="group cursor-pointer rounded-lg border flex items-center justify-center bg-white shadow-sm transition-all h-10 w-10"
+                                          >
+                                            <UploadIcon />
+                                          </label>
+                                          <input
+                                            id="fileInput"
+                                            type="file"
+                                            multiple
+                                            ref={fileInputRef}
+                                            onChange={handleFileChange}
+                                            className="hidden"
+                                          />
+                                        </div>
+                                      </div>
+                                      <AlertDialogCancel>
+                                        Cancel
+                                      </AlertDialogCancel>
+                                      <AlertDialogAction
+                                        onClick={() =>
+                                          handleUpdatePost(
+                                            post.id,
+                                            post.imageContentUrls
+                                          )
+                                        }
+                                      >
+                                        Update
+                                      </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                  </AlertDialogContent>
+                                </AlertDialog>
+
+                                {/* ------------------- DELETE DIALOG ------------------- */}
+                                <AlertDialog>
+                                  <AlertDialogTrigger asChild>
+                                    <DropdownMenuItem
+                                      onSelect={(e) => e.preventDefault()}
+                                    >
+                                      <span style={{ color: "red" }}>
+                                        Delete
+                                      </span>
+                                    </DropdownMenuItem>
+                                  </AlertDialogTrigger>
+                                  <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                      <AlertDialogTitle>
+                                        Are you sure?
+                                      </AlertDialogTitle>
+                                      <AlertDialogDescription>
+                                        This action cannot be undone.
+                                      </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                      <AlertDialogCancel>
+                                        Cancel
+                                      </AlertDialogCancel>
+                                      <AlertDialogAction
+                                        onClick={() =>
+                                          handleDeletePost(post.id)
+                                        }
+                                      >
+                                        Delete
+                                      </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                  </AlertDialogContent>
+                                </AlertDialog>
+                              </DropdownMenuGroup>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </div>
                       </div>
                     </div>
-
                     <div className="desc-box">{post.content}</div>
-
                     {Array.isArray(post.imageContentUrls) &&
                       post.imageContentUrls.map((url, index) => (
                         <img
@@ -286,7 +575,6 @@ export default function UserPage() {
                           alt={`Post image ${index}`}
                         />
                       ))}
-
                     <span
                       style={{ color: "grey", fontSize: 13, opacity: "70%" }}
                     >
@@ -294,17 +582,6 @@ export default function UserPage() {
                         hour12: false,
                       })}
                     </span>
-                    <div className="modifileButton">
-                      <Button className="w-26 bg-black cursor-pointer">
-                        Update
-                      </Button>
-                      <Button
-                        className="w-26 bg-black cursor-pointer"
-                        onClick={()=>handleDeletePost(post.id)}
-                      >
-                        Delete
-                      </Button>
-                    </div>
                   </div>
                 ))}
               </div>
@@ -322,32 +599,16 @@ export default function UserPage() {
                   user={dataUser}
                   currentAvatar={dataUser.userAvatarUrl}
                   onClose={() => setShowEditAvt(false)}
-                  onSave={handleAvatarUpdate}   // ✅ callback đúng
+                  onSave={handleAvatarUpdate}
                 />
               )}
             </>
           )}
         </>
       ) : (
-    
-        //---------------------------------SỬA ĐỔI: PHẦN NÀY DÀNH CHO USER CHƯA LOGIN------------------------------
         <div className="logged-out-container">
           <h2>You are not signed in</h2>
           <p>Please sign in or sign up to view your profile.</p>
-          {/* <div className="auth-buttons">
-            <button
-              className="auth-btn login-btn"
-              onClick={() => navigate("/signin")}
-            >
-              Sign in
-            </button>
-            <button
-              className="auth-btn register-btn"
-              onClick={() => navigate("/signup")}
-            >
-              Sign up
-            </button>
-          </div> */}
         </div>
       )}
     </div>

@@ -400,6 +400,7 @@
   width: 50px;
   height: 50px;
   position: relative;
+  /* overflow: hidden; */
 }
 .avatar_mini_wrapper .avatar{
   width: 50px;
@@ -435,8 +436,46 @@
   margin: 20px 0;
 }
 .modifileButton{
-  width: 100%;
+  width: 75%;
   display: flex;
   justify-content: end;
   gap:10px
+}
+.previewWrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.previewImage {
+  /* max-width: 500px; */
+  max-height: 500px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+  padding: 3px;
+}
+
+/* Nút xóa ảnh */
+.removeButton {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: center;
+  transition: 0.2s;
+}
+
+.removeButton:hover {
+  background-color: red;
 }

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+  import { useState, useEffect } from "react";
 import style from "./ListPost.module.css";
 import axios from "axios";
 import { toast } from "sonner";
@@ -38,8 +38,9 @@ export default function ListPost() {
     fetchPosts();
   }, []);
 
-  const handleAction = (postId, type) => {
+  const handleAction = async (postId, type) => {
     if (type === "LIKE") {
+      // 1. Cập nhật UI ngay lập tức (Optimistic Update)
       setData((prevData) =>
         prevData.map((post) =>
           post.id === postId
@@ -51,6 +52,38 @@ export default function ListPost() {
             : post
         )
       );
+
+      // 2. Gửi request đến backend
+      try {
+        // Giả sử bạn có API: POST /api/posts/{postId}/like
+        // Bạn cần lấy userId từ localStorage hoặc context
+        const userId = String(localStorage.getItem("userId")).replaceAll(
+          '"',
+          ""
+        );
+
+        // API thật sự của bạn có thể khác
+        await axios.post(`http://localhost:8080/api/v1/likes/${postId}`, {
+          userId,
+        });
+        // Nếu backend trả về số like mới, bạn có thể cập nhật state một lần nữa
+      } catch (error) {
+        console.error("Error liking post:", error);
+        toast.error("Failed to like post.");
+
+        // 3. Nếu API lỗi, hoàn tác lại thay đổi ở UI
+        setData((prevData) =>
+          prevData.map((post) =>
+            post.id === postId
+              ? {
+                  ...post,
+                  liked: !post.liked, // Đảo ngược lại
+                  likeCount: post.likeCount + (post.liked ? 1 : -1), // Đảo ngược lại
+                }
+              : post
+          )
+        );
+      }
     }
 
     if (type === "COMMENT") {
@@ -67,7 +100,7 @@ export default function ListPost() {
   return (
     <>
       <div className={style.layout}>
-        {[...data].reverse().map((post) => (
+        {data.length>0 ? ([...data].reverse().map((post) => (
           <div key={post.id} className={style.box}>
             {/* --- Header post --- */}
             <div className={style["post-content"]}>
@@ -85,52 +118,60 @@ export default function ListPost() {
               </div>
             </div>
 
-            <div className={style["desc-box"]}>{post.content}</div>
+              <div className={style["desc-box"]}>{post.content}</div>
 
-            {Array.isArray(post.imageContentUrls) &&
-              post.imageContentUrls.map((url, index) => (
-                <img
-                  key={index}
-                  src={url}
-                  className={style["picture"]}
-                  alt={`Post image ${index}`}
-                />
-              ))}
+              {Array.isArray(post.imageContentUrls) &&
+                post.imageContentUrls.map((url, index) => (
+                  <img
+                    key={index}
+                    src={url}
+                    className={style["picture"]}
+                    alt={`Post image ${index}`}
+                  />
+                ))}
 
-            <span style={{ color: "grey", fontSize: 13, opacity: "70%" }}>
-              {new Date(post.createdAt).toLocaleString("vi-VN", {
-                hour12: false,
-              })}
-            </span>
+              <span style={{ color: "grey", fontSize: 13, opacity: "70%" }}>
+                {new Date(post.createdAt).toLocaleString("vi-VN", {
+                  hour12: false,
+                })}
+              </span>
 
-            {/* --- Thanh trạng thái (like / comment) --- */}
-            <div className={style["status-bar"]}>
-              {/* LIKE */}
-              <button
-                type="button"
-                className={`${style.btn} ${style["btn-like"]} ${
-                  post.liked ? style["btn-like-active"] : ""
-                }`}
-                aria-label="Like"
-                onClick={() => handleAction(post.id, "LIKE")}
-              >
-                <span className={style.icon} />
-              </button>
-              <span>{post.likeCount}</span>
+              {/* --- Thanh trạng thái (like / comment) --- */}
+              <div className={style["status-bar"]}>
+                {/* LIKE */}
+                <button
+                  type="button"
+                  className={`${style.btn} ${style["btn-like"]} ${
+                    post.liked ? style["btn-like-active"] : ""
+                  }`}
+                  aria-label="Like"
+                  onClick={() => handleAction(post.id, "LIKE")}
+                >
+                  <span className={style.icon} />
+                </button>
+                <span>{post.likeCount}</span>
 
-              {/* COMMENT */}
-              <button
-                type="button"
-                className={`${style.btn} ${style["btn-comment"]}`}
-                aria-label="Comment"
-                onClick={() => handleAction(post.id, "COMMENT")}
-              >
-                <span className={style.icon} />
-              </button>
-              <span>{post.commentCount}</span>
+                {/* COMMENT */}
+                <button
+                  type="button"
+                  className={`${style.btn} ${style["btn-comment"]}`}
+                  aria-label="Comment"
+                  onClick={() => handleAction(post.id, "COMMENT")}
+                >
+                  <span className={style.icon} />
+                </button>
+                <span>{post.commentCount}</span>
+              </div>
             </div>
-          </div>
-        ))}
+          ))
+        ) : (
+          <center>
+            <span>
+              {" "}
+              <i>Empty post</i>
+            </span>
+          </center>
+        )}
       </div>
 
       {/* --- Comment Popup --- */}
