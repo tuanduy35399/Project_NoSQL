@@ -1,7 +1,7 @@
 /* Toàn bộ trang đăng nhập căn giữa */
 .signin-container {
   display: flex;
-  flex-position: column;
+  flex-direction: column;
   align-items: center;         /* Căn giữa theo chiều dọc */
   justify-content: center;     /* Căn giữa theo chiều ngang */
   height: 100vh;               /* Chiếm toàn màn hình */
@@ -46,8 +46,33 @@
   border: 1px solid #ccc;
   border-radius: 8px;
   font-size: 0.95rem;
+  width: 100%;
 }
 
+.signin-form input::placeholder {
+  color: #888;
+  opacity: 1;
+}
+
+.pass-container {
+  position: relative;
+}
+
+/* con mắt hiện password */
+.toggle-password {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #666;
+  user-select: none;    /* không cho bôi đen */
+  pointer-events: auto; /* vẫn click được */
+}
+
+.toggle-password:hover {
+  color: #000;
+}
 /* Nút đăng nhập */
 .signin-button {
   background-color: #000;

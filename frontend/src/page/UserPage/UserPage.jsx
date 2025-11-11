@@ -13,7 +13,7 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/Components/ui/dropdown-menu";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -24,10 +24,10 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+} from "@/Components/ui/alert-dialog";
 import { MoreHorizontalIcon, UploadIcon } from "lucide-react";
-import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
-import { Textarea } from "@/components/ui/textarea";
+import { Field, FieldGroup, FieldLabel } from "@/Components/ui/field";
+import { Textarea } from "@/Components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -37,7 +37,6 @@ import {
 } from "@/Components/ui/select";
 
 export default function UserPage() {
-  const [activeTab, setActiveTab] = useState("thread");
   const [showEdit, setShowEdit] = useState(false);
   const [showEditAvt, setShowEditAvt] = useState(false);
   const [dataUser, setDataUser] = useState(null);
