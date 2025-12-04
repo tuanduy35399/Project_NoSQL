@@ -16,7 +16,7 @@ const SignIn = () => {
 
     //----------------------------------------connect to backend------------------------------------------------------
     try {
-      const response = await axios.post("http://localhost:8080/auth/log-in", formData, {
+      const response = await axios.post("http://localhost:8080/api/v1/auth/log-in", formData, {
         headers: { "Content-Type": "application/json" },
       });
 

@@ -37,7 +37,7 @@ import {
 } from "@/Components/ui/select";
 
 export default function UserPage() {
-  const [activeTab, setActiveTab] = useState("thread");
+  // const [activeTab, setActiveTab] = useState("thread");
   const [showEdit, setShowEdit] = useState(false);
   const [showEditAvt, setShowEditAvt] = useState(false);
   const [dataUser, setDataUser] = useState(null);
@@ -64,7 +64,7 @@ export default function UserPage() {
         return;
       }
       const tempData = await axios.get(
-        `http://localhost:8080/api/users/${userId}`
+        `http://localhost:8080/api/v1/users/${userId}`
       );
       const islogined = Boolean(localStorage.getItem("isLoggedIn"));
       setIsLogin(islogined);
@@ -90,7 +90,7 @@ export default function UserPage() {
         toast.error("User session error. Please log in again.");
         return;
       }
-      await axios.delete(`http://localhost:8080/api/users/${userId}`);
+      await axios.delete(`http://localhost:8080/api/v1/users/${userId}`);
       console.log("Xóa user thành công");
       toast.success("Delete user successfully!");
       localStorage.removeItem("isLoggedIn");

@@ -66,7 +66,7 @@ export default function PostPage() {
 
   const checkLogin = async () => {
     const login = localStorage.getItem("isLoggedIn");
-    const userData= await axios.get(`http://localhost:8080/api/users/${localStorage.getItem("userId")?.replaceAll('"', "")}`)
+    const userData= await axios.get(`http://localhost:8080/api/v1/users/${localStorage.getItem("userId")?.replaceAll('"', "")}`)
     setData(userData.data);
     setIsLogin(login);
   };

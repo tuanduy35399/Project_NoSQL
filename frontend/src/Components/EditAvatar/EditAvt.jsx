@@ -20,11 +20,11 @@ export default function EditAvt({ onClose, currentAvatar, onSave }) {
     const loadingToast = toast.loading("Deleting...");
     const storedUserId = localStorage.getItem("userId")?.replaceAll('"', "");
     try {
-      await axios.delete(`http://localhost:8080/api/users/${storedUserId}/avatar`);
+      await axios.delete(`http://localhost:8080/api/v1/users/${storedUserId}/avatar`);
       console.log("Avatar deleted successfully");
       toast.success("Avatar deleted successfully!", { id: loadingToast });
 
-      const updatedUser = await axios.get(`http://localhost:8080/api/users/${storedUserId}`);
+      const updatedUser = await axios.get(`http://localhost:8080/api/v1/users/${storedUserId}`);
       setUser(updatedUser.data); // gán lại user mới
       if (onSave) {
       onSave(updatedUser.data); // 👈 Gửi luôn dữ liệu user mới (chứa avatar mặc định)
@@ -119,7 +119,7 @@ export default function EditAvt({ onClose, currentAvatar, onSave }) {
     // Gửi yêu cầu POST lên server
     try {
       setLoading(true);
-      const response = await axios.patch(`http://localhost:8080/api/users/${storedUserId}/avatar`, formData, { //lấy tạm api post blogs để test
+      const response = await axios.patch(`http://localhost:8080/api/v1/users/${storedUserId}/avatar`, formData, { //lấy tạm api post blogs để test
         headers: { "Content-Type": "multipart/form-data" },
       });
       toast.success("Avatar updated successfully!", { id: loadingToast });
