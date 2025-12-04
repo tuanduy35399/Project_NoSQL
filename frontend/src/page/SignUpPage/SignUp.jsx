@@ -3,12 +3,14 @@ import "./SignUp.css";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 export default function SignUp() {
   const [fullname, setFullName] = useState("");
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [birthday, setBirthday] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [isSubmit, setIsSubmit] = useState(false);  // để tránh click đăng ký nhiều lần
   const navigate = useNavigate(); // dùng để chuyển page sau khi đky thành công
   const today = new Date().toISOString().split("T")[0];
@@ -57,7 +59,7 @@ export default function SignUp() {
         console.error("Error setting up the request:", error.message);
         toast.error("Something went wrong in the app. Check the console for details.");
       }
-    }finally{
+    } finally {
       setIsSubmit(false);
     }
   };
@@ -73,7 +75,7 @@ export default function SignUp() {
   return (
     <div className="signup-container">
       <form className="signup-form" onSubmit={handleSubmit}>
-        <h2>Create Account</h2>
+        <h2 className="signup-title">Create Account</h2>
 
         <label>Full Name</label>
         <input
@@ -97,24 +99,39 @@ export default function SignUp() {
         <input
           type="date"
           value={birthday}
-          max={today} 
+          max={today}
           onChange={(e) => setBirthday(e.target.value)}
           required
         />
 
         <label>Password</label>
-        <input
-          type="password"
-          placeholder="Enter password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
+        <div className="pass-container">
+          <input
+            type={showPassword ? "text" : "password"}
+            placeholder="Enter password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="signup-input"
+            required
+          />
 
-        <button 
-          type="submit" 
+          <span
+            className="eye-pass"
+            onMouseDown={(e) => e.preventDefault()}
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            {showPassword ? <FaEyeSlash /> : <FaEye />}
+          </span>
+        </div>
+
+        <small className="password-hint">
+          At least 8 chars, include a special symbol (e.g. @ #).
+        </small>
+
+        <button
+          type="submit"
           className="signup-btn"
-          disabled={isSubmit}>  
+          disabled={isSubmit}>
           {/* tránh click nhiều lần => gây lỗi */}
           Sign Up
         </button>
@@ -122,7 +139,7 @@ export default function SignUp() {
         <p className="signin-link">
           Already have an account? <Link to="/signin">Sign In</Link>
         </p>
-      </form>
-    </div>
+      </form >
+    </div >
   );
 }

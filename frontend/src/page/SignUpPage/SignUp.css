@@ -12,6 +12,12 @@
   background-repeat: no-repeat;
 }
 
+.signup-title{
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
 .signup-form {
   background: #fff;
   padding: 40px 45px;
@@ -20,6 +26,10 @@
   width: 100%;
   max-width: 380px;
   text-align: left;
+}
+.signup-form input::placeholder {
+  color: #747474;
+  opacity: 1;
 }
 
 .signup-form h2 {
@@ -66,6 +76,11 @@
   transition: 0.2s;
 }
 
+.signup-form input::placeholder {
+  color: #888;
+  opacity: 1;
+}
+
 .signup-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
@@ -74,6 +89,51 @@
 .signup-btn:hover {
   background: #333;
 }
+/* ---------------------------------PASSWORD----------------------------------------- */
+.pass-container {
+  position: relative;
+}
+
+/* con mắt hiện password */
+.eye-pass {
+  position: absolute;
+  right: 12px;
+  top: 40%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #666;
+  user-select: none;    /* không cho bôi đen */
+  pointer-events: auto; /* vẫn click được */
+}
+
+.eye-pass:hover {
+  color: #000;
+}
+
+
+/* Ẩn icon con mắt mặc định của trình duyệt (Edge, Chrome, Safari) */
+input::-ms-reveal,
+input::-ms-clear,
+input::-webkit-credentials-auto-fill-button,
+input::-webkit-password-toggle-button {
+  display: none !important;
+}
+
+/* Đảm bảo không có padding thừa do icon ẩn */
+input[type="password"] {
+  padding-right: 40px; /* vẫn chừa chỗ cho icon của bạn */
+}
+
+.password-hint {
+  color: #888;          /* màu xám nhạt */
+  font-size: 0.8rem;   /* chữ nhỏ */
+  top: 10px;
+  margin-top: -10px;
+  margin-bottom: 25px;
+  display: block;
+}
+
+/* --------------------------------------------LINK------------------------------------------ */
 
 .signin-link {
   text-align: center;
@@ -90,3 +150,5 @@
 .signin-link a:hover {
   text-decoration: underline;
 }
+
+

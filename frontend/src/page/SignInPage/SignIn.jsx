@@ -3,10 +3,12 @@ import { Link, useNavigate } from "react-router-dom";
 import './SignIn.css';
 import axios from 'axios';
 import { toast } from "sonner";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const SignIn = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleSignIn = async (e) => {
@@ -63,13 +65,24 @@ const SignIn = () => {
             onChange={(e) => setUsername(e.target.value)}
             className="signin-input"
           />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="signin-input"
-          />
+          <div className="pass-container">
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="signin-input"
+            />
+
+            <span
+              className="toggle-password"
+              onMouseDown={(e) => e.preventDefault()}  // chặn khi click quá nhiều nó sẽ focus vào chỗ khác
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </span>
+          </div>
+
           <button type="submit" className="signin-button">
             Sign In
           </button>

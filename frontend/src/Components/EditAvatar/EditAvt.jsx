@@ -5,6 +5,7 @@ import { useState, useRef, useEffect } from "react";
 import { CloudCog } from "lucide-react";
 import { createPortal } from "react-dom";
 
+
 export default function EditAvt({ onClose, currentAvatar, onSave }) {
   // State để lưu file ảnh và URL preview
   const [avatarFile, setAvatarFile] = useState(null);
@@ -15,8 +16,17 @@ export default function EditAvt({ onClose, currentAvatar, onSave }) {
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
+  const defaultAvatar = "http://res.cloudinary.com/drwznlrbn/image/upload/v1762008409/9db2e9f0-8423-481e-8bd6-e2f911e15097.jpg";
+
+   
 
   const deleteAvatar = async () => {
+
+    if (currentAvatar === defaultAvatar){
+      console.log ("hẹ hẹ hẹ");
+      return;
+    }
+
     const loadingToast = toast.loading("Deleting...");
     const storedUserId = localStorage.getItem("userId")?.replaceAll('"', "");
     try {

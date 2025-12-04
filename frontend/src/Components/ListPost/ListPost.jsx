@@ -22,9 +22,9 @@ export default function ListPost() {
       const processedData = rs.data.map((post) => ({
         ...post,
         liked: false,
-        likeCount: post.likeCount || 0,
-        commentCount: post.commentCount || 0,
-        shareCount: post.shareCount || 0,
+        likesCount: post.likesCount || 0,
+        commentsCount: post.commentsCount || 0,
+        sharesCount: post.sharesCount || 0,
       }));
 
       setData(processedData);
@@ -47,7 +47,7 @@ export default function ListPost() {
             ? {
                 ...post,
                 liked: !post.liked,
-                likeCount: post.likeCount + (post.liked ? -1 : 1),
+                likesCount: post.likesCount + (post.liked ? -1 : 1),
               }
             : post
         )
@@ -78,7 +78,7 @@ export default function ListPost() {
               ? {
                   ...post,
                   liked: !post.liked, // Đảo ngược lại
-                  likeCount: post.likeCount + (post.liked ? 1 : -1), // Đảo ngược lại
+                  likesCount: post.likesCount + (post.liked ? 1 : -1), // Đảo ngược lại
                 }
               : post
           )
@@ -149,7 +149,7 @@ export default function ListPost() {
                 >
                   <span className={style.icon} />
                 </button>
-                <span>{post.likeCount}</span>
+                <span>{post.likesCount}</span>
 
                 {/* COMMENT */}
                 <button
@@ -160,7 +160,7 @@ export default function ListPost() {
                 >
                   <span className={style.icon} />
                 </button>
-                <span>{post.commentCount}</span>
+                <span>{post.commentsCount}</span>
               </div>
             </div>
           ))
