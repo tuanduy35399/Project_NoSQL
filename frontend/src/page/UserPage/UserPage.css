@@ -1,0 +1,483 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+.user-page {
+  /* padding-top: 250px; */
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.user-page .edit-avatar-modal {
+  position: absolute; /* hoặc fixed nếu bạn muốn giữa trang */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10; /* Chỉ cao trong vùng userpage */
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+/*----------------------------- NAV BAR -----------------------------*/
+.nav-bar {
+  position: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* để menu-wrapper dùng margin-left:auto */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 40px;
+  padding: 8px 20px;
+  z-index: 4000;
+}
+
+.nav-bar h1 {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  /* margin: 0; */
+  margin-top: 26px;
+  font-size: 17px;
+  z-index: 4500;
+  font-weight: 560;
+}
+
+.nav-bar .btn {
+  position: static;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border: 1px solid #c9c7c7;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+}
+
+/*----------------------------- PROFILE -----------------------------*/
+.profile {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  top: 50px;
+  left: 0;
+  width: 100%;
+  height: 200px;
+  background: #ffffff;
+  padding: 12px 50px;
+  box-sizing: border-box;
+  z-index: 3000;
+}
+
+.profile-in4 {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.profile-in4 h1 {
+  font-size: 25px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.profile-in4 p {
+  margin: 0;
+  font-size: 14px;
+  color: #000;
+}
+
+.profile-avt img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/*-------------------------- EDIT BUTTON --------------------------*/
+/* .edit-profile-btn {
+  position: absolute;
+  top: 180px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  padding: 5px 12px;
+  font-size: 15px;
+  font-family: 'Roboto';
+  font-weight: 550;
+  border: 1px solid #afafaf9a;
+  border-radius: 10px;
+  background: #ffffff;
+  cursor: pointer;
+} */
+
+.edit-btn {
+  position: absolute;
+  top: 180px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  padding: 5px 12px;
+  font-size: 15px;
+  font-family: 'Roboto';
+  font-weight: 550;
+  border: 1px solid #afafaf9a;
+  border-radius: 10px;
+  background: #ffffff;
+  cursor: pointer;
+}
+
+/*-------------------------- TAB MENU --------------------------*/
+.tab {
+  display: flex;
+  justify-content: space-around;
+  position: fixed;
+  top: 220px;
+  width: 90%;
+  border-bottom: 1px solid #ddd;
+  background-color: #ffffff;
+  z-index: 10;
+  margin-top: 50px;
+  color: #000000
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 10px 0;
+  background: none;
+  border: none;
+  font-size: 15px;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+  color: #555;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.tab-btn:hover {
+  color: #000;
+  background-color: #f8f8f8;
+}
+
+.tab-btn.active {
+  font-weight: 600;
+  color: #000;
+  border-bottom: 2px solid #000;
+}
+
+/*-------------------------- DROPDOWN MENU --------------------------*/
+.menu-wrapper {
+  margin-left: auto;   /* đây là chìa khoá: đẩy nó về phải */
+  position: relative;  /* để dropdown vị trí absolute dựa trên wrapper */
+  z-index: 5000;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 35px;
+  right: 0;
+  width: 130px;
+  background: #fff;
+  border: 1px solid #dcdcdc;
+  border-radius: 8px;
+  padding: 6px 0;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  z-index: 6000;
+}
+
+.dropdown-menu button {
+  width: 100%;
+  padding: 10px 25px;
+  background: none;
+  border: none;
+  text-align: left;
+  font-size: 14px;
+  cursor: pointer;
+  font-family: 'Roboto';
+}
+
+.dropdown-menu button:hover {
+  background: #f5f5f5;
+}
+
+/* Nút chung */
+.signout-btn,
+.deleteacc-btn {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 10px 16px;
+  font-size: 16px;
+  font-weight: 500;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #000000;
+  transition: background 0.15s ease, color 0.15s ease;
+  border-radius: 8px;
+}
+
+/* Hover nhẹ */
+.signout-btn:hover {
+  background-color: #f3f4f6;
+}
+
+/* Nút Delete đỏ cảnh báo */
+.deleteacc-btn {
+  color: #e74c3c;
+}
+
+.deleteacc-btn:hover {
+  background-color: #fdecea;
+  color: #c0392b;
+}
+
+/* Hiệu ứng popup mượt */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/*
+========================================
+  STYLES CHO PHẦN CHƯA ĐĂNG NHẬP
+========================================
+*/
+.logged-out-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 20px;
+  margin-top: 200px;
+  /* Khoảng cách với nav-bar */
+  max-width: 500px;
+  /* Giới hạn chiều rộng */
+  margin-left: auto;
+  margin-right: auto;
+  background-color: #f9f9f9;
+  /* Nền xám rất nhạt */
+  border-radius: 12px;
+  border: 1px solid #eee;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.logged-out-container h2 {
+  font-size: 23px;
+  font-weight: 600;
+  color: #000000;
+  margin-bottom: 15px;
+  margin-top: 20px;
+}
+
+.logged-out-container p {
+  font-size: 16px;
+  color: #757575;
+  margin-bottom: 25px;
+  font-family: 'Roboto';
+}
+
+.auth-buttons {
+  display: flex;
+  gap: 15px;
+  /* Khoảng cách giữa 2 nút */
+}
+
+.auth-btn {
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.login-btn {
+  background-color: #007bff;
+  /* Màu xanh dương chính */
+  color: white;
+}
+
+.login-btn:hover {
+  background-color: #0056b3;
+  /* Xanh đậm hơn khi hover */
+}
+
+.register-btn {
+  background-color: #f0f0f0;
+  /* Nền xám nhạt */
+  color: #333;
+  border: 1px solid #ddd;
+}
+
+.register-btn:hover {
+  background-color: #e0e0e0;
+  /* Xám đậm hơn khi hover */
+}
+
+/*------------------------profile-avt--------------------------------------*/
+
+
+/*Nút chỉnh sửa avatar — nằm ngay trên avatar */
+.edit-avatar-btn {
+  position: absolute;
+  bottom: 4px;     /*điều chỉnh vị trí icon*/
+  right: 4px;
+  background-color: rgba(0, 0, 0, 0.65);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.edit-avatar-btn:hover {
+  background-color: rgba(0, 0, 0, 0.85);
+}
+
+.picture {
+  max-width: 500px;
+  max-height: 500px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+  padding: 3px;
+} 
+ .layout {
+  width: 100%;
+  height: 100%;
+  background-color: #FFFF;
+  overflow-y: auto;
+  margin-top: 250px;   
+  /* chỉnh vị trí bài đăng lên xuống */
+}
+
+.header_post {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  margin-bottom: 5px;
+  gap: 10px;
+}
+.avatar-wrapper {
+  position: relative;
+  width: 120px;
+  height: 120px;
+}
+
+/* Ảnh đại diện tròn */
+.avatar-wrapper .avt {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ddd;
+}
+.avatar_mini_wrapper {
+  width: 50px;
+  height: 50px;
+  position: relative;
+  /* overflow: hidden; */
+}
+.avatar_mini_wrapper .avatar{
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.layout::-webkit-scrollbar {
+  display: none;
+}
+
+.layout {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* --------------------------------POST------------------------------------------- */
+
+.box {
+  height: auto;
+  border-bottom: 1.5px solid rgb(193, 192, 192);
+  padding: 20px 10px;
+  white-space: pre-wrap;
+}
+
+.box:last-child {
+  border: none;
+}
+
+.user-box {
+  font-weight: bold;
+}
+
+.desc-box {
+  margin: 20px 0;
+}
+.modifileButton{
+  width: 75%;
+  display: flex;
+  justify-content: end;
+  gap:10px
+}
+.previewWrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.previewImage {
+  /* max-width: 500px; */
+  max-height: 500px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+  padding: 3px;
+}
+
+/* Nút xóa ảnh */
+.removeButton {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: center;
+  transition: 0.2s;
+}
+
+.removeButton:hover {
+  background-color: red;
+}

@@ -1,0 +1,152 @@
+.boxlayout{
+  width: 100vw;
+  padding-top: 10px;
+  padding-left: 30px;
+  padding-right: 30px;
+}
+.leftbuttons{
+  width: auto;
+  display: flex;
+  align-items:center;
+  gap: 20px;
+}
+textarea {
+  width: 100%;
+  height: 150px;
+  padding-left: 20px;
+  font-size: 16x;
+  /* min-height: 300px; */
+  resize: he;
+  border-left: 2px solid rgba(0, 0, 0, 0.281);
+  border-top: none;
+  border-right: none;
+  border-bottom: none;
+  outline: none;
+  overflow: hidden;
+}
+body::-webkit-scrollbar {
+  display: none;
+}
+
+/* Ẩn thanh cuộn (Firefox) */
+body {
+  scrollbar-width: none;
+}
+.avatar_mini_wrapper {
+  width: 50px;
+  height: 50px;
+  position: relative;
+}
+
+.avatar_mini_wrapper .avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.selectForm{
+  border-radius: 5px;
+  background-color: white;
+  border: 2px solid black;
+  cursor: pointer;
+}
+.selectForm:hover{
+  background-color: rgba(193, 192, 192, 0.295);
+}
+.header_post{
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  margin-top: 30px;
+  margin-left: -25px;
+  margin-bottom: 5px;
+  gap: 10px;
+}
+
+/* Nút chọn file bằng hình post.png */
+.fileInput {
+  display: none;
+}
+
+.buttonPost-2 {
+  width: 35px;
+  height: 35px;
+  border-radius: 10px;
+  border: none;
+  padding: 3px 0 0 5px;
+  cursor: pointer;
+}
+
+.buttonPost-2:hover {
+  background-color: rgba(193, 192, 192, 0.295);
+  opacity: 100%;
+}
+
+.option {
+  width: 100%;
+  height: 33px;
+  display: flex;
+  gap: 15px;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+
+
+/* Hiển thị ảnh preview */
+.previewContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.previewWrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.previewImage {
+  max-width: 500px;
+  max-height: 500px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+  padding: 3px;
+}
+
+/* Nút xóa ảnh */
+.removeButton {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: center;
+  transition: 0.2s;
+}
+
+.removeButton:hover {
+  background-color: red;
+}
+.infor{
+  width: auto;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logged-out-container{
+  width: 100%;
+}

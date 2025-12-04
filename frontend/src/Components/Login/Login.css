@@ -10,9 +10,9 @@
     width: 350px;
     height: 45vh;
     border-radius: 20px;
-    //box-shadow: 0px 0px 6px 3px rgba(0, 0, 0, 0.06);
-    border: 1.5px solid #e0e0e0;
-    background-color: rgba(194, 193, 193, 0.171);
+    box-shadow: 0px 0px 6px 3px rgba(0, 0, 0, 0.06);
+    border: 1.5px solid rgb(193, 192, 192);
+    background: #ffffff59;
     text-align: center;
     line-height: 1.0;
 }
@@ -36,7 +36,7 @@ a{
     margin-bottom: 10px;
 }
 a:link{
-    color: #081249;
+    color: #3d899c;
     text-decoration: none;
     transition: font-weight 0.1s ease;
     font-size: 14px;
@@ -53,7 +53,7 @@ a:visited{
 
 }
 
-.btn{
+.buttonLogin{
     display: flex;
     align-items: center;
     justify-content: center;
@@ -72,5 +72,5 @@ a:visited{
 }
 
 .btn:hover{
-    background: #888888ab
+    background: #888888
 }
