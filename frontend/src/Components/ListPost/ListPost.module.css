@@ -112,3 +112,15 @@
   padding: 3px;
 }
 
+.action-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  display: block;
+}
+
+.btn-share {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

@@ -1,4 +1,4 @@
-  import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import style from "./ListPost.module.css";
 import axios from "axios";
 import { toast } from "sonner";
@@ -9,10 +9,11 @@ export default function ListPost() {
   const [isCommentPopupOpen, setIsCommentPopupOpen] = useState(false);
   const [selectedPostId, setSelectedPostId] = useState(null);
 
-  //Lấy dữ liệu từ backend
+  // Lấy dữ liệu từ backend
   const fetchPosts = async () => {
     try {
       const rs = await axios.get("http://localhost:8080/api/v1/soulspaces");
+
       if (!Array.isArray(rs.data)) {
         console.error("API không trả về mảng hợp lệ:", rs.data);
         toast.error("Invalid API response format");
@@ -40,7 +41,6 @@ export default function ListPost() {
 
   const handleAction = async (postId, type) => {
     if (type === "LIKE") {
-      // 1. Cập nhật UI ngay lập tức (Optimistic Update)
       setData((prevData) =>
         prevData.map((post) =>
           post.id === postId
@@ -53,32 +53,26 @@ export default function ListPost() {
         )
       );
 
-      // 2. Gửi request đến backend
       try {
-        // Giả sử bạn có API: POST /api/posts/{postId}/like
-        // Bạn cần lấy userId từ localStorage hoặc context
         const userId = String(localStorage.getItem("userId")).replaceAll(
           '"',
           ""
         );
 
-        // API thật sự của bạn có thể khác
         await axios.post(`http://localhost:8080/api/v1/likes/${postId}`, {
           userId,
         });
-        // Nếu backend trả về số like mới, bạn có thể cập nhật state một lần nữa
       } catch (error) {
         console.error("Error liking post:", error);
         toast.error("Failed to like post.");
 
-        // 3. Nếu API lỗi, hoàn tác lại thay đổi ở UI
         setData((prevData) =>
           prevData.map((post) =>
             post.id === postId
               ? {
                   ...post,
-                  liked: !post.liked, // Đảo ngược lại
-                  likesCount: post.likesCount + (post.liked ? 1 : -1), // Đảo ngược lại
+                  liked: !post.liked,
+                  likesCount: post.likesCount + (post.liked ? 1 : -1),
                 }
               : post
           )
@@ -90,6 +84,37 @@ export default function ListPost() {
       setSelectedPostId(postId);
       setIsCommentPopupOpen(true);
     }
+
+    if (type === "SHARE") {
+      const shareUrl = `${window.location.origin}/post/${postId}`;
+
+      try {
+        if (navigator.share) {
+          await navigator.share({
+            title: "Soul Space Post",
+            text: "Xem bài viết này nè",
+            url: shareUrl,
+          });
+        } else {
+          await navigator.clipboard.writeText(shareUrl);
+          toast.success("Đã copy link bài viết");
+        }
+
+        setData((prevData) =>
+          prevData.map((post) =>
+            post.id === postId
+              ? {
+                  ...post,
+                  sharesCount: (post.sharesCount || 0) + 1,
+                }
+              : post
+          )
+        );
+      } catch (error) {
+        console.error("Error sharing post:", error);
+        toast.error("Không thể chia sẻ bài viết");
+      }
+    }
   };
 
   const handleClosePopup = () => {
@@ -100,23 +125,24 @@ export default function ListPost() {
   return (
     <>
       <div className={style.layout}>
-        {data.length>0 ? ([...data].reverse().map((post) => (
-          <div key={post.id} className={style.box}>
-            {/* --- Header post --- */}
-            <div className={style["post-content"]}>
-              <div className={style.header_post}>
-                <div className={style.avatar_mini_wrapper}>
-                  <img
-                    src={post.userAvatarUrl || "/default-avatar.png"}
-                    alt="User Avatar"
-                    className={style.avatar}
-                  />
-                </div>
-                <div className={style["user-box"]}>
-                  {post.username ? "@" + post.username : "Unknown user"}
+        {data.length > 0 ? (
+          [...data].reverse().map((post) => (
+            <div key={post.id} className={style.box}>
+              {/* Header post */}
+              <div className={style["post-content"]}>
+                <div className={style.header_post}>
+                  <div className={style.avatar_mini_wrapper}>
+                    <img
+                      src={post.userAvatarUrl || "/default-avatar.png"}
+                      alt="User Avatar"
+                      className={style.avatar}
+                    />
+                  </div>
+                  <div className={style["user-box"]}>
+                    {post.username ? "@" + post.username : "Unknown user"}
+                  </div>
                 </div>
               </div>
-            </div>
 
               <div className={style["desc-box"]}>{post.content}</div>
 
@@ -125,7 +151,7 @@ export default function ListPost() {
                   <img
                     key={index}
                     src={url}
-                    className={style["picture"]}
+                    className={style.picture}
                     alt={`Post image ${index}`}
                   />
                 ))}
@@ -136,7 +162,7 @@ export default function ListPost() {
                 })}
               </span>
 
-              {/* --- Thanh trạng thái (like / comment) --- */}
+              {/* Thanh trạng thái */}
               <div className={style["status-bar"]}>
                 {/* LIKE */}
                 <button
@@ -161,20 +187,30 @@ export default function ListPost() {
                   <span className={style.icon} />
                 </button>
                 <span>{post.commentsCount}</span>
+
+                {/* SHARE */}
+                <button
+                  type="button"
+                  className={`${style.btn} ${style["btn-share"]}`}
+                  aria-label="Share"
+                  onClick={() => handleAction(post.id, "SHARE")}
+                >
+                  <span className={style.icon} />
+                </button>
+                <span>{post.sharesCount}</span>
               </div>
             </div>
           ))
         ) : (
           <center>
             <span>
-              {" "}
               <i>Empty post</i>
             </span>
           </center>
         )}
       </div>
 
-      {/* --- Comment Popup --- */}
+      {/* Comment Popup */}
       {isCommentPopupOpen && (
         <CommentPopup postId={selectedPostId} onClose={handleClosePopup} />
       )}
